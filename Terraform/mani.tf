@@ -33,7 +33,7 @@ resource "aws_vpc" "main" {
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
   tags = {
-    Name = "&{var.env}-igw"
+    Name = "${var.env}-igw"
   }
 }
 
@@ -52,7 +52,7 @@ resource "aws_subnet" "public_subnets" {
 }
 
 resource "aws_route_table" "public_subnets" {
-    vpc_id = aws_vpc.main.id
+    vpc_id         = aws_vpc.main.id
     route {
         cidr_block = "0.0.0.0/0"
         gateway_id = aws_internet_gateway.main.id
@@ -64,9 +64,9 @@ resource "aws_route_table" "public_subnets" {
 
 
 resource "aws_route_table_association" "public_routes" {
-  count = length(aws_subnet.public_subnets[*].id)
+  count          = length(aws_subnet.public_subnets[*].id)
   route_table_id = aws_route_table.public_subnets.id
-  subnet_id = element(aws_subnet.public_subnets[*].id, count.index)
+  subnet_id      = element(aws_subnet.public_subnets[*].id, count.index)
 }
 
 
@@ -75,7 +75,7 @@ resource "aws_route_table_association" "public_routes" {
 
 resource "aws_eip" "nat" {
     count    = length(var.private_subnet_cidrs)
-    vpc      = true
+    domain   = "vpc"
     tags     = {
         Name ="${var.env}-nat-gw-${count.index + 1}"
     }
@@ -110,13 +110,13 @@ resource "aws_subnet" "private_subnets" {
 
 resource "aws_route_table" "private_subnets" {
   count        = length(var.private_subnet_cidrs)
-  vpc_id       = aws_vpc.main.owner_id
-  route = {
+  vpc_id       = aws_vpc.main.id
+  route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.nat[count.index +1].id
+    gateway_id = aws_nat_gateway.nat[count.index].id
   }
   tags = {
-    Name = "${var.env}-routep-private-subnet-${count.index +1}"
+    Name = "${var.env}-route-private-subnet-${count.index +1}"
   }
 }
 
@@ -130,31 +130,27 @@ resource "aws_route_table_association" "private_routes" {
 #-------------------------------------DataBase Subnet and Routing-----------------------------------
 
 resource "aws_subnet" "database_subnets" {
-  count               = length(var.database_subnet_cidrs)
-  vpc_id              = aws_vpc.main.id
-  cidr_block          = element(var.database_subnet_cidrs, count.index)
-  availability_zone   = data.aws_availability_zones.available.names[count.index]
-  map_public_ip_on_launch = false
+  count                     = length(var.database_subnet_cidrs)
+  vpc_id                    = aws_vpc.main.id
+  cidr_block                = element(var.database_subnet_cidrs, count.index)
+  availability_zone         = data.aws_availability_zones.available.names[count.index]
+  map_public_ip_on_launch   = false
   tags = {
     Name = "${var.env}-database-${count.index + 1}"
   }
 }
 
 resource "aws_route_table" "database_subnets" {
-    vpc_id = aws_vpc.main.id
-    route {
-        cidr_block = "10.0.0.0/16"
-    }
+    vpc_id         = aws_vpc.main.id
     tags = {
       Name = "${var.env}-route-database-subnets"
     }
 }
 
-
 resource "aws_route_table_association" "database_routes" {
-  count = length(aws_subnet.database_subnets[*].id)
+  count          = length(aws_subnet.database_subnets[*].id)
   route_table_id = aws_route_table.database_subnets.id
-  subnet_id = element(aws_subnet.database_subnets[*].id, count.index)
+  subnet_id      = element(aws_subnet.database_subnets[*].id, count.index)
 }
 
 

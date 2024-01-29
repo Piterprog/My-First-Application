@@ -11,6 +11,14 @@ provider "aws" {
   region = "us-east-1"
 }
 
+terraform {
+  backend "s3" {
+    bucket = "vpc-piter-kononihin-terraform"
+    key = "dev/vpc/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
 #----------------------------------------------------------------------------------------
 
 data "aws_availability_zones" "available" {}
@@ -44,13 +52,13 @@ resource "aws_subnet" "public_subnets" {
 }
 
 resource "aws_route_table" "public_subnets" {
-    vpc_id                   = aws_vpc.main.id
-    route = {
-        cidr_block           = "0.0.0.0/0"
-        gateway_id           = aws_internet_gateway.main.id
+    vpc_id = aws_vpc.main.id
+    route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.main.id
     }
     tags = {
-        Name                 = "${var.env}-route-public-subnets"
+        Name = "${var.env}-route-public-subnets"
     }
 }
 
@@ -67,11 +75,12 @@ resource "aws_route_table_association" "public_routes" {
 
 resource "aws_eip" "nat" {
     count    = length(var.private_subnet_cidrs)
-    domain  = true
+    vpc      = true
     tags     = {
         Name ="${var.env}-nat-gw-${count.index + 1}"
     }
 }
+
 
 
 resource "aws_nat_gateway" "nat" {
@@ -101,7 +110,7 @@ resource "aws_subnet" "private_subnets" {
 
 resource "aws_route_table" "private_subnets" {
   count        = length(var.private_subnet_cidrs)
-  vpc_id       = aws_vps.main.id
+  vpc_id       = aws_vpc.main.owner_id
   route = {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_nat_gateway.nat[count.index +1].id
@@ -133,7 +142,7 @@ resource "aws_subnet" "database_subnets" {
 
 resource "aws_route_table" "database_subnets" {
     vpc_id = aws_vpc.main.id
-    route = {
+    route {
         cidr_block = "10.0.0.0/16"
     }
     tags = {

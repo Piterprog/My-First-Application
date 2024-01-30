@@ -24,7 +24,8 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: us-east-1
 
-      - name: Terraform Init and Apply
+      - name: Download Terraform state file from S3
         run: |
+          aws s3 cp s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate .
           terraform init
           terraform apply -auto-approve

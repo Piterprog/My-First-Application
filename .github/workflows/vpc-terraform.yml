@@ -1,4 +1,4 @@
-name: Terraform AWS Deploy.....
+name: Terraform AWS Deployment
 
 on:
   push:
@@ -26,9 +26,8 @@ jobs:
 
       - name: Initialize Terraform
         run: terraform init
+        working-directory: ./Terraform
 
       - name: Apply Terraform changes
         run: terraform apply -auto-approve
         working-directory: ./Terraform
-
-

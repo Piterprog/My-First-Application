@@ -28,7 +28,7 @@ jobs:
         run: |
             aws s3 cp s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate.enc .
             aws kms decrypt --ciphertext-blob fileb://terraform.tfstate.enc --output text --query Plaintext | base64 --decode > terraform.tfstate
-        working-directory: ./My-First-Application/My-First-Application
+        working-directory: ./My-First-Apolication/My-First-Application/Terraform
 
         
       - name: Initialize Terraform

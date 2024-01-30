@@ -24,8 +24,13 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: us-east-1
 
-      - name: Download Terraform state file from S3
+      - name: Decrypt Terraform state file from S3 if encrypted
         run: |
-          aws s3 cp s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate .
-          terraform init
-          terraform apply -auto-approve
+          aws s3 cp s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate.enc .
+          aws kms decrypt --ciphertext-blob fileb://terraform.tfstate.enc --output text --query Plaintext | base64 --decode > terraform.tfstate
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Apply Terraform changes
+        run: terraform apply -auto-approve

@@ -29,5 +29,5 @@ jobs:
 
       - name: Apply Terraform changes
         run: terraform apply -auto-approve
-        working-directory: ./home/piterk/My-First-Apolication/My-First-Application/Terraform/
+        working-directory: ./home/piterk/My-First-Apolication/My-First-Application/Terraform
 

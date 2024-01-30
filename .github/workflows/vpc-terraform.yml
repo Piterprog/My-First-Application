@@ -26,8 +26,8 @@ jobs:
 
       - name: Decrypt Terraform state file from S3 if encrypted
         run: |
-          aws s3 cp s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate.enc .
-          aws kms decrypt --ciphertext-blob fileb://terraform.tfstate.enc --output text --query Plaintext | base64 --decode > terraform.tfstate
+          aws s3 cp s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate
+          aws kms decrypt --ciphertext-blob fileb://terraform.tfstate --output text --query Plaintext | base64 --decode > terraform.tfstate
 
       - name: Initialize Terraform
         run: terraform init

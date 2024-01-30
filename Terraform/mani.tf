@@ -1,9 +1,11 @@
 # My Terraform
 # - VPC
 # - Internet Gateway
+# - Nat for Private Subnets
 # - Public Subnets
 # - Private Subnets
 # - Database Subnets
+# - Security Group
 
 #----------------------------------------------------------------------------------------
 
@@ -85,7 +87,6 @@ resource "aws_eip" "nat" {
 }
 
 
-
 resource "aws_nat_gateway" "nat" {
   count         = length(var.private_subnet_cidrs)
   allocation_id = aws_eip.nat[count.index].id 
@@ -116,7 +117,7 @@ resource "aws_route_table" "private_subnets" {
   vpc_id       = aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.nat[count.index].id
+    nat_gateway_id = aws_nat_gateway.nat[count.index].id
   }
   tags = {
     Name = "${var.env}-route-private-subnet-${count.index +1}"
@@ -156,6 +157,40 @@ resource "aws_route_table_association" "database_routes" {
   subnet_id      = element(aws_subnet.database_subnets[*].id, count.index)
 }
 
+#----------------------------------------------Security Group--------------------------------
+
+resource "aws_security_group" "Security_vpc" {
+  name        = "Serurity_vpc"
+  description = "Security group"
+  vpc_id      = aws_vpc.main.id 
+
+  ingress {
+    description = "TLS from VPC"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.main.cidr_block]
+  }
+
+  ingress {
+    description = "HTTP from VPC"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.main.cidr_block]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "Security group for HTTPS , HTTP"
+  }
+}
 
 
 #---------------------------------------------- END -----------------------------------------

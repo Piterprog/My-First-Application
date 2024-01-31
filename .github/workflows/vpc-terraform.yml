@@ -1,6 +1,11 @@
 # Test and deploy VPC AWS network.
 
 
+
+Jobs
+Run details
+Workflow file for this run
+.github/workflows/vpc-terraform.yml at 2310e12
 name: Terraform AWS Deployment
 
 on:
@@ -27,10 +32,6 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: us-east-1
 
-      - name: Initialize Terraform
-        run: terraform init
-        working-directory: ./Terraform
-
-      - name: Apply Terraform changes
-        run: terraform apply -auto-approve
+      - name: Destroy Terraform resources
+        run: terraform destroy -auto-approve
         working-directory: ./Terraform

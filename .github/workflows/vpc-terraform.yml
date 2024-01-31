@@ -28,10 +28,18 @@ jobs:
 
       - name: Check AWS credentials
         run: |
-          aws configure set aws_access_key_id AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key AWS_SECRET_ACCESS_KEY
-          aws configure set default_region us-east-1
-          aws configure test
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set default_region us-east-1
+            aws configure get aws_access_key_id
+            aws configure get aws_secret_access_key
+            aws configure get default_region
+            aws configure list
+            aws configure test
+            
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Terraform Init
         run: terraform init

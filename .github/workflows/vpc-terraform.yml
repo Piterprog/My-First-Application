@@ -1,6 +1,7 @@
 # Test and deploy VPC AWS network.
 
 
+
 name: Terraform Deploy
 
 on:
@@ -17,6 +18,12 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     steps:
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+        shell: bash
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -24,7 +31,6 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.7.1
-
 
       - name: Check AWS credentials
         run: |
@@ -62,4 +68,3 @@ jobs:
             echo "No changes in Terraform state."
           fi
         continue-on-error: false
-

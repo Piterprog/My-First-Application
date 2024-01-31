@@ -36,7 +36,9 @@ jobs:
         
 
       - name: Terraform Plan
-        run: terraform plan -chdir=/home/piterk/My-First-Apolication/My-First-Application/Terraform/ -out=tfplan
+        run: |
+          cd /home/piterk/My-First-Apolication/My-First-Application/Terraform/
+          terraform plan -out=tfplan
         continue-on-error: false
 
       - name: Terraform Apply

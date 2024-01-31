@@ -38,6 +38,7 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan 
+        working-directory: ./Terraform
         continue-on-error: false
 
 

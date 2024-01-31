@@ -1,7 +1,7 @@
 # Test and deploy VPC AWS network.
 
 
-name: Terraform Deploy
+name: Terraform Workflow
 
 on:
   push:
@@ -25,11 +25,16 @@ jobs:
         with:
           terraform_version: 1.7.1
 
-      - name: Terraform Init
+      - name: Configure AWS credentials
         run: |
-          -backend-config="bucket='vpc-piter-kononihin-terraform'" \
-          -backend-config="key='/dev/vpc/terraform.tfstate'" \
-          -backend-config="region='us-east-1'"
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+
+      - name: Terraform Init
+        run: terraform init \
+          -backend-config="bucket=vpc-piter-kononihin-terraform" \
+          -backend-config="key=/dev/vpc/terraform.tfstate" \
+          -backend-config="region=us-east-1"
         continue-on-error: false
 
       - name: Terraform Plan
@@ -42,11 +47,11 @@ jobs:
 
       - name: Compare Terraform State
         run: |
-          existing_state=$(aws s3 cp s3://vpc-piter-kononihin-terraform/dev/terraform.tfstate -)
+          existing_state=$(aws s3 cp s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate -)
           current_state=$(cat terraform.tfstate)
           if [ "$existing_state" != "$current_state" ]; then
             echo "State has changed. Saving to S3."
-            aws s3 cp terraform.tfstate s3://vpc-piter-kononihin-terraform/dev/terraform.tfstate
+            aws s3 cp terraform.tfstate s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate
           else
             echo "No changes in Terraform state."
           fi

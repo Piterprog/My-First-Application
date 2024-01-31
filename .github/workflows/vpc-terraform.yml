@@ -1,4 +1,7 @@
-name: Terraform AWS Deployment
+# Test and deploy VPC AWS network.
+
+
+name: Terraform Deploy
 
 on:
   push:
@@ -6,10 +9,15 @@ on:
       - main
 
 jobs:
-  deploy:
+  terraform:
     runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Terraform
@@ -17,18 +25,34 @@ jobs:
         with:
           terraform_version: 1.7.1
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-region: us-east-1
 
-      - name: Initialize Terraform
+      - name: Check AWS credentials
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID &&
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY &&
+          aws configure test
+
+      - name: Terraform Init
         run: terraform init
-        working-directory: ./Terraform
-      
-      - name: Destroy Terraform resources
-        run: terraform destroy -auto-approve
-        working-directory: ./Terraform
+        continue-on-error: false
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        continue-on-error: false
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        continue-on-error: false
+
+      - name: Compare Terraform State
+        run: |
+          existing_state=$(aws s3 cp s3://vpc-piter-kononihin-terraform/dev/terraform.tfstate -)
+          current_state=$(cat terraform.tfstate)
+          if [ "$existing_state" != "$current_state" ]; then
+            echo "State has changed. Saving to S3."
+            aws s3 cp terraform.tfstate s3://vpc-piter-kononihin-terraform/dev/terraform.tfstate
+          else
+            echo "No changes in Terraform state."
+          fi
+        continue-on-error: false
 

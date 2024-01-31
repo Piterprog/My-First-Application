@@ -13,6 +13,14 @@ provider "aws" {
   region = "us-east-1"
 }
 
+terraform {
+  backend "s3" {
+    bucket = "vpc-piter-kononihin-terraform"
+    key    = "dev/vpc/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
 #--------------------------------------VPC + IGW -----------------------------------------
 
 data "aws_availability_zones" "available" {}
@@ -82,7 +90,7 @@ resource "aws_eip" "nat" {
 resource "aws_nat_gateway" "nat" {
   count         = length(var.private_subnet_cidrs)
   allocation_id = aws_eip.nat[count.index].id 
-  subnet_id     = element(aws_subnet.public_subnets[*].id,count.index)
+  subnet_id     = element(aws_subnet.public_subnets[*].id, count.index)
   tags = {
     Name = "${var.env}-nat-gw-${count.index + 1}"
   }
@@ -118,7 +126,7 @@ resource "aws_route_table" "private_subnets" {
 
 resource "aws_route_table_association" "private_routes" {
   count          = length(aws_subnet.private_subnets[*].id)
-  route_table_id = aws_route_table.private_subnets[count.index].id 
+  route_table_id = aws_route_table.private_subnets[count.index].id
   subnet_id      = element(aws_subnet.private_subnets[*].id, count.index)
 }
 

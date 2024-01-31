@@ -1,12 +1,8 @@
 # Test and deploy VPC AWS network.
 
 
+name: Terraform Destroy VPC
 
-Jobs
-Run details
-Workflow file for this run
-.github/workflows/vpc-terraform.yml at 2310e12
-name: Terraform AWS Deployment
 
 on:
   push:

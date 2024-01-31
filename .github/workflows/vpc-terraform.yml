@@ -30,6 +30,19 @@ jobs:
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
 
+      - name: Compare Terraform State
+        run: |
+          existing_state=$(aws s3 cp s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate -)
+          current_state=$(cat terraform.tfstate)
+          if [ "$existing_state" != "$current_state" ]; then
+            echo "State has changed. Saving to S3."
+            aws s3 cp terraform.tfstate s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate
+          else
+            echo "No changes in Terraform state."
+          fi
+        continue-on-error: false
+  
+
       - name: Terraform Init
         run: terraform init -backend-config="bucket=vpc-piter-kononihin-terraform" -backend-config="key=/dev/vpc/terraform.tfstate" -backend-config="region=us-east-1"
         continue-on-error: false
@@ -42,16 +55,4 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        continue-on-error: false
-
-      - name: Compare Terraform State
-        run: |
-          existing_state=$(aws s3 cp s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate -)
-          current_state=$(cat terraform.tfstate)
-          if [ "$existing_state" != "$current_state" ]; then
-            echo "State has changed. Saving to S3."
-            aws s3 cp terraform.tfstate s3://vpc-piter-kononihin-terraform/dev/vpc/terraform.tfstate
-          else
-            echo "No changes in Terraform state."
-          fi
         continue-on-error: false

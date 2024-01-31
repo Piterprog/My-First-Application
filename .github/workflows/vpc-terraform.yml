@@ -27,7 +27,7 @@ jobs:
 
       - name: Terraform Init
         run: |
-            /home/runner/work/_temp/2631cda3-1b61-45e2-b0ac-4c0a004fbc60/terraform-bin init \
+            /usr/local/bin/terraform init \
               -backend-config="bucket='vpc-piter-kononihin-terraform'" \
               -backend-config="key='/dev/vpc/terraform.tfstate'" \
               -backend-config="region='us-east-1'"

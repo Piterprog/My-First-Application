@@ -162,7 +162,7 @@ resource "aws_route_table_association" "database_routes" {
 resource "aws_security_group" "Security_vpc" {
   name        = var.security_group_name
   description = "Security group"
-  vpc_id      = var.aws_vpc_id
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "TLS from VPC"

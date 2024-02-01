@@ -27,6 +27,6 @@ variable "database_subnet_cidrs" {
   ]
 }
 
-variable "security_group_name" {
+variable "Security_vpc_Musad" {
   description = "Security group for HTTPS , HTTP "
 }

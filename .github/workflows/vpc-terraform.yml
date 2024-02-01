@@ -1,4 +1,4 @@
-
+# Test and deploy VPC AWS network.
 
 
 name: Terraform Destroy VPC
@@ -7,7 +7,7 @@ name: Terraform Destroy VPC
 on:
   push:
     branches:
-      - main
+      
 
 jobs:
   deploy:
@@ -28,6 +28,14 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: us-east-1
 
+      - name: Initialize Terraform
+        run: terraform init
+        working-directory: ./Terraform
+
+      - name: Apply Terraform changes
+        run: terraform apply -auto-approve
+        working-directory: ./Terraform
+      
       - name: Destroy Terraform resources
         run: terraform destroy -auto-approve
         working-directory: ./Terraform

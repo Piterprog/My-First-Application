@@ -26,3 +26,7 @@ variable "database_subnet_cidrs" {
     "10.0.22.0/24"
   ]
 }
+
+variable "security_group_name" {
+  description = "Security group for HTTPS , HTTP "
+}

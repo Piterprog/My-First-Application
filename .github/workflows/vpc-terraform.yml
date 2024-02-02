@@ -35,3 +35,10 @@ jobs:
 
       - name: Apply changes
         run: terraform apply -auto-approve
+
+      - name: Apply Terraform
+        run: |
+           terraform init
+           terraform plan
+           terraform apply -auto-approve
+    

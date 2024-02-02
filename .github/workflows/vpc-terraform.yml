@@ -1,9 +1,5 @@
 
-Piter Kononihin <piterbog@gmail.com>
-ср, 31 янв., 21:17 (2 дня назад)
-кому: мне
-
-name: Terraform Deploy
+name: Terraform AWS Deployment
 
 on:
   push:
@@ -31,26 +27,8 @@ jobs:
 
       - name: Initialize Terraform
         run: terraform init
-        continue-on-error: false
+        working-directory: ./Terraform
 
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan
-        continue-on-error: false
-
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
-        continue-on-error: false
-
-      - name: Compare Terraform State
-        run: |
-          existing_state=$(aws s3 cp s3://your-bucket-name/path/to/terraform.tfstate -)
-          current_state=$(cat terraform.tfstate)
-          if [ "$existing_state" != "$current_state" ]; then
-            echo "State has changed. Saving to S3."
-            aws s3 cp terraform.tfstate s3://vpc-piter-kononihin-terraform/dev/vpc//terraform.tfstate
-          else
-            echo "No changes in Terraform state."
-          fi
-        continue-on-error: false
-
-        
+      - name: Apply Terraform changes
+        run: terraform apply -auto-approve
+        working-directory: ./Terraform

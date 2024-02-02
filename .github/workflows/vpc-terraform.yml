@@ -1,7 +1,4 @@
-# Test and deploy VPC AWS network.
-
-
-name: Your Workflow
+name: Terraform CI/CD
 
 on:
   push:
@@ -9,10 +6,11 @@ on:
       - main
 
 jobs:
-  deploy:
+  terraform:
     runs-on: ubuntu-latest
 
     env:
+      AWS_REGION: your-aws-region
       TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
@@ -20,14 +18,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Terraform
+      - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: "1.7.1"
+          terraform_version: "0.15.x"
 
-      - name: Initialize Terraform
-        run: terraform init
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq -y
 
-      - name: Apply Terraform
-        run: terraform apply -auto-approve
+      - name: Terraform Init
+        run: |
+          terraform init
 
+      - name: Terraform Validate
+        run: |
+          terraform validate
+
+      - name: Terraform Plan
+        run: |
+          terraform plan -out=tfplan
+
+      - name: Check Terraform State on S3
+        run: |
+          terraform show -json tfplan | jq -r .resource_changes[].change.actions | grep "create\|update\|delete"

@@ -1,4 +1,4 @@
-как# My Terraform
+# My Terraform
 # - VPC
 # - Internet Gateway
 # - Nat for Private Subnets

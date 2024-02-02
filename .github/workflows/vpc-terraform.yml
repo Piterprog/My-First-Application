@@ -21,7 +21,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: "0.15.x"
+          terraform_version: "1.7.1"
 
       - name: Install jq
         run: |

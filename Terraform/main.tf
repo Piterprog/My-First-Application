@@ -151,8 +151,8 @@ resource "aws_route_table_association" "database_routes" {
 
 #----------------------------------------------Security Group--------------------------------
 
-resource "aws_security_group" "Security_vpc" {
-  name        = "Serurity_vpc"
+resource "aws_security_group" "Security_vpc_Musad" {
+  name        = "Security_vpc_MusadSS"
   description = "Security group"
   vpc_id      = aws_vpc.main.id 
 

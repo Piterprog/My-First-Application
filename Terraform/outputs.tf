@@ -20,17 +20,10 @@ output "database_subnet_ids" {
 }
 
 output "security_group_id" {
-  value = aws_security_group.Security_vpc.id
+  value = aws_security_group.Security_vpc_Musad.id
 }
 
 output "security_group_name" {
   value = aws_security_group.Security_vpc_Musad.name
 }
-output "egress_rule" {
-  value = {
-    from_port   = aws_security_group.Security_vpc_Musad.egress[0].from_port
-    to_port     = aws_security_group.Security_vpc_Musad.egress[0].to_port
-    protocol    = aws_security_group.Security_vpc_Musad.egress[0].protocol
-    cidr_blocks = aws_security_group.Security_vpc_Musad.egress[0].cidr_blocks
-  }
-}
+

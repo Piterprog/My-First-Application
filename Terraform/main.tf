@@ -13,7 +13,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-
 #--------------------------------------VPC + IGW -----------------------------------------
 
 data "aws_availability_zones" "available" {}
@@ -152,11 +151,10 @@ resource "aws_route_table_association" "database_routes" {
 
 #----------------------------------------------Security Group--------------------------------
 
-resource "aws_security_group" "Security_vpc_Musad" {
-  name        = var.Security_vpc_Musad
+resource "aws_security_group" "Security_vpc" {
+  name        = "Serurity_vpc"
   description = "Security group"
-  vpc_id      = var.vpc_id
-
+  vpc_id      = aws_vpc.main.id 
 
   ingress {
     description = "TLS from VPC"

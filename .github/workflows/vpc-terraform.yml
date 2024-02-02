@@ -35,6 +35,6 @@ jobs:
 
       - name: Apply changes
         run: terraform apply -auto-approve
-
+        working-directory: ./Terraform
       
     

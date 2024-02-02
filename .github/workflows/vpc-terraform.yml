@@ -38,7 +38,7 @@ jobs:
 
       - name: Terraform Plan
         run: |
-          cd Terraform/main.tf
+          cd Terraform
           terraform plan -out=tfplan
 
       - name: Check Terraform State on S3

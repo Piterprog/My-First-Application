@@ -191,12 +191,15 @@ resource "aws_security_group" "Security_vpc_Musad" {
    description = var.Security_database
    vpc_id      = aws_vpc.main.id
 
-   ingress = {
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
-    cidr_blocks = var.database_subnet_cidrs
-   }
+ ingress = [
+    for cidr_block in var.database_subnet_cidrs : {
+      from_port   = 3306
+      to_port     = 3306
+      protocol    = "tcp"
+      cidr_blocks = [cidr_block]
+    }
+  ]
+
 }
 
 

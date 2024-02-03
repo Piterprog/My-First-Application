@@ -202,9 +202,13 @@ resource "aws_security_group" "Security_vpc_Musad" {
       prefix_list_ids  = []
       security_groups  = []
       self             = false
-  }
-    
+   }  
   ]
+
+  tags = {
+    "Database zone B" = "Zone B"
+    "Database zone A" = "Zone A"
+  }
 }
 
 

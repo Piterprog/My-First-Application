@@ -187,16 +187,15 @@ resource "aws_security_group" "Security_vpc_Musad" {
 #----------------------------------- Security group for Database ----------------------------
 
  resource "aws_security_group" "database_sg" {
-  count        = length(var.database_subnet_cidrs)
    name        = var.Security_database
    description = var.Security_database
    vpc_id      = aws_vpc.main.id
 
    ingress = {
-    from_port = 3306
-    to_port   = 3306
-    protocol  = "tcp"
-    cidr_blocks = element(var.database_subnet_cidrs, count.index)
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = var.database_subnet_cidrs
    }
 }
 

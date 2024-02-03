@@ -41,6 +41,7 @@ variable "Security_database" {
 }
 
 variable "security_group_name" {
+  type        = list(string)
   description = "Name for security group"
-  default     = "Database-group"
+  default     = ["Database-group"]
 }

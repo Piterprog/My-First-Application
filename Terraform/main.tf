@@ -161,7 +161,7 @@ resource "aws_security_group" "Security_vpc_Musad" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = var.Security_vpc_Musad
+    cidr_blocks = [var.Security_vpc_Musad]
   }
 
   ingress {
@@ -169,14 +169,14 @@ resource "aws_security_group" "Security_vpc_Musad" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = var.Security_vpc_Musad
+    cidr_blocks = [var.Security_vpc_Musad]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = var.Security_vpc_Musad
+    cidr_blocks = [var.Security_vpc_Musad]
   }
 
   tags = {
@@ -187,8 +187,8 @@ resource "aws_security_group" "Security_vpc_Musad" {
 #----------------------------------- Security group for Database ----------------------------
 
  resource "aws_security_group" "database_sg" {
-   name        = var.Security_database
-   description = var.Security_database
+   name        = var.Security_database[0]
+   description = var.Security_database[1]
    vpc_id      = aws_vpc.main.id
 
  ingress = [
@@ -196,7 +196,7 @@ resource "aws_security_group" "Security_vpc_Musad" {
       from_port   = 3306
       to_port     = 3306
       protocol    = "tcp"
-      cidr_blocks = [cidr_block]
+      cidr_blocks = [cidr_block[0]]
     }
   ]
 

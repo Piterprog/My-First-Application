@@ -196,10 +196,15 @@ resource "aws_security_group" "Security_vpc_Musad" {
       from_port   = 3306
       to_port     = 3306
       protocol    = "tcp"
-      cidr_blocks = [cidr_block[0]]
-    }
+      description = "MySQL traffic"
+      cidr_blocks = [cidr_block]
+      ipv6_cidr_blocks = [] 
+      prefix_list_ids  = []
+      security_groups  = []
+      self             = false
+  }
+    
   ]
-
 }
 
 

@@ -149,7 +149,7 @@ resource "aws_route_table_association" "database_routes" {
   subnet_id      = element(aws_subnet.database_subnets[*].id, count.index)
 }
 
-#----------------------------------------------Security Group--------------------------------
+#----------------------------------------------Security Group for VPC ---------------------------
 
 resource "aws_security_group" "Security_vpc_Musad" {
   name        = "Security_vpc_Musad"
@@ -161,7 +161,7 @@ resource "aws_security_group" "Security_vpc_Musad" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.Security_vpc_Musad
   }
 
   ingress {
@@ -169,19 +169,34 @@ resource "aws_security_group" "Security_vpc_Musad" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.Security_vpc_Musad
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.Security_vpc_Musad
   }
 
   tags = {
     Name = "Security group for HTTPS , HTTP"
   }
+}
+
+#----------------------------------- Security group for Database ----------------------------
+
+ resource "aws_security_group_db" "database.sg" {
+   name        = var.Security_database
+   description = var.Security_database
+   vpc_id      = aws_vpc.main.id
+
+   ingress = {
+    from_port = 3306
+    to_port   = 3306
+    protocol  = "tcp"
+    cidr_blocks = element(var.database_subnet_cidrs, count.index)
+   }
 }
 
 

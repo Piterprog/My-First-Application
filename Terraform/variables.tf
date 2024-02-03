@@ -31,3 +31,11 @@ variable "Security_vpc_Musad" {
   description = "Security group for HTTPS , HTTP "
   default     = "10.0.0.0/0"
 }
+
+variable "Security_database" {
+  description = "Security froup database port 3306"
+  default = [
+     "10.0.12.0/24",
+     "10.0.22.0/24"
+  ] 
+}

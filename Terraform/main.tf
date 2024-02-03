@@ -186,7 +186,7 @@ resource "aws_security_group" "Security_vpc_Musad" {
 
 #----------------------------------- Security group for Database ----------------------------
 
- resource "aws_security_group_db" "database.sg" {
+ resource "aws_security_group" "database.sg" {
    name        = var.Security_database
    description = var.Security_database
    vpc_id      = aws_vpc.main.id

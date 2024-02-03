@@ -32,16 +32,4 @@ variable "Security_vpc_Musad" {
   default     = "0.0.0.0/0"
 }
 
-variable "Security_database" {
-  description = "Security froup database port 3306"
-  default = [
-     "10.0.12.0/24",
-     "10.0.22.0/24"
-  ] 
-}
-
-variable "security_group_name" {
-  type        = list(string)
-  description = "Name for security group"
-  default     = ["Database-group"]
-}
+ 

@@ -39,3 +39,8 @@ variable "Security_database" {
      "10.0.22.0/24"
   ] 
 }
+
+variable "security_group_name" {
+  description = "Name for security group"
+  default     = "Database-group"
+}

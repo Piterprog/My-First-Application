@@ -5,7 +5,7 @@ name: Build and Push to ECR
 
 on:
   push:
-    paths:
+    branches:
       - main
 
 jobs:

@@ -5,8 +5,8 @@ FROM ubuntu
 RUN apt-get update && apt-get install -y nginx
 
 # Копируем файлы HTML и CSS
-COPY ./web/pages /var/www/html/
-COPY ./web/styles /var/www/html/styles/
+COPY ./Web/pages /var/www/html/
+COPY ./Web/styles /var/www/html/styles/
 
 # Открываем порт 80
 EXPOSE 80

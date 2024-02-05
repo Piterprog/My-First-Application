@@ -3,7 +3,7 @@ variable "vpc_cidr" {
 }
 
 variable "env" {
-  default = "dev"
+  default = "piterbog"
 }
 
 variable "public_subnet_cidrs" {

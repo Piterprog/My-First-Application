@@ -30,9 +30,9 @@ jobs:
     - name: Build and push Docker image
       run: |
         image_tag=$(date +'%y%m%d%h%m%s')
-        
-
+    
         docker build -t 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$image_tag .
-        docker tag 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$image_tag ${{ steps.login-ecr.outputs.registry }}/${{ github.repository }}/381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$image_tag
-
-        docker push ${{ steps.login-ecr.outputs.registry }}/${{ github.repository }}/381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$image_tag
+        docker tag 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$image_tag ${{ steps.login-ecr.outputs.registry }}/piterbog:$image_tag
+    
+        docker push ${{ steps.login-ecr.outputs.registry }}/piterbog:$image_tag
+    

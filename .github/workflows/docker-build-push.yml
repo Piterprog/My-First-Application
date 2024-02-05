@@ -32,7 +32,7 @@ jobs:
         IMAGE_TAG=$(date +'%Y%m%d%H%M%S')
         
 
-        docker build -t 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$IMAGE_TAG .
-        docker tag 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$IMAGE_TAG ${{ steps.login-ecr.outputs.registry }}/${{ github.repository }}/381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$IMAGE_TAG
+        docker build -t 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$image_tag .
+        docker tag 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$image_tag ${{ steps.login-ecr.outputs.registry }}/${{ github.repository }}/381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$image_tag
 
-        docker push ${{ steps.login-ecr.outputs.registry }}/${{ github.repository }}/381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$IMAGE_TAG
+        docker push ${{ steps.login-ecr.outputs.registry }}/${{ github.repository }}/381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:$image_tag

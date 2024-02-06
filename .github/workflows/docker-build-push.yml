@@ -8,8 +8,8 @@ on:
     branches:
       - main
     paths:
-      - 'web/**/*.html' 
-      - 'web/**/*.css'
+      - 'Web/**/*.html' 
+      - 'Web/**/*.css'
 
 jobs:
   build-and-push:

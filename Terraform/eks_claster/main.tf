@@ -33,7 +33,7 @@ data "terraform_remote_state" "vpc" {
 #----------------------------------------------- AMI rule -----------------------------------------------
 
 data "aws_vpc" "existing_vpc" {
-  id = [data.terraform_remote_state.vpc.outputs.vpc_id]
+  id = data.terraform_remote_state.vpc.outputs.vpc_id
 }
 
 resource "aws_iam_role" "eks_cluster_role" {
@@ -57,9 +57,18 @@ resource "aws_iam_policy_attachment" "eks_cluster_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-# IAM роль для нод (Node IAM Role)
 resource "aws_iam_role" "eks_node_role" {
-  name = "eks-node-role"
+  name               = "eks-node-role"
+  assume_role_policy = jsonencode({
+    Version   = "2012-10-17",
+    Statement = [{
+      Effect    = "Allow",
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      },
+      Action    = "sts:AssumeRole"
+    }]
+  })
 }
 
 resource "aws_iam_policy_attachment" "eks_node_policy_attachment" {
@@ -74,9 +83,18 @@ resource "aws_iam_policy_attachment" "eks_cni_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
 
-# IAM роль для управления нодами (Node Instance Role)
 resource "aws_iam_role" "eks_node_instance_role" {
-  name = "eks-node-instance-role"
+  name               = "eks-node-instance-role"
+  assume_role_policy = jsonencode({
+    Version   = "2012-10-17",
+    Statement = [{
+      Effect    = "Allow",
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      },
+      Action    = "sts:AssumeRole"
+    }]
+  })
 }
 
 resource "aws_iam_policy_attachment" "eks_node_instance_policy_attachment" {

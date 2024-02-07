@@ -60,7 +60,7 @@ resource "aws_autoscaling_group" "eks_nodes" {
   max_size             = 3                   
   desired_capacity     = 2                   
   launch_configuration = aws_launch_configuration.eks_nodes.id
-  vpc_zone_identifier  = data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
+  vpc_zone_identifier  = [for subnet_id in data.terraform_remote_state.vpc.outputs.private_subnet_ids : subnet_id]
 }
 
 

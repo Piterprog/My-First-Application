@@ -61,10 +61,6 @@ resource "aws_autoscaling_group" "eks_nodes" {
   desired_capacity     = 2                   
   launch_configuration = aws_launch_configuration.eks_nodes.id
   vpc_zone_identifier  = data.terraform_remote_state.vpc.outputs.private_subnet_ids
-
-  tags = {
-    Name = "eks-worker-node"  # Укажите имя тега
-  }
 }
 
 

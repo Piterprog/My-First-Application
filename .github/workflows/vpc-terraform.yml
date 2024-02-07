@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  job1:
+  create_vpc:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -37,7 +37,8 @@ jobs:
       run: terraform apply -auto-approve
       working-directory: ./Terraform
 
-  job2:
+  cretae_eks_claster:
+      needs: [create_vpc]
       runs-on: ubuntu-latest
       steps:
         - name: Checkout repository

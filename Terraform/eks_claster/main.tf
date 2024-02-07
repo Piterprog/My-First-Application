@@ -36,45 +36,7 @@ data "aws_vpc" "existing_vpc" {
   id = [data.terraform_remote_state.vpc.outputs.vpc_id]
 }
 
-<<<<<<< HEAD
-resource "aws_eks_cluster" "eks_cluster" {
-  name     = "piterbog_claster"
-  role_arn = aws_iam_role.eks_cluster.arn
-
-   vpc_config {
-    subnet_ids = [
-      for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) : 
-        data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
-    ]
-  }
-}
-
-resource "aws_launch_configuration" "eks_nodes" {
-  name          = "eks-worker-nodes"
-  image_id      = "ami-0c7217cdde317cfec"  
-  instance_type = "t2.micro"               
-  key_name      = "SSH"         
-
-
-}
-
-resource "aws_autoscaling_group" "eks_nodes" {
-  name                 = "eks-worker-nodes"
-  min_size             = 1                   
-  max_size             = 3                   
-  desired_capacity     = 2                   
-  launch_configuration = aws_launch_configuration.eks_nodes.id
-  vpc_zone_identifier  = [for subnet_id in data.terraform_remote_state.vpc.outputs.private_subnet_ids : subnet_id]
-}
-
-
-#-------------------------------------------------- IAM roles ------------------------------------------
-
-resource "aws_iam_role" "eks_cluster" {
-=======
-# IAM роль для управления кластером (Control Plane Role)
 resource "aws_iam_role" "eks_cluster_role" {
->>>>>>> dccbe0e (Start)
   name = "eks-cluster-role"
 
   assume_role_policy = jsonencode({
@@ -145,9 +107,6 @@ resource "aws_iam_policy_attachment" "eks_fargate_policy_attachment" {
 }
 
 
-<<<<<<< HEAD
-#------------------------------------------------ END --------------------------------------------------
-=======
 resource "aws_eks_cluster" "eks_cluster" {
   name     = "piter-eks-cluster"
   role_arn = aws_iam_role.eks_cluster_role.arn
@@ -177,7 +136,6 @@ resource "aws_eks_node_group" "eks_nodes" {
     min_size     = 1  
   }
   instance_types = ["t2.micro"]
-  ami_type = "AL2_x86_64"S
+  ami_type = "AL2_x86_64"
 }
 
->>>>>>> dccbe0e (Start)

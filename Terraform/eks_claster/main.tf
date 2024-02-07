@@ -168,7 +168,7 @@ resource "aws_iam_policy_attachment" "eks_fargate_policy_attachment" {
 
 #------------------------------------------- EKS cluster ----------------------------------------------
 
-resource "aws_eks_cluster" "eks_cluster" {
+resource "aws_eks_cluster" "piter-eks-cluster" {
   name     = "piter-eks-cluster"
   role_arn = aws_iam_role.eks_role.arn
   version  = "1.29"

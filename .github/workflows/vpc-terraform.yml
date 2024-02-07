@@ -30,11 +30,11 @@ jobs:
       working-directory: ./Terraform
 
     - name: Apply Terraform changes
-      run: terraform apply -auto-approve
+      run: terraform destroy -auto-approve
       working-directory: ./Terraform
 
     - name: Apply changes
-      run: terraform apply -auto-approve
+      run: terraform destroy -auto-approve
       working-directory: ./Terraform
 
   cretae_eks_claster:
@@ -61,5 +61,5 @@ jobs:
           working-directory: ./Terraform/eks_claster
         
         - name: Apply Terraform changes
-          run: terraform apply -auto-approve
+          run: terraform destroy -auto-approve
           working-directory: ./Terraform/eks_claster

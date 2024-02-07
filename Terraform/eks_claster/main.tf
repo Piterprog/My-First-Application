@@ -50,7 +50,6 @@ resource "aws_iam_role" "eks_cluster_role" {
     }]
   })
 }
-#--------------------------------------------------- New ------------------------------------------------
 
 resource "aws_iam_role" "eks_role" {
   name               = "eks-role"
@@ -92,9 +91,6 @@ resource "aws_iam_role_policy_attachment" "eks_attachment" {
   role       = aws_iam_role.eks_role.name
   policy_arn = aws_iam_policy.eks_policy.arn
 }
-
-#---------------------------------------------------- New -----------------------------------------------
-
 
 resource "aws_iam_policy_attachment" "eks_cluster_policy_attachment" {
   name       = "eks-cluster-policy-attachment"
@@ -169,6 +165,28 @@ resource "aws_iam_policy_attachment" "eks_fargate_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
 }
 
+
+#--------------------------------------------------- New ------------------------------------------------
+
+resource "aws_iam_role" "eks_role" {
+  name               = "eks-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "eks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+#------------------------------------------- EKS cluster ----------------------------------------------
 
 resource "aws_eks_cluster" "eks_cluster" {
   name     = "my-cluster"

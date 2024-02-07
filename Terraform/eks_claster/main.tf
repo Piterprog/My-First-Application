@@ -82,6 +82,7 @@ resource "aws_launch_configuration" "eks_nodes" {
 }
 
 resource "aws_autoscaling_group" "eks_nodes" {
+  name                 = "eks-nodes"
   desired_capacity     = 2
   max_size             = 3
   min_size             = 1

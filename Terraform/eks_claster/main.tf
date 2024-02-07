@@ -44,6 +44,35 @@ resource "aws_eks_cluster" "eks_cluster" {
     ]
   }
 }
+provider "aws" {
+  region = "us-east-1"  # Укажите ваш регион AWS
+}
+
+data "aws_eks_cluster" "cluster" {
+  name = "your-eks-cluster-name"
+}
+
+resource "aws_launch_configuration" "eks_nodes" {
+  name          = "eks-worker-nodes"
+  image_id      = "ami-0c7217cdde317cfec"  
+  instance_type = "t2.micro"               
+  key_name      = "SSH"         
+
+  # Другие настройки launch configuration (опционально)
+}
+
+resource "aws_autoscaling_group" "eks_nodes" {
+  name                 = "eks-worker-nodes"
+  min_size             = 1                   # Минимальное количество экземпляров
+  max_size             = 3                   # Максимальное количество экземпляров
+  desired_capacity     = 2                   # Желаемое количество экземпляров
+  launch_configuration = aws_launch_configuration.eks_nodes.id
+  vpc_zone_identifier  = data.terraform_remote_state.vpc.outputs.private_subnet_ids
+
+  tags = {
+    Name = "eks-worker-node"  # Укажите имя тега
+  }
+}
 
 
 #-------------------------------------------------- IAM roles ------------------------------------------
@@ -73,21 +102,5 @@ resource "aws_iam_role_policy_attachment" "eks_worker_nodes" {
   role       = aws_iam_role.eks_cluster.name
 }
 
-#---------------------------------------- My worker nodes --------------------------------------------
-
-resource "aws_launch_configuration" "eks_nodes" {
-  name = "worker-nodes"
-  image_id = "ami-0c7217cdde317cfec"  
-  instance_type = "t2.micro"  
-}
-
-resource "aws_autoscaling_group" "eks_nodes" {
-  name                 = "eks-nodes"
-  desired_capacity     = 2
-  max_size             = 3
-  min_size             = 1
-  launch_configuration = aws_launch_configuration.eks_nodes.id
-  vpc_zone_identifier  = data.terraform_remote_state.vpc.outputs.private_subnet_ids
-}
 
 #------------------------------------------------ END --------------------------------------------------

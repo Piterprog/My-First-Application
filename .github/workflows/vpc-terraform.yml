@@ -8,6 +8,7 @@ on:
 
 jobs:
   create_vpc:
+    needs: [cretae_eks_claster]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -38,7 +39,6 @@ jobs:
       working-directory: ./Terraform
 
   cretae_eks_claster:
-      needs: [create_vpc]
       runs-on: ubuntu-latest
       steps:
         - name: Checkout repository

@@ -30,14 +30,15 @@ jobs:
       working-directory: ./Terraform
 
     - name: Apply Terraform changes
-      run: terraform destroy -auto-approve
+      run: terraform applay -auto-approve
       working-directory: ./Terraform
 
     - name: Apply changes
-      run: terraform destroy -auto-approve
+      run: terraform applay -auto-approve
       working-directory: ./Terraform
 
   cretae_eks_claster:
+      needs: [create_vpc]
       runs-on: ubuntu-latest
       steps:
         - name: Checkout repository
@@ -60,5 +61,5 @@ jobs:
           working-directory: ./Terraform/eks_claster
         
         - name: Apply Terraform changes
-          run: terraform destroy -auto-approve
+          run: terraform apply -auto-approve
           working-directory: ./Terraform/eks_claster

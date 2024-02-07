@@ -142,7 +142,7 @@ resource "aws_eks_cluster" "eks_cluster" {
 #---------------------------------------------- (Worker Nodes)-----------------------------------------
 resource "aws_eks_node_group" "eks_nodes" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
-  node_group_name = "My application"
+  node_group_name = "production-nodes"
   node_role_arn   = aws_iam_role.eks_node_instance_role.arn
   subnet_ids      = [
     for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) :

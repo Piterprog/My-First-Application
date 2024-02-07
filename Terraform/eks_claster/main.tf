@@ -169,7 +169,7 @@ resource "aws_iam_policy_attachment" "eks_fargate_policy_attachment" {
 #------------------------------------------- EKS cluster ----------------------------------------------
 
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = "my-cluster"
+  name     = "piter-eks-cluster"
   role_arn = aws_iam_role.eks_role.arn
   version  = "1.29"
 
@@ -184,7 +184,7 @@ resource "aws_eks_cluster" "eks_cluster" {
 
 #---------------------------------------------- (Worker Nodes)-----------------------------------------
 resource "aws_eks_node_group" "eks_nodes" {
-  cluster_name    = aws_eks_cluster.my_cluster.name
+  cluster_name    = aws_eks_cluster.piter-eks-cluster.name
   node_group_name = "production-nodes"
   node_role_arn   = aws_iam_role.eks_node_instance_role.arn
   subnet_ids      = [

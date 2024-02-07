@@ -2,21 +2,24 @@
 # - Worker nodes 
 # - Policys + rols
 
-#--------------------------------------------- EKS claster -----------------------------------------
+#--------------------------------------------- Backend + data -----------------------------------------
 
 provider "aws" {
     region = "us-east-1"
 }
 
-terraform {
+#--------------------------------------------- save in s3 bucket --------------------------------------         
+
+terraform {                       
   backend "s3" {
-    bucket     = "vpc-piter-kononihin-terraform"
-    key        = "dev/eks/terraform.tfstate"
-    region     = "us-east-1"
+    bucket     = "vpc-piter-kononihin-terraform" # My bucket
+    key        = "dev/eks/terraform.tfstate"     # MY bucket path
+    region     = "us-east-1"                     
     encrypt    = true
   }
 }
 
+#-------------------------------------------- pull from s3 bucket ---------------------------------------
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {
@@ -27,12 +30,13 @@ data "terraform_remote_state" "vpc" {
 }
 
 
-data "aws_vpcs" "existing_name" {
-  tags = {
-    Name = "piterbog-vpc"
-  }
+#----------------------------------------------- AMI rule -----------------------------------------------
+
+data "aws_vpc" "existing_vpc" {
+  id = [data.terraform_remote_state.vpc.outputs.vpc_id]
 }
 
+<<<<<<< HEAD
 resource "aws_eks_cluster" "eks_cluster" {
   name     = "piterbog_claster"
   role_arn = aws_iam_role.eks_cluster.arn
@@ -67,29 +71,113 @@ resource "aws_autoscaling_group" "eks_nodes" {
 #-------------------------------------------------- IAM roles ------------------------------------------
 
 resource "aws_iam_role" "eks_cluster" {
+=======
+# IAM роль для управления кластером (Control Plane Role)
+resource "aws_iam_role" "eks_cluster_role" {
+>>>>>>> dccbe0e (Start)
   name = "eks-cluster-role"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17",
+    Version   = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeRole",
-      Effect = "Allow",
+      Effect    = "Allow"
       Principal = {
         Service = "eks.amazonaws.com"
       }
+      Action    = "sts:AssumeRole"
     }]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "eks_cluster" {
+resource "aws_iam_policy_attachment" "eks_cluster_policy_attachment" {
+  name       = "eks-cluster-policy-attachment"
+  roles      = [aws_iam_role.eks_cluster_role.name]
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks_cluster.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks_worker_nodes" {
+# IAM роль для нод (Node IAM Role)
+resource "aws_iam_role" "eks_node_role" {
+  name = "eks-node-role"
+}
+
+resource "aws_iam_policy_attachment" "eks_node_policy_attachment" {
+  name       = "eks-node-policy-attachment"
+  roles      = [aws_iam_role.eks_node_role.name]
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.eks_cluster.name
+}
+
+resource "aws_iam_policy_attachment" "eks_cni_policy_attachment" {
+  name       = "eks-cni-policy-attachment"
+  roles      = [aws_iam_role.eks_node_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+# IAM роль для управления нодами (Node Instance Role)
+resource "aws_iam_role" "eks_node_instance_role" {
+  name = "eks-node-instance-role"
+}
+
+resource "aws_iam_policy_attachment" "eks_node_instance_policy_attachment" {
+  name       = "eks-node-instance-policy-attachment"
+  roles      = [aws_iam_role.eks_node_instance_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+}
+
+resource "aws_iam_role" "eks_fargate_role" {
+  name = "eks-fargate-role"
+
+  assume_role_policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = {
+        Service = "eks-fargate-pods.amazonaws.com"
+      }
+      Action    = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_policy_attachment" "eks_fargate_policy_attachment" {
+  name       = "eks-fargate-policy-attachment"
+  roles      = [aws_iam_role.eks_fargate_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
 }
 
 
+<<<<<<< HEAD
 #------------------------------------------------ END --------------------------------------------------
+=======
+resource "aws_eks_cluster" "eks_cluster" {
+  name     = "piter-eks-cluster"
+  role_arn = aws_iam_role.eks_cluster_role.arn
+  version  = "1.28"
+
+  vpc_config {
+    subnet_ids = [
+     for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) :
+        data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
+        ] 
+    security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id] 
+  }
+}
+
+#---------------------------------------------- (Worker Nodes)-----------------------------------------
+resource "aws_eks_node_group" "eks_nodes" {
+  cluster_name    = aws_eks_cluster.eks_cluster.name
+  node_group_name = "My application"
+  node_role_arn   = aws_iam_role.eks_node_instance_role.arn
+  subnet_ids      = [
+    for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) :
+        data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
+  ] 
+  scaling_config {
+    desired_size = 2  
+    max_size     = 3  
+    min_size     = 1  
+  }
+  instance_types = ["t2.micro"]
+  ami_type = "AL2_x86_64"S
+}
+
+>>>>>>> dccbe0e (Start)

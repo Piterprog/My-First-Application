@@ -39,8 +39,8 @@ resource "aws_eks_cluster" "eks_cluster" {
 
    vpc_config {
     subnet_ids = [
-      for index in range(length(data.terraform_remote_state.vpc.output.private_subnet_ids)) : 
-        data.terraform_remote_state.vpc.output.private_subnet_ids[index]
+      for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) : 
+        data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
     ]
   }
 }
@@ -60,7 +60,7 @@ resource "aws_autoscaling_group" "eks_nodes" {
   max_size             = 3                   
   desired_capacity     = 2                   
   launch_configuration = aws_launch_configuration.eks_nodes.id
-  vpc_zone_identifier  = [for subnet_id in data.terraform_remote_state.vpc.output.private_subnet_ids : subnet_id]
+  vpc_zone_identifier  = [for subnet_id in data.terraform_remote_state.vpc.outputs.private_subnet_ids : subnet_id]
 }
 
 

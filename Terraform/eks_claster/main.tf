@@ -23,6 +23,16 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
+  config = {
+    bucket = "vpc-piter-kononihin-terraform"
+    key    = "dev/eks/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
+
 # Определение роли IAM для узлов EKS
 resource "aws_iam_role" "eks_node_instance_role" {
   name = "eks-node-instance-role"

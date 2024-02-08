@@ -69,8 +69,8 @@ resource "aws_iam_role" "eks_role" {
 EOF
 }
 
-resource "aws_iam_policy" "eks_policy" {
-  name        = "eks-policy"
+resource "aws_iam_policy" "eks_policy-lite" {
+  name        = "eks-policy-lite"
   description = "Policy for EKS access"
 
   policy = <<EOF

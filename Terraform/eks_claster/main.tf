@@ -35,7 +35,8 @@ data "terraform_remote_state" "vpc" {
 data "aws_vpc" "existing_vpc" {
   id = data.terraform_remote_state.vpc.outputs.vpc_id
 }
-# Определение ресурса aws_iam_role
+
+# Определение ресурса aws_iam_role для узлов EKS
 resource "aws_iam_role" "eks_node_instance_role" {
   name = "eks-node-instance-role"
   assume_role_policy = jsonencode({
@@ -84,33 +85,24 @@ resource "aws_iam_role" "eks_node_instance_role" {
   }
 }
 
-
-
-#------------------------------------------- EKS cluster ----------------------------------------------
-
+# Определение кластера EKS
 resource "aws_eks_cluster" "eks_cluster" {
   name     = "my-eks-cluster"
-  role_arn = aws_iam_role.eks_role.arn
+  role_arn = aws_iam_role.eks_node_instance_role.arn
   version  = "1.29"
 
   vpc_config {
-    subnet_ids = [
-     for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) :
-        data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
-        ] 
+    subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnet_ids
     security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id] 
   }
 }
 
-#---------------------------------------------- (Worker Nodes)-----------------------------------------
+# Определение группы узлов EKS
 resource "aws_eks_node_group" "eks_nodes" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "production-nodes"
   node_role_arn   = aws_iam_role.eks_node_instance_role.arn
-  subnet_ids      = [
-    for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) :
-        data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
-  ] 
+  subnet_ids      = data.terraform_remote_state.vpc.outputs.private_subnet_ids
   scaling_config {
     desired_size = 2  
     max_size     = 3  
@@ -119,4 +111,10 @@ resource "aws_eks_node_group" "eks_nodes" {
   instance_types = ["t2.micro"]
   ami_type = "AL2_x86_64"
 }
+
+    
+  
+
+  
+
 

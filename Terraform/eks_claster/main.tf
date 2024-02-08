@@ -49,6 +49,7 @@ data "terraform_remote_state" "eks-clustet" {
 resource "aws_eks_cluster" "my_cluster" {
   name     = "my-cluster"
   role_arn = aws_iam_role.eks_cluster_role.arn
+  version = "1.29"
 
 <<<<<<< HEAD
 # Определение роли IAM для узлов EKS

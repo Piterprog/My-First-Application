@@ -66,6 +66,53 @@ resource "aws_iam_role" "eks_node_instance_role" {
     ]
   })
 }
+resource "aws_iam_role" "eks_node_instance_role" {
+  name = "eks-node-instance-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action    = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  # Прикрепление политики AmazonEKSWorkerNodePolicy
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "eks:*",
+        Resource = "*"
+      }
+    ]
+  })
+
+  # Прикрепление политики AmazonEKS_CNI_Policy
+  inline_policy {
+    name = "AmazonEKS_CNI_Policy"
+    policy = jsonencode({
+      Version = "2012-10-17",
+      Statement = [
+        {
+          Effect = "Allow",
+          Action = [
+            "ec2:DescribeRouteTables",
+            "ec2:CreateRoute",
+            "ec2:ReplaceRoute",
+            "ec2:DeleteRoute"
+          ],
+          Resource = "*"
+        }
+      ]
+    })
+  }
+}
 
 
 #------------------------------------------- EKS cluster ----------------------------------------------

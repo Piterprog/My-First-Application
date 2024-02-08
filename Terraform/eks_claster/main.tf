@@ -35,7 +35,6 @@ data "terraform_remote_state" "vpc" {
 data "aws_vpc" "existing_vpc" {
   id = data.terraform_remote_state.vpc.outputs.vpc_id
 }
-
 # Определение ресурса aws_iam_role
 resource "aws_iam_role" "eks_node_instance_role" {
   name = "eks-node-instance-role"
@@ -51,32 +50,8 @@ resource "aws_iam_role" "eks_node_instance_role" {
       }
     ]
   })
-}
 
-# Определение ресурса aws_iam_policy
-resource "aws_iam_policy" "eks_node_instance_policy" {
-  name        = "eks-node-instance-policy"
-  description = "Policy for EKS node instances"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow",
-        Action   = "eks:*",
-        Resource = "*"
-      }
-    ]
-  })
-}
-
-# Прикрепление политики к роли
-resource "aws_iam_role_policy_attachment" "eks_node_instance_attachment" {
-  role       = aws_iam_role.eks_node_instance_role.name
-  policy_arn = aws_iam_policy.eks_node_instance_policy.arn
-}
-
-  # Прикрепление политики AmazonEKSWorkerNodePolicy
+  # Прикрепление политики к роли
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -108,6 +83,7 @@ resource "aws_iam_role_policy_attachment" "eks_node_instance_attachment" {
     })
   }
 }
+
 
 
 #------------------------------------------- EKS cluster ----------------------------------------------

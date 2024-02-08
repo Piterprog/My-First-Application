@@ -76,22 +76,6 @@ resource "aws_iam_role_policy_attachment" "eks_node_instance_attachment" {
   policy_arn = aws_iam_policy.eks_node_instance_policy.arn
 }
 
-
-resource "aws_iam_role" "eks_node_instance_role" {
-  name = "eks-node-instance-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect    = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-        Action    = "sts:AssumeRole"
-      }
-    ]
-  })
-
   # Прикрепление политики AmazonEKSWorkerNodePolicy
   policy = jsonencode({
     Version = "2012-10-17"

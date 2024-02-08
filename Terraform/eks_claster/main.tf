@@ -63,8 +63,19 @@ resource "aws_iam_policy" "eks_node_instance_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = "eks:*"
+        Effect    = "Allow",
+        Action    = [
+          "ec2:CreateTags",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeRouteTables",
+          "eks:DescribeCluster",
+          "eks:ListNodegroups",
+          "eks:CreateNodegroup",
+          "eks:DeleteNodegroup",
+          "eks:TagResource",
+          "eks:UntagResource",
+          "iam:PassRole"
         Resource = "*"
       }
     ]

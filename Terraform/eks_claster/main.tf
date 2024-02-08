@@ -23,7 +23,7 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
-data "terraform_remote_state" "vpc" {
+data "terraform_remote_state" "eks-clustet" {
   backend = "s3"
   config = {
     bucket = "vpc-piter-kononihin-terraform"

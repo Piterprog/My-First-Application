@@ -89,7 +89,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "eks_attachment" {
   role       = aws_iam_role.eks_role.name
-  policy_arn = aws_iam_policy.eks_policy.arn
+  policy_arn = aws_iam_policy.eks_policy-lite.arn
 }
 
 resource "aws_iam_policy_attachment" "eks_cluster_policy_attachment" {

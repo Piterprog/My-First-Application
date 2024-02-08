@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 # Определение провайдера AWS
+=======
+# - EKS claster
+# - Worker nodes 
+# - Policys + rols
+
+#------------------------------------------------ EKS cluster -----------------------------------------
+
+>>>>>>> d3f964f (push)
 provider "aws" {
-    region = "us-east-1"
+  region = "us-east-1"  
 }
 
 # Определение бэкенда Terraform для сохранения состояния в S3
@@ -13,7 +22,11 @@ terraform {
   }
 }
 
+<<<<<<< HEAD
 # Получение данных о VPC из удаленного состояния Terraform
+=======
+#-------------------------------------------- pull from s3 bucket -------------------------------------
+>>>>>>> d3f964f (push)
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {
@@ -32,7 +45,12 @@ data "terraform_remote_state" "eks-clustet" {
   }
 }
 
+#--------------------------------------------- My cluster ---------------------------------------------
+resource "aws_eks_cluster" "my_cluster" {
+  name     = "my-cluster"
+  role_arn = aws_iam_role.eks_cluster_role.arn
 
+<<<<<<< HEAD
 # Определение роли IAM для узлов EKS
 resource "aws_iam_role" "eks_node_instance_role" {
   name = "eks-node-instance-role"
@@ -125,3 +143,77 @@ resource "aws_eks_node_group" "eks_nodes" {
   
 
 
+=======
+  vpc_config {
+    subnet_ids = [
+      for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) :
+        data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
+    ]
+    security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id] 
+  }
+
+  tags = {
+    Name = "My Cluster App"
+  }
+}
+#--------------------------------------------- Worker Nodes -------------------------------------------
+resource "aws_eks_node_group" "workers" {
+  cluster_name    = aws_eks_cluster.my_cluster.name
+  node_group_name = "workers"
+  node_role_arn   = aws_iam_role.eks_node_role.arn
+
+  scaling_config {
+    desired_size = 2
+    max_size     = 5
+    min_size     = 1
+  }
+
+  subnet_ids = [
+    for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) :
+        data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
+  ]
+
+  disk_size = 20
+  instance_types = ["t2.micro"]
+  
+  tags = {
+    Name = "My Worck nodes"
+  }
+}
+#----------------------------------------------- Cluster and Nodes ruls -------------------------------
+resource "aws_iam_role" "eks_cluster_role" {
+  name               = "eks-cluster-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "eks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "eks_node_role" {
+  name               = "eks-node-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+>>>>>>> d3f964f (push)

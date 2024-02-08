@@ -77,6 +77,7 @@ resource "aws_iam_policy" "eks_node_instance_policy" {
           "eks:UntagResource",
           "iam:PassRole"
         Resource = "*"
+       ]
       }
     ]
   })

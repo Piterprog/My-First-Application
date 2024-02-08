@@ -36,21 +36,46 @@ data "aws_vpc" "existing_vpc" {
   id = data.terraform_remote_state.vpc.outputs.vpc_id
 }
 
-resource "aws_iam_role" "eks_role" {
-  name = "eks-role"
+# Определение ресурса aws_iam_role
+resource "aws_iam_role" "eks_node_instance_role" {
+  name = "eks-node-instance-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Effect    = "Allow"
         Principal = {
-          Service = "eks.amazonaws.com"
+          Service = "ec2.amazonaws.com"
         }
         Action    = "sts:AssumeRole"
       }
     ]
   })
 }
+
+# Определение ресурса aws_iam_policy
+resource "aws_iam_policy" "eks_node_instance_policy" {
+  name        = "eks-node-instance-policy"
+  description = "Policy for EKS node instances"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "eks:*",
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Прикрепление политики к роли
+resource "aws_iam_role_policy_attachment" "eks_node_instance_attachment" {
+  role       = aws_iam_role.eks_node_instance_role.name
+  policy_arn = aws_iam_policy.eks_node_instance_policy.arn
+}
+
 
 resource "aws_iam_role" "eks_node_instance_role" {
   name = "eks-node-instance-role"

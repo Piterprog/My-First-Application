@@ -127,3 +127,9 @@ resource "aws_iam_role_policy_attachment" "ecr_readonly_policy_attachment" {
   role       = aws_iam_role.eks_node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
+
+resource "aws_iam_role_policy_attachment" "attach_rosa_kube_controller_policy" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/ROSAKubeControllerPolicy"
+}
+

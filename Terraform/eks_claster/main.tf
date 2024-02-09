@@ -38,10 +38,11 @@ data "terraform_remote_state" "eks-cluster" {
 }
 
 #--------------------------------------------- My EKS Cluster ---------------------------------------------
+
 resource "aws_eks_cluster" "my_cluster" {
   name     = "my-cluster"
   role_arn = aws_iam_role.eks_cluster_role.arn
-  version  = "1.29"
+  version  = "1.29"  
 
   vpc_config {
     subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids
@@ -53,7 +54,7 @@ resource "aws_eks_cluster" "my_cluster" {
   }
 }
 
-#--------------------------------------------- Worker Nodes -------------------------------------------
+# Создание узлов кластера EKS
 resource "aws_eks_node_group" "workers" {
   cluster_name    = aws_eks_cluster.my_cluster.name
   node_group_name = "workers"
@@ -74,7 +75,7 @@ resource "aws_eks_node_group" "workers" {
   }
 }
 
-#----------------------------------------------- Policies for Cluster and Nodes -------------------------------
+# Политика IAM для роли кластера EKS
 resource "aws_iam_role" "eks_cluster_role" {
   name               = "eks-cluster-role"
   assume_role_policy = jsonencode({
@@ -86,6 +87,65 @@ resource "aws_iam_role" "eks_cluster_role" {
           "Service": "eks.amazonaws.com"
         },
         "Action": "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+# Политика IAM для узлов кластера EKS
+resource "aws_iam_role" "eks_node_role" {
+  name               = "eks-node-role"
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks_management_policy_attachment" {
+  role       = aws_iam_role.eks_cluster_role.name
+  policy_arn = aws_iam_policy.eks_full_access_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = aws_iam_policy.eks_node_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "eks_cni_attachment" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_worker_node_policy_attachment" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+}
+
+resource "aws_iam_policy" "eks_node_policy" {
+  name        = "eks-node-policy"
+  description = "Policy for managing Amazon EKS nodes"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "eks:DescribeNodegroup",
+          "eks:ListNodegroups",
+          "eks:DescribeUpdate",
+          "eks:ListUpdates",
+          "eks:UpdateNodegroupConfig"
+        ],
+        "Resource": "*"
       }
     ]
   })
@@ -117,79 +177,4 @@ resource "aws_iam_policy" "eks_full_access_policy" {
       }
     ]
   })
-}
-
-resource "aws_iam_role" "eks_management_role" {
-  name               = "eks-management-role"
-  assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "eks.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "eks_management_policy_attachment" {
-  role       = aws_iam_role.eks_management_role.name
-  policy_arn = aws_iam_policy.eks_full_access_policy.arn
-}
-
-#------------------------------------------------ Node Policies -----------------------------------------------
-resource "aws_iam_role" "eks_node_role" {
-  name               = "eks-node-role"
-  assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "ec2.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_policy" "eks_node_policy" {
-  name        = "eks-node-policy"
-  description = "Policy for managing Amazon EKS nodes"
-
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "eks:DescribeNodegroup",
-          "eks:ListNodegroups",
-          "eks:DescribeUpdate",
-          "eks:ListUpdates",
-          "eks:UpdateNodegroupConfig"
-        ],
-        "Resource": "*"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment" {
-  role       = aws_iam_role.eks_node_role.name
-  policy_arn = aws_iam_policy.eks_node_policy.arn
-}
-
-resource "aws_iam_role_policy_attachment" "eks_cni_attachment" {
-  role       = aws_iam_role.eks_node_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-}
-
-resource "aws_iam_role_policy_attachment" "eks_worker_node_policy_attachment" {
-  role       = aws_iam_role.eks_node_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }

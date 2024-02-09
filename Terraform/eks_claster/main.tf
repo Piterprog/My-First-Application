@@ -186,10 +186,5 @@ resource "aws_iam_role_policy_attachment" "eks_worker_node_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
-<<<<<<< HEAD
-
-  
-=======
->>>>>>> 7499f13 (destroy)
 
 

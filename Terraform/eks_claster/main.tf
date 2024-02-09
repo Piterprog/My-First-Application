@@ -77,8 +77,38 @@ resource "aws_eks_node_group" "workers" {
   }
 }
 #----------------------------------------------- Cluster and Nodes ruls -------------------------------
-resource "aws_iam_role" "eks_cluster_role" {
-  name               = "eks-cluster-role"
+
+resource "aws_iam_policy" "eks_full_access_policy" {
+  name        = "eks-full-access-policy"
+  description = "Policy allowing full access and deletion of Amazon EKS resources"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "eks:DeleteCluster",
+          "eks:DeleteNodegroup",
+          "eks:DeleteFargateProfile",
+          "eks:DeleteAddon",
+          "eks:DeleteIdentityProviderConfig",
+          "eks:DeleteNodegroup",
+          "eks:DissociateIdentityProviderConfig",
+          "eks:DisassociateFargateProfile",
+          "eks:DisassociateIdentityProviderConfig",
+          "eks:DisassociateNodegroup",
+          "eks:TagResource",
+          "eks:UntagResource"
+        ],
+        "Resource": "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "eks_management_role" {
+  name               = "eks-management-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -95,6 +125,12 @@ resource "aws_iam_role" "eks_cluster_role" {
 EOF
 }
 
+resource "aws_iam_role_policy_attachment" "eks_management_policy_attachment" {
+  role       = aws_iam_role.eks_management_role.name
+  policy_arn = aws_iam_policy.eks_full_access_policy.arn
+}
+
+#------------------------------------------------ Nodes -----------------------------------------------
 resource "aws_iam_role" "eks_node_role" {
   name               = "eks-node-role"
   assume_role_policy = <<EOF
@@ -113,6 +149,33 @@ resource "aws_iam_role" "eks_node_role" {
 EOF
 }
 
+resource "aws_iam_policy" "eks_node_policy" {
+  name        = "eks-node-policy"
+  description = "Policy for managing Amazon EKS nodes"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "eks:DescribeNodegroup",
+          "eks:ListNodegroups",
+          "eks:DescribeUpdate",
+          "eks:ListUpdates",
+          "eks:UpdateNodegroupConfig"
+        ],
+        "Resource": "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = aws_iam_policy.eks_node_policy.arn
+}
+
 resource "aws_iam_role_policy_attachment" "eks_cni_attachment" {
   role       = aws_iam_role.eks_node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
@@ -123,7 +186,10 @@ resource "aws_iam_role_policy_attachment" "eks_worker_node_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
+<<<<<<< HEAD
 
   
+=======
+>>>>>>> 7499f13 (destroy)
 
 

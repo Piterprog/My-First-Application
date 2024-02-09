@@ -28,7 +28,7 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
-data "terraform_remote_state" "eks-clustet" {
+data "terraform_remote_state" "eks-cluster" {
   backend = "s3"
   config = {
     bucket = "vpc-piter-kononihin-terraform"
@@ -44,13 +44,10 @@ resource "aws_eks_cluster" "my_cluster" {
   version = "1.29"
 
   vpc_config {
-    subnet_ids = [
-      for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) :
-        data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
-    ]
+    subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnet_ids
     security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id] 
   }
-
+ 
   tags = {
     Name = "My Cluster App"
   }
@@ -114,4 +111,19 @@ resource "aws_iam_role" "eks_node_role" {
   ]
 }
 EOF
+}
+
+resource "aws_iam_role_policy_attachment" "eks_cni_attachment" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_worker_node_policy_attachment" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_readonly_policy_attachment" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }

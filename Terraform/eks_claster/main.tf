@@ -126,10 +126,9 @@ resource "aws_iam_role" "eks_node_instance_role" {
 resource "aws_iam_role_policy_attachment" "eks_node_instance_role_policy" {
   role       = aws_iam_role.eks_node_instance_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
- 
-  additional_policy_arns = ["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]
-  additional_policy_arns = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
 }
+
+
 
 #-------------------------------------------------- Service Accaunt -----------------------------------
 

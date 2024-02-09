@@ -80,65 +80,38 @@ resource "aws_eks_node_group" "workers" {
   }
 }
 #----------------------------------------------- Cluster and Nodes ruls -------------------------------
-resource "aws_iam_role" "eks_cluster_role" {
-  name               = "eks-cluster-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-}
+# resource "aws_iam_role" "eks_cluster_role" {
+#   name               = "eks-cluster-role"
+#   assume_role_policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Effect": "Allow",
+#       "Principal": {
+#         "Service": "eks.amazonaws.com"
+#       },
+#       "Action": "sts:AssumeRole"
+#     }
+#   ]
+# }
+# EOF
+# }
 
-resource "aws_iam_role" "eks_node_role" {
-  name               = "eks-node-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-}
-
-#---------------------------------------- KubeCTL admin --------------------------------------
-resource "kubernetes_service_account" "my_service_account" {
-  metadata {
-    name      = "my-service-account"
-    namespace = "default"
-  }
-}
-
-# Назначение роли
-resource "kubernetes_cluster_role_binding" "my_cluster_role_binding" {
-  metadata {
-    name = "my-cluster-role-binding"
-  }
-
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "cluster-admin"
-  }
-
-  subject {
-    kind      = "ServiceAccount"
-    name      = kubernetes_service_account.my_service_account.metadata[0].name
-    namespace = kubernetes_service_account.my_service_account.metadata[0].namespace
-  }
-}
+# resource "aws_iam_role" "eks_node_role" {
+#   name               = "eks-node-role"
+#   assume_role_policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Effect": "Allow",
+#       "Principal": {
+#         "Service": "ec2.amazonaws.com"
+#       },
+#       "Action": "sts:AssumeRole"
+#     }
+#   ]
+# }
+# EOF
+# }

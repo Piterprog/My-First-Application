@@ -51,9 +51,9 @@ resource "aws_iam_role" "eks_cluster_role" {
 }
 
 resource "aws_eks_cluster" "eks_cluster" {
-  name                 = "your_cluster_name"
-  role_arn             = aws_iam_role.eks_cluster_role.arn
-  version              = "1.29"
+  name     = "your_cluster_name"
+  role_arn = aws_iam_role.eks_cluster_role.arn
+  version  = "1.28"
 
   vpc_config {
     subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
@@ -132,27 +132,32 @@ resource "aws_eks_node_group" "eks_nodes" {
 
 #-------------------------------------------------- Service Accaunt -----------------------------------
 
-resource "kubernetes_service_account" "my_service_account" {
+resource "kubernetes_cluster_role" "example_role" {
   metadata {
-    name              = "my-service-account"
-    namespace         = "default"
+    name = "example-role"
+  }
+
+  rule {
+    api_groups = ["", "extensions", "apps"]
+    resources  = ["pods", "services", "deployments"]
+    verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
   }
 }
 
-resource "kubernetes_cluster_role_binding" "my_cluster_role_binding" {
+resource "kubernetes_cluster_role_binding" "example_role_binding" {
   metadata {
-    name = "my-cluster-role-binding"
+    name = "example-role-binding"
   }
 
   role_ref {
+    kind     = "ClusterRole"
+    name     = kubernetes_cluster_role.example_role.metadata[0].name
     api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "cluster-admin"
   }
 
   subject {
-    kind      = "ServiceAccount"
-    name      = kubernetes_service_account.my_service_account.metadata.0.name
-    namespace = kubernetes_service_account.my_service_account.metadata.0.namespace
+    kind      = "Admins"  
+    name      = "Kubectl"  
+    api_group = "rbac.authorization.k8s.io"
   }
 }

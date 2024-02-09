@@ -64,6 +64,21 @@ resource "aws_eks_cluster" "eks_cluster" {
 
 #-------------------------------------------------- Worker Nodes -------------------------------------- 
 
+resource "aws_iam_role" "eks_node_instance_role" {
+  name               = "eks-node-instance-role"
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Principal": { "Service": ["ec2.amazonaws.com", "eks.amazonaws.com"] },
+      "Action": "sts:AssumeRole"
+    }]
+  })
+
+  tags = {
+    Name = "EKS Node Instance Role"
+  }
+}
 
 resource "aws_eks_node_group" "eks_nodes" {
   cluster_name        = aws_eks_cluster.eks_cluster.name
@@ -77,8 +92,8 @@ resource "aws_eks_node_group" "eks_nodes" {
     min_size     = 1  
   }
 
-  disk_size = 20
-  instance_types = ["t2.micro"]
+  disk_size       = 20
+  instance_types  = ["t2.micro"]
 }
 
 resource "aws_iam_role" "eks_node_instance_role" {

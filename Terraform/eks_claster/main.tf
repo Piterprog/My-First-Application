@@ -19,20 +19,20 @@ terraform {
 
 
 data "terraform_remote_state" "vpc" {
-  backend = "s3"
-  config = {
-    bucket = "vpc-piter-kononihin-terraform"
-    key    = "dev/vpc/terraform.tfstate"
-    region = "us-east-1"
+  backend      = "s3"
+  config       = {
+    bucket     = "vpc-piter-kononihin-terraform"
+    key        = "dev/vpc/terraform.tfstate"
+    region     = "us-east-1"
   }
 }
 
 data "terraform_remote_state" "eks-cluster" {
-  backend = "s3"
-  config = {
-    bucket = "vpc-piter-kononihin-terraform"
-    key    = "dev/eks/terraform.tfstate"
-    region = "us-east-1"
+  backend      = "s3"
+  config       = {
+    bucket     = "vpc-piter-kononihin-terraform"
+    key        = "dev/eks/terraform.tfstate"
+    region     = "us-east-1"
   }
 }
 
@@ -51,15 +51,52 @@ resource "aws_iam_role" "eks_cluster_role" {
 }
 
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = "your_cluster_name"
-  role_arn = aws_iam_role.eks_cluster_role.arn
-  version  = "1.29"
+  name                 = "your_cluster_name"
+  role_arn             = aws_iam_role.eks_cluster_role.arn
+  version              = "1.29"
 
   vpc_config {
     subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
     security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id] 
   }
 }
+
+resource "aws_iam_policy" "eks_cluster_role" {
+  name        = "example-policy"
+  description = "Example IAM policy for EC2 network interfaces"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": [
+          "ec2:UnassignPrivateIpAddresses",
+          "ec2:ModifyNetworkInterfaceAttribute",
+          "ec2:DetachNetworkInterface",
+          "ec2:DescribeTags",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DescribeInstances",
+          "ec2:DescribeInstanceTypes",
+          "ec2:DeleteNetworkInterface",
+          "ec2:CreateNetworkInterface",
+          "ec2:AttachNetworkInterface",
+          "ec2:AssignPrivateIpAddresses"
+        ],
+        "Effect": "Allow",
+        "Resource": "*",
+        "Sid": "IPV4"
+      },
+      {
+        "Action": "ec2:CreateTags",
+        "Effect": "Allow",
+        "Resource": "arn:aws:ec2:*:*:network-interface/*",
+        "Sid": "CreateTags"
+      }
+    ]
+  })
+}
+#-------------------------------------------------EKS Nodes -------------------------------------------
+
 
 resource "aws_iam_role" "eks_node_instance_role" {
   name               = "eks-node-instance-role"
@@ -84,21 +121,21 @@ resource "aws_eks_node_group" "eks_nodes" {
   subnet_ids          = data.terraform_remote_state.vpc.outputs.private_subnet_ids
 
   scaling_config {
-    desired_size = 2  
-    max_size     = 3  
-    min_size     = 1  
+    desired_size      = 2  
+    max_size          = 3  
+    min_size          = 1  
   }
 
-  disk_size       = 20
-  instance_types  = ["t2.micro"]
+  disk_size           = 20
+  instance_types      = ["t3.micro"]
 }
 
 #-------------------------------------------------- Service Accaunt -----------------------------------
 
 resource "kubernetes_service_account" "my_service_account" {
   metadata {
-    name      = "my-service-account"
-    namespace = "default"
+    name              = "my-service-account"
+    namespace         = "default"
   }
 }
 

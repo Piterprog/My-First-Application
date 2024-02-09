@@ -3,12 +3,11 @@
 # - Policys + rols
 
 #------------------------------------------------ EKS cluster -----------------------------------------
-
 provider "aws" {
   region = "us-east-1"
 }
 
-#-------------------------------------- Backend Configuration for Saving to S3 Bucket -------------------------------------
+
 terraform {                       
   backend "s3" {
     bucket     = "vpc-piter-kononihin-terraform" 
@@ -18,7 +17,7 @@ terraform {
   }
 }
 
-#-------------------------------------------- Data Sources to Pull from S3 Bucket -------------------------------------
+
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {
@@ -37,151 +36,124 @@ data "terraform_remote_state" "eks-cluster" {
   }
 }
 
-#--------------------------------------------- My EKS Cluster ---------------------------------------------
+#--------------------------------------------------- EKS cluster --------------------------------------
+resource "aws_iam_role" "eks_cluster_role" {
+  name               = "eks-cluster-role"
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Principal": { "Service": [
+        "eks.amazonaws.com",
+        "ec2.amazonaws.com",
+        "elasticloadbalancing.amazonaws.com",
+        "autoscaling.amazonaws.com",
+        "cloudformation.amazonaws.com",
+        "eks-fargate.amazonaws.com",
+        "logs.amazonaws.com",
+        "secretsmanager.amazonaws.com",
+        "ssm.amazonaws.com",
+        "rds.amazonaws.com",
+        "kinesis.amazonaws.com",
+        "s3.amazonaws.com"
+      ] },
+      "Action": "sts:AssumeRole"
+    }]
+  })
+}
 
-resource "aws_eks_cluster" "my_cluster" {
-  name     = "my-cluster"
+resource "aws_eks_cluster" "eks_cluster" {
+  name     = "your_cluster_name"
   role_arn = aws_iam_role.eks_cluster_role.arn
-  version  = "1.29"  
+  version  = "1.29"
 
   vpc_config {
-    subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids
-    security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id] 
-  }
- 
-  tags = {
-    Name = "My Cluster App"
+    subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
+    security_group_ids =[data.terraform_remote_state.vpc.outputs.security_group_id] 
   }
 }
 
-# Создание узлов кластера EKS
-resource "aws_eks_node_group" "workers" {
-  cluster_name    = aws_eks_cluster.my_cluster.name
-  node_group_name = "workers"
-  node_role_arn   = aws_iam_role.eks_node_role.arn
+#-------------------------------------------------- Worker Nodes --------------------------------------
+
+resource "aws_eks_node_group" "eks_nodes" {
+  cluster_name        = aws_eks_cluster.eks_cluster.name
+  node_group_name     = "workers"
+  node_role_arn       = aws_iam_role.eks_node_instance_role.arn
+  subnet_ids          = data.terraform_remote_state.vpc.outputs.private_subnet_ids
 
   scaling_config {
-    desired_size = 2
-    max_size     = 5
-    min_size     = 1
+    desired_size = 2  
+    max_size     = 3  
+    min_size     = 1  
   }
 
-  subnet_ids       = data.terraform_remote_state.vpc.outputs.private_subnet_ids
-  disk_size        = 20
-  instance_types   = ["t2.micro"]
+  disk_size = 20
+  instance_types = ["t2.micro"]
   
+  security_group_ids = data.terraform_remote_state.vpc.outputs.security_group_id
+
   tags = {
-    Name = "My Worker Nodes"
+  
+    Name = "EKS Node Group"
+  }
+
+  version = "1.29"
+
+  capacity_type = "SPOT"
+
+  update_config {
+    max_unavailable = 1
+    max_surge       = 1
   }
 }
 
-# Политика IAM для роли кластера EKS
-resource "aws_iam_role" "eks_cluster_role" {
-  name = "eks-cluster-role"
-
+resource "aws_iam_role" "eks_node_instance_role" {
+  name               = "eks-node-instance-role"
   assume_role_policy = jsonencode({
     "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "eks.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
-      }
-    ]
+    "Statement": [{
+      "Effect": "Allow",
+      "Principal": { "Service": "ec2.amazonaws.com" },
+      "Action": "sts:AssumeRole"
+    }]
   })
+
+  tags = {
+    Name = "EKS Node Instance Role"
+  }
 }
 
-# Политика IAM для узлов кластера EKS
-resource "aws_iam_role" "eks_node_role" {
-  name = "eks-node-role"
-
-  assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "ec2.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
-# Прикрепление политики IAM к ролям
-resource "aws_iam_role_policy_attachment" "eks_management_policy_attachment" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = aws_iam_policy.eks_full_access_policy.arn
-}
-
-resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment" {
-  role       = aws_iam_role.eks_node_role.name
-  policy_arn = aws_iam_policy.eks_node_policy.arn
-}
-
-resource "aws_iam_role_policy_attachment" "eks_cni_attachment" {
-  role       = aws_iam_role.eks_node_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-}
-
-resource "aws_iam_role_policy_attachment" "eks_worker_node_policy_attachment" {
-  role       = aws_iam_role.eks_node_role.name
+resource "aws_iam_role_policy_attachment" "eks_node_instance_role_policy" {
+  role       = aws_iam_role.eks_node_instance_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+ 
+  additional_policy_arns = ["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]
+  additional_policy_arns = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
 }
 
-# Политика IAM для управления узлами кластера EKS
-resource "aws_iam_policy" "eks_node_policy" {
-  name = "eks-node-policy"
+#-------------------------------------------------- Service Accaunt -----------------------------------
 
-  description = "Policy for managing Amazon EKS nodes"
-
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "eks:DescribeNodegroup",
-          "eks:ListNodegroups",
-          "eks:DescribeUpdate",
-          "eks:ListUpdates",
-          "eks:UpdateNodegroupConfig"
-        ],
-        "Resource": "*"
-      }
-    ]
-  })
+resource "kubernetes_service_account" "my_service_account" {
+  metadata {
+    name      = "my-service-account"
+    namespace = "default"
+  }
 }
 
-# Политика IAM для полного доступа к кластеру EKS
-resource "aws_iam_policy" "eks_full_access_policy" {
-  name = "eks-full-access-policy"
+resource "kubernetes_cluster_role_binding" "my_cluster_role_binding" {
+  metadata {
+    name = "my-cluster-role-binding"
+  }
 
-  description = "Policy allowing full access and deletion of Amazon EKS resources"
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "cluster-admin"
+  }
 
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "eks:DeleteCluster",
-          "eks:DeleteNodegroup",
-          "eks:DeleteFargateProfile",
-          "eks:DeleteAddon",
-          "eks:DeleteIdentityProviderConfig",
-          "eks:DissociateIdentityProviderConfig",
-          "eks:DisassociateFargateProfile",
-          "eks:DisassociateIdentityProviderConfig",
-          "eks:DisassociateNodegroup",
-          "eks:TagResource",
-          "eks:UntagResource"
-        ],
-        "Resource": "*"
-      }
-    ]
-  })
+  subject {
+    kind      = "ServiceAccount"
+    name      = kubernetes_service_account.my_service_account.metadata.0.name
+    namespace = kubernetes_service_account.my_service_account.metadata.0.namespace
+  }
 }

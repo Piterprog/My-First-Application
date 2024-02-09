@@ -5,10 +5,10 @@
 #------------------------------------------------ EKS cluster -----------------------------------------
 
 provider "aws" {
-  region = "us-east-1"  
+  region = "us-east-1"
 }
 
-#-------------------------------------- backend save to s3 bucket -------------------------------------
+#-------------------------------------- Backend Configuration for Saving to S3 Bucket -------------------------------------
 terraform {                       
   backend "s3" {
     bucket     = "vpc-piter-kononihin-terraform" 
@@ -18,7 +18,7 @@ terraform {
   }
 }
 
-#-------------------------------------------- pull from s3 bucket -------------------------------------
+#-------------------------------------------- Data Sources to Pull from S3 Bucket -------------------------------------
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {
@@ -37,14 +37,14 @@ data "terraform_remote_state" "eks-cluster" {
   }
 }
 
-#--------------------------------------------- My cluster ---------------------------------------------
+#--------------------------------------------- My EKS Cluster ---------------------------------------------
 resource "aws_eks_cluster" "my_cluster" {
   name     = "my-cluster"
   role_arn = aws_iam_role.eks_cluster_role.arn
-  version = "1.29"
+  version  = "1.29"
 
   vpc_config {
-    subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnet_ids
+    subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids
     security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id] 
   }
  
@@ -52,6 +52,7 @@ resource "aws_eks_cluster" "my_cluster" {
     Name = "My Cluster App"
   }
 }
+
 #--------------------------------------------- Worker Nodes -------------------------------------------
 resource "aws_eks_node_group" "workers" {
   cluster_name    = aws_eks_cluster.my_cluster.name
@@ -64,19 +65,16 @@ resource "aws_eks_node_group" "workers" {
     min_size     = 1
   }
 
-  subnet_ids = [
-    for index in range(length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)) :
-        data.terraform_remote_state.vpc.outputs.private_subnet_ids[index]
-  ]
-
-  disk_size = 20
-  instance_types = ["t2.micro"]
+  subnet_ids       = data.terraform_remote_state.vpc.outputs.private_subnet_ids
+  disk_size        = 20
+  instance_types   = ["t2.micro"]
   
   tags = {
-    Name = "My Worck nodes"
+    Name = "My Worker Nodes"
   }
 }
-#----------------------------------------------- Cluster and Nodes ruls -------------------------------
+
+#----------------------------------------------- Policies for Cluster and Nodes -------------------------------
 
 resource "aws_iam_policy" "eks_full_access_policy" {
   name        = "eks-full-access-policy"
@@ -93,7 +91,6 @@ resource "aws_iam_policy" "eks_full_access_policy" {
           "eks:DeleteFargateProfile",
           "eks:DeleteAddon",
           "eks:DeleteIdentityProviderConfig",
-          "eks:DeleteNodegroup",
           "eks:DissociateIdentityProviderConfig",
           "eks:DisassociateFargateProfile",
           "eks:DisassociateIdentityProviderConfig",
@@ -109,20 +106,18 @@ resource "aws_iam_policy" "eks_full_access_policy" {
 
 resource "aws_iam_role" "eks_management_role" {
   name               = "eks-management-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "eks.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "eks_management_policy_attachment" {
@@ -130,23 +125,21 @@ resource "aws_iam_role_policy_attachment" "eks_management_policy_attachment" {
   policy_arn = aws_iam_policy.eks_full_access_policy.arn
 }
 
-#------------------------------------------------ Nodes -----------------------------------------------
+#------------------------------------------------ Node Policies -----------------------------------------------
 resource "aws_iam_role" "eks_node_role" {
   name               = "eks-node-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_policy" "eks_node_policy" {

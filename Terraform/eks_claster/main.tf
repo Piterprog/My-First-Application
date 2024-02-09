@@ -64,6 +64,31 @@ resource "aws_eks_cluster" "eks_cluster" {
 
 #-------------------------------------------------- Worker Nodes -------------------------------------- 
 
+resource "aws_iam_role" "eks_cluster_role" {
+  name               = "eks-cluster-role"
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Principal": { "Service": "eks.amazonaws.com" },
+      "Action": "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_eks_cluster" "eks_cluster" {
+  name     = "your_cluster_name"
+  role_arn = aws_iam_role.eks_cluster_role.arn
+  version  = "1.29"
+
+  vpc_config {
+    subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
+    security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id] 
+  }
+}
+
+#-------------------------------------------------- Worker Nodes -------------------------------------- 
+
 resource "aws_iam_role" "eks_node_instance_role" {
   name               = "eks-node-instance-role"
   assume_role_policy = jsonencode({
@@ -95,6 +120,7 @@ resource "aws_eks_node_group" "eks_nodes" {
   disk_size       = 20
   instance_types  = ["t2.micro"]
 }
+
 
 resource "aws_iam_role" "eks_node_instance_role" {
   name               = "eks-node-instance-role"

@@ -53,7 +53,7 @@ resource "aws_iam_role" "eks_cluster_role" {
 resource "aws_eks_cluster" "eks_cluster" {
   name     = "your_cluster_name"
   role_arn = aws_iam_role.eks_cluster_role.arn
-  version  = "1.27"
+  version  = "1.29"
 
   vpc_config {
     subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids 

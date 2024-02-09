@@ -37,44 +37,6 @@ data "terraform_remote_state" "eks-cluster" {
 }
 
 #--------------------------------------------------- EKS cluster --------------------------------------
-resource "aws_iam_role" "eks_cluster_role" {
-  name               = "eks-cluster-role"
-  assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [{
-      "Effect": "Allow",
-      "Principal": { "Service": [
-        "eks.amazonaws.com",
-        "ec2.amazonaws.com",
-        "elasticloadbalancing.amazonaws.com",
-        "autoscaling.amazonaws.com",
-        "cloudformation.amazonaws.com",
-        "eks-fargate.amazonaws.com",
-        "logs.amazonaws.com",
-        "secretsmanager.amazonaws.com",
-        "ssm.amazonaws.com",
-        "rds.amazonaws.com",
-        "kinesis.amazonaws.com",
-        "s3.amazonaws.com"
-      ] },
-      "Action": "sts:AssumeRole"
-    }]
-  })
-}
-
-resource "aws_eks_cluster" "eks_cluster" {
-  name     = "your_cluster_name"
-  role_arn = aws_iam_role.eks_cluster_role.arn
-  version  = "1.29"
-
-  vpc_config {
-    subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
-    security_group_ids =[data.terraform_remote_state.vpc.outputs.security_group_id] 
-  }
-}
-
-#-------------------------------------------------- Worker Nodes --------------------------------------
-
 resource "aws_eks_node_group" "eks_nodes" {
   cluster_name        = aws_eks_cluster.eks_cluster.name
   node_group_name     = "workers"
@@ -87,48 +49,29 @@ resource "aws_eks_node_group" "eks_nodes" {
     min_size     = 1  
   }
 
-  disk_size = 20
-  instance_types = ["t2.micro"]
-  
-  security_group_ids = data.terraform_remote_state.vpc.outputs.security_group_id
+  disk_size       = 20
+  instance_types  = ["t2.micro"]
+  node_security_group_ids = data.terraform_remote_state.vpc.outputs.security_group_id
 
   tags = {
-  
     Name = "EKS Node Group"
   }
 
   version = "1.29"
 
   capacity_type = "SPOT"
+}
 
-  update_config {
-    max_unavailable = 1
-    max_surge       = 1
+resource "aws_eks_cluster" "eks_cluster" {
+  name     = "your_cluster_name"
+  role_arn = aws_iam_role.eks_cluster_role.arn
+  version  = "1.29"
+
+  vpc_config {
+    subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
+    security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id] 
   }
 }
-
-resource "aws_iam_role" "eks_node_instance_role" {
-  name               = "eks-node-instance-role"
-  assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [{
-      "Effect": "Allow",
-      "Principal": { "Service": "ec2.amazonaws.com" },
-      "Action": "sts:AssumeRole"
-    }]
-  })
-
-  tags = {
-    Name = "EKS Node Instance Role"
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "eks_node_instance_role_policy" {
-  role       = aws_iam_role.eks_node_instance_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-}
-
-
 
 #-------------------------------------------------- Service Accaunt -----------------------------------
 

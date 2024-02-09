@@ -77,7 +77,8 @@ resource "aws_eks_node_group" "workers" {
 
 # Политика IAM для роли кластера EKS
 resource "aws_iam_role" "eks_cluster_role" {
-  name               = "eks-cluster-role"
+  name = "eks-cluster-role"
+
   assume_role_policy = jsonencode({
     "Version": "2012-10-17",
     "Statement": [
@@ -94,7 +95,8 @@ resource "aws_iam_role" "eks_cluster_role" {
 
 # Политика IAM для узлов кластера EKS
 resource "aws_iam_role" "eks_node_role" {
-  name               = "eks-node-role"
+  name = "eks-node-role"
+
   assume_role_policy = jsonencode({
     "Version": "2012-10-17",
     "Statement": [
@@ -109,6 +111,7 @@ resource "aws_iam_role" "eks_node_role" {
   })
 }
 
+# Прикрепление политики IAM к ролям
 resource "aws_iam_role_policy_attachment" "eks_management_policy_attachment" {
   role       = aws_iam_role.eks_cluster_role.name
   policy_arn = aws_iam_policy.eks_full_access_policy.arn
@@ -129,8 +132,10 @@ resource "aws_iam_role_policy_attachment" "eks_worker_node_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
+# Политика IAM для управления узлами кластера EKS
 resource "aws_iam_policy" "eks_node_policy" {
-  name        = "eks-node-policy"
+  name = "eks-node-policy"
+
   description = "Policy for managing Amazon EKS nodes"
 
   policy = jsonencode({
@@ -151,8 +156,10 @@ resource "aws_iam_policy" "eks_node_policy" {
   })
 }
 
+# Политика IAM для полного доступа к кластеру EKS
 resource "aws_iam_policy" "eks_full_access_policy" {
-  name        = "eks-full-access-policy"
+  name = "eks-full-access-policy"
+
   description = "Policy allowing full access and deletion of Amazon EKS resources"
 
   policy = jsonencode({

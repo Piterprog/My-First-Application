@@ -2,30 +2,6 @@
 # - Worker nodes 
 # - Policys + rols
 
-#------------------------------------------------ EKS cluster -----------------------------------------
-
-provider "aws" {
-  region = "us-east-1"
-}
-
-terraform {
-  backend "s3" {
-    bucket     = "vpc-piter-kononihin-terraform" 
-    key        = "dev/eks/terraform.tfstate"     
-    region     = "us-east-1"                     
-    encrypt    = true
-  }
-}
-
-data "terraform_remote_state" "vpc" {
-  backend = "s3"
-  config = {
-    bucket = "vpc-piter-kononihin-terraform"
-    key    = "dev/vpc/terraform.tfstate"
-    region = "us-east-1"
-  }
-}
-
 #------------------------------------ Start Module Terraform ------------------------------------------
 
 resource "aws_eks_cluster" "my_cluster" {
@@ -108,4 +84,36 @@ resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment" {
 resource "aws_iam_role_policy_attachment" "eks_cni_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   role       = aws_iam_role.eks_node_role.name
+}
+
+
+resource "kubernetes_role" "pod_reader" {
+  metadata {
+    name      = "pod-reader"
+    namespace = "default"
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["pods"]
+    verbs      = ["get", "list"]
+  }
+}
+
+resource "kubernetes_role_binding" "read_pods" {
+  metadata {
+    name      = "read-pods"
+    namespace = "default"
+  }
+
+  subject {
+    kind     = "User"
+    name     = "john"
+  }
+
+  role_ref {
+    kind     = "Role"
+    name     = kubernetes_role.pod_reader.metadata.0.name
+    api_group = "rbac.authorization.k8s.io"
+  }
 }

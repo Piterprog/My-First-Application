@@ -7,8 +7,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
-
-terraform {                       
+terraform {
   backend "s3" {
     bucket     = "vpc-piter-kononihin-terraform" 
     key        = "dev/eks/terraform.tfstate"     
@@ -17,20 +16,17 @@ terraform {
   }
 }
 
-
 data "terraform_remote_state" "vpc" {
-  backend      = "s3"
-  config       = {
-    bucket     = "vpc-piter-kononihin-terraform"
-    key        = "dev/vpc/terraform.tfstate"
-    region     = "us-east-1"
+  backend = "s3"
+  config = {
+    bucket = "vpc-piter-kononihin-terraform"
+    key    = "dev/vpc/terraform.tfstate"
+    region = "us-east-1"
   }
 }
 
-#--------------------------------------------------- EKS cluster --------------------------------------
-
 resource "aws_iam_role" "eks_cluster_role" {
-  name               = "eks-cluster-role"
+  name = "eks-cluster-role"
   assume_role_policy = jsonencode({
     "Version": "2012-10-17",
     "Statement": [{
@@ -52,42 +48,29 @@ resource "aws_eks_cluster" "eks_cluster" {
   }
 }
 
-resource "aws_iam_policy" "eks_cluster_role" {
-  name        = "example-policy"
-  description = "Example IAM policy for EC2 network interfaces"
-
+resource "aws_iam_policy" "eks_cluster_policy" {
+  name        = "eks-cluster-policy"
+  description = "Example IAM policy for EKS cluster"
+  
   policy = jsonencode({
     "Version": "2012-10-17",
     "Statement": [
       {
         "Action": [
-          "ec2:UnassignPrivateIpAddresses",
-          "ec2:ModifyNetworkInterfaceAttribute",
-          "ec2:DetachNetworkInterface",
-          "ec2:DescribeTags",
-          "ec2:DescribeNetworkInterfaces",
-          "ec2:DescribeInstances",
-          "ec2:DescribeInstanceTypes",
-          "ec2:DeleteNetworkInterface",
-          "ec2:CreateNetworkInterface",
-          "ec2:AttachNetworkInterface",
-          "ec2:AssignPrivateIpAddresses"
+          "eks:DescribeCluster",
+          "eks:ListClusters"
         ],
         "Effect": "Allow",
-        "Resource": "*",
-        "Sid": "IPV4"
-      },
-      {
-        "Action": "ec2:CreateTags",
-        "Effect": "Allow",
-        "Resource": "arn:aws:ec2:*:*:network-interface/*",
-        "Sid": "CreateTags"
+        "Resource": "*"
       }
     ]
   })
 }
-#-------------------------------------------------EKS Nodes -------------------------------------------
 
+resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
+  role       = aws_iam_role.eks_cluster_role.name
+  policy_arn = aws_iam_policy.eks_cluster_policy.arn
+}
 
 resource "aws_iam_role" "eks_node_instance_role" {
   name               = "eks-node-instance-role"
@@ -108,8 +91,8 @@ resource "aws_iam_role" "eks_node_instance_role" {
 resource "aws_eks_node_group" "worker_group_1" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "worker-group-1"
-  node_role_arn   = "your_eks_node_role_arn"
-  subnet_ids      = [data.terraform_remote_state.vpc.outputs.private_subnet_ids] 
+  node_role_arn   = aws_iam_role.eks_node_instance_role.arn
+  subnet_ids      = data.terraform_remote_state.vpc.outputs.private_subnet_ids
   instance_types  = ["t2.small"]
   scaling_config {
     desired_size = 2
@@ -121,8 +104,8 @@ resource "aws_eks_node_group" "worker_group_1" {
 resource "aws_eks_node_group" "worker_group_2" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "worker-group-2"
-  node_role_arn   = "your_eks_node_role_arn"
-  subnet_ids      = [data.terraform_remote_state.vpc.outputs.private_subnet_ids] 
+  node_role_arn   = aws_iam_role.eks_node_instance_role.arn
+  subnet_ids      = data.terraform_remote_state.vpc.outputs.private_subnet_ids
   instance_types  = ["t2.medium"]
   scaling_config {
     desired_size = 1

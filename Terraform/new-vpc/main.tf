@@ -108,15 +108,6 @@ resource "aws_subnet" "database_subnet_b" {
   }
 }
 
-# Elastic IPs
-resource "aws_eip" "nat_gateway_a" {
-  vpc = true
-}
-
-resource "aws_eip" "nat_gateway_b" {
-  vpc = true
-}
-
 # NAT Gateways
 resource "aws_nat_gateway" "nat_gateway_a" {
   allocation_id = aws_eip.nat_gateway_a.id

@@ -47,7 +47,6 @@ resource "aws_eks_cluster" "eks_cluster" {
   version  = "1.29"
 
   vpc_config {
-    vpc_id             = data.terraform_remote_state.vpc.outputs.vpc_id
     subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
     security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id]
   }

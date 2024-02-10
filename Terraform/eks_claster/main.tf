@@ -25,6 +25,20 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
+resource "aws_iam_role" "terraform_role" {
+  name               = "terraform"
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "eks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }]
+  })
+}
+
 resource "aws_iam_role" "eks_cluster_role" {
   name = "eks-cluster-role"
   assume_role_policy = jsonencode({
@@ -111,6 +125,98 @@ resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment" {
   policy_arn = aws_iam_policy.eks_node_policy.arn
 }
 
+resource "aws_iam_policy" "eks_aws_api_policy" {
+  name        = "eks-aws-api-policy"
+  description = "Policy for EKS nodes to access AWS API"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Action": [
+        "rds:DescribeDBInstances",   // Пример для Amazon RDS
+        "s3:GetObject"               // Пример для Amazon S3
+        // Добавьте другие действия для доступа к другим сервисам AWS
+      ],
+      "Resource": "*"               // Уточните ресурсы по необходимости
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks_aws_api_policy_attachment" {
+  role       = aws_iam_role.eks_node_instance_role.name
+  policy_arn = aws_iam_policy.eks_aws_api_policy.arn
+
+}
+
+resource "aws_iam_policy" "eks_kubernetes_policy" {
+  name        = "eks-kubernetes-policy"
+  description = "Policy for EKS nodes to access Kubernetes resources"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Action": [
+        "eks:DescribeNodegroup",
+        "eks:ListNodegroups",
+        "eks:AccessKubernetesApi"
+        // Добавьте другие действия для управления ресурсами Kubernetes
+      ],
+      "Resource": "*"               // Уточните ресурсы по необходимости
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks_kubernetes_policy_attachment" {
+  role       = aws_iam_role.eks_node_instance_role.name
+  policy_arn = aws_iam_policy.eks_kubernetes_policy.arn
+}
+
+resource "aws_iam_policy" "eks_monitoring_policy" {
+  name        = "eks-monitoring-policy"
+  description = "Policy for EKS nodes to send metrics and logs to monitoring services"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:PutMetricData",   // Пример для CloudWatch
+        "cloudtrail:PutLogEvents",    // Пример для CloudTrail
+        // Добавьте другие действия для отправки метрик и журналов в сервисы мониторинга
+      ],
+      "Resource": "*"               // Уточните ресурсы по необходимости
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks_monitoring_policy_attachment" {
+  role       = aws_iam_role.eks_node_instance_role.name
+  policy_arn = aws_iam_policy.eks_monitoring_policy.arn
+}
+
+resource "aws_iam_policy" "eks_other_services_policy" {
+  name        = "eks-other-services-policy"
+  description = "Policy for EKS nodes to access other AWS services"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeInstances",    // Пример для EC2
+        // Добавьте другие действия для доступа к другим сервисам AWS
+      ],
+      "Resource": "*"               // Уточните ресурсы по необходимости
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks_other_services_policy_attachment" {
+  role       = aws_iam_role.eks_node_instance_role.name
+  policy_arn = aws_iam_policy.eks_other_services_policy.arn
+}
 
 resource "aws_eks_node_group" "worker_group_1" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
@@ -132,6 +238,7 @@ resource "aws_eks_node_group" "worker_group_2" {
   node_role_arn   = aws_iam_role.eks_node_instance_role.arn
   subnet_ids      = data.terraform_remote_state.vpc.outputs.private_subnet_ids
   instance_types  = ["t2.medium"]
+
   scaling_config {
     desired_size = 1
     max_size     = 2
@@ -140,3 +247,4 @@ resource "aws_eks_node_group" "worker_group_2" {
 }
 
 
+#-----------------------------------------------------------------------------------------------------

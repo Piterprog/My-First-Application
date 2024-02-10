@@ -44,7 +44,7 @@ resource "aws_subnet" "public_subnets" {
   map_public_ip_on_launch    = true
   tags = {
     Name = "${var.env}-public-${count.index + 1}"
-    "kubernetes.io/role/elb" = "1"
+    "kubernetes.io/role/elb" = 1
   }
 }
 
@@ -180,7 +180,7 @@ resource "aws_security_group" "Security_vpc_Musad" {
   }
 
   tags = {
-    Name = "Security group for HTTPS , HTTP"
+    Name = "Security group Musad"
   }
 }
 

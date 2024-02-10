@@ -3,6 +3,7 @@
 # - Policys + rols
 
 #------------------------------------------------ EKS cluster -----------------------------------------
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -134,11 +135,10 @@ resource "aws_iam_policy" "eks_aws_api_policy" {
     "Statement": [{
       "Effect": "Allow",
       "Action": [
-        "rds:DescribeDBInstances",   // Пример для Amazon RDS
-        "s3:GetObject"               // Пример для Amazon S3
-        // Добавьте другие действия для доступа к другим сервисам AWS
+        "rds:DescribeDBInstances",
+        "s3:GetObject"
       ],
-      "Resource": "*"               // Уточните ресурсы по необходимости
+      "Resource": "*"
     }]
   })
 }
@@ -146,7 +146,6 @@ resource "aws_iam_policy" "eks_aws_api_policy" {
 resource "aws_iam_role_policy_attachment" "eks_aws_api_policy_attachment" {
   role       = aws_iam_role.eks_node_instance_role.name
   policy_arn = aws_iam_policy.eks_aws_api_policy.arn
-
 }
 
 resource "aws_iam_policy" "eks_kubernetes_policy" {
@@ -161,9 +160,8 @@ resource "aws_iam_policy" "eks_kubernetes_policy" {
         "eks:DescribeNodegroup",
         "eks:ListNodegroups",
         "eks:AccessKubernetesApi"
-        // Добавьте другие действия для управления ресурсами Kubernetes
       ],
-      "Resource": "*"               // Уточните ресурсы по необходимости
+      "Resource": "*"
     }]
   })
 }
@@ -182,11 +180,10 @@ resource "aws_iam_policy" "eks_monitoring_policy" {
     "Statement": [{
       "Effect": "Allow",
       "Action": [
-        "cloudwatch:PutMetricData",   // Пример для CloudWatch
-        "cloudtrail:PutLogEvents",    // Пример для CloudTrail
-        // Добавьте другие действия для отправки метрик и журналов в сервисы мониторинга
+        "cloudwatch:PutMetricData",
+        "cloudtrail:PutLogEvents"
       ],
-      "Resource": "*"               // Уточните ресурсы по необходимости
+      "Resource": "*"
     }]
   })
 }
@@ -205,10 +202,9 @@ resource "aws_iam_policy" "eks_other_services_policy" {
     "Statement": [{
       "Effect": "Allow",
       "Action": [
-        "ec2:DescribeInstances",    // Пример для EC2
-        // Добавьте другие действия для доступа к другим сервисам AWS
+        "ec2:DescribeInstances"
       ],
-      "Resource": "*"               // Уточните ресурсы по необходимости
+      "Resource": "*"
     }]
   })
 }
@@ -245,6 +241,3 @@ resource "aws_eks_node_group" "worker_group_2" {
     min_size     = 1
   }
 }
-
-
-#-----------------------------------------------------------------------------------------------------

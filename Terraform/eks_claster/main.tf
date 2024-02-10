@@ -27,15 +27,6 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
-data "terraform_remote_state" "eks-cluster" {
-  backend      = "s3"
-  config       = {
-    bucket     = "vpc-piter-kononihin-terraform"
-    key        = "dev/eks/terraform.tfstate"
-    region     = "us-east-1"
-  }
-}
-
 #--------------------------------------------------- EKS cluster --------------------------------------
 
 resource "aws_iam_role" "eks_cluster_role" {
@@ -51,13 +42,14 @@ resource "aws_iam_role" "eks_cluster_role" {
 }
 
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = "your_cluster_name"
+  name     = "piterbog-cluster"
   role_arn = aws_iam_role.eks_cluster_role.arn
   version  = "1.29"
 
   vpc_config {
+    vpc_id             = data.terraform_remote_state.vpc.outputs.vpc_id
     subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
-    security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id] 
+    security_group_ids = data.terraform_remote_state.vpc.outputs.security_group_id
   }
 }
 
@@ -126,8 +118,8 @@ resource "aws_eks_node_group" "eks_nodes" {
     min_size          = 1  
   }
 
-  disk_size           = 20
-  instance_types      = ["t3.micro"]
+  disk_size           = 8
+  instance_types      = ["t2.micro"]
 }
 
 #-------------------------------------------------- Service Accaunt -----------------------------------

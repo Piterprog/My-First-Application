@@ -82,6 +82,28 @@ resource "aws_iam_policy" "eks_cluster_policy" {
   })
 }
 
+resource "aws_iam_policy" "ecr_policy" {
+  name = "ECRFullAccessPolicy"
+  description = "Policy granting full access to Amazon ECR"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "ecr:*",
+        Effect = "Allow",
+        Principal = "*",
+        Resource = "*",
+      },
+      {
+        Action = "ecr:GetAuthorizationToken*",
+        Effect = "Allow",
+        Principal = "*",
+        Resource = "*",
+      },
+    ]
+  })
+}
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
   role       = aws_iam_role.eks_cluster_role.name
   policy_arn = aws_iam_policy.eks_cluster_policy.arn

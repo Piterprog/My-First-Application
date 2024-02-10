@@ -105,50 +105,28 @@ resource "aws_iam_role" "eks_node_instance_role" {
   }
 }
 
-resource "aws_eks_node_group" "eks_nodes" {
-  cluster_name        = aws_eks_cluster.eks_cluster.name
-  node_group_name     = "workers"
-  node_role_arn       = aws_iam_role.eks_node_instance_role.arn
-  subnet_ids          = data.terraform_remote_state.vpc.outputs.private_subnet_ids
-
+resource "aws_eks_node_group" "worker_group_1" {
+  cluster_name    = aws_eks_cluster.eks_cluster.name
+  node_group_name = "worker-group-1"
+  node_role_arn   = "your_eks_node_role_arn"
+  subnet_ids      = [data.terraform_remote_state.vpc.outputs.private_subnet_ids] 
+  instance_types  = ["t2.small"]
   scaling_config {
-    desired_size      = 2  
-    max_size          = 3  
-    min_size          = 1  
-  }
-
-  disk_size           = 8
-  instance_types      = ["t2.micro"]
-}
-
-#-------------------------------------------------- Service Accaunt -----------------------------------
-
-resource "kubernetes_cluster_role" "example_role" {
-  metadata {
-    name = "example-role"
-  }
-
-  rule {
-    api_groups = ["", "extensions", "apps"]
-    resources  = ["pods", "services", "deployments"]
-    verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
+    desired_size = 2
+    max_size     = 2
+    min_size     = 1
   }
 }
 
-resource "kubernetes_cluster_role_binding" "example_role_binding" {
-  metadata {
-    name = "example-role-binding"
-  }
-
-  role_ref {
-    kind     = "ClusterRole"
-    name     = kubernetes_cluster_role.example_role.metadata[0].name
-    api_group = "rbac.authorization.k8s.io"
-  }
-
-  subject {
-    kind      = ""  
-    name      = "Kube"  
-    api_group = "rbac.authorization.k8s.io"
+resource "aws_eks_node_group" "worker_group_2" {
+  cluster_name    = aws_eks_cluster.eks_cluster.name
+  node_group_name = "worker-group-2"
+  node_role_arn   = "your_eks_node_role_arn"
+  subnet_ids      = [data.terraform_remote_state.vpc.outputs.private_subnet_ids] 
+  instance_types  = ["t2.medium"]
+  scaling_config {
+    desired_size = 1
+    max_size     = 2
+    min_size     = 1
   }
 }

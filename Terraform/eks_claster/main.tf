@@ -107,12 +107,12 @@ resource "kubernetes_role_binding" "read_pods" {
   }
 
   subject {
-    kind     = "User"
-    name     = "john"
+    kind     = "kube"
+    name     = "piter"
   }
 
   role_ref {
-    kind     = "Role"
+    kind     = "kube"
     name     = kubernetes_role.pod_reader.metadata.0.name
     api_group = "rbac.authorization.k8s.io"
   }

@@ -28,50 +28,84 @@ data "terraform_remote_state" "vpc" {
 
 #------------------------------------ Start Module Terraform ------------------------------------------
 
-module "eks_cluster" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "12.0.0"
-  
-  cluster_name           = "piterbog"
-  cluster_version        = "1.29"
-  subnets                = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
-  vpc_id                 = data.terraform_remote_state.vpc.outputs.vpc_id
-  manage_aws_auth        = true
+resource "aws_eks_cluster" "my_cluster" {
+  name                 = "my-cluster"
+  role_arn             =  aws_iam_role.eks_cluster_role.arn
+  version              = "1.29"
+
+  vpc_config {
+    subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids   
+    security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id]
+  }
 }
 
-# Рабочая группа 1
-module "eks_workers_1" {
-  source               = "terraform-aws-modules/eks/aws//modules/workers"
-  cluster_name         = module.eks_cluster.cluster_id
-  cluster_endpoint     = module.eks_cluster.cluster_endpoint
-  cluster_certificate_authority_data = module.eks_cluster.cluster_certificate_authority_data
-  subnet_ids           = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
-  instance_type        = "t2.micro" 
-  desired_capacity     = 2
-  max_capacity         = 3
-  min_capacity         = 1
-  key_name             = "SSH" 
-}
+resource "aws_eks_node_group" "workers" {
+  cluster_name    = aws_eks_cluster.my_cluster.name
+  node_group_name = "workers"
+  node_role_arn   = aws_iam_role.eks_node_role.arn
+  subnet_ids      = data.terraform_remote_state.vpc.outputs.private_subnet_ids
+  disk_size       = 8
+  instance_types  = ["t2.micro"]
 
-# Рабочая группа 2
-module "eks_workers_2" {
-  source               = "terraform-aws-modules/eks/aws//modules/workers"
-  cluster_name         = module.eks_cluster.cluster_id
-  cluster_endpoint     = module.eks_cluster.cluster_endpoint
-  cluster_certificate_authority_data = module.eks_cluster.cluster_certificate_authority_data
-  subnet_ids           = data.terraform_remote_state.vpc.outputs.private_subnet_ids 
-  instance_type        = "t2.micro" 
-  desired_capacity     = 2
-  max_capacity         = 3
-  min_capacity         = 1
-  key_name             = "SSH" 
+  scaling_config {
+    desired_size = 2
+    max_size     = 3
+    min_size     = 1
+  }
+
+  remote_access {
+    ec2_ssh_key = "SSH"
+  }
 }
 
 
-module "eks_node_group_role" {
-  source                = "terraform-aws-modules/iam/aws//modules/eks_node_group_role"
-  create_iam_role       = true
-  attach_policy_arns    = ["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
-                           "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
-                           "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]
+resource "aws_iam_role" "eks_cluster_role" {
+  name = "eks-cluster-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "eks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "eks_node_role" {
+  name = "eks-node-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+  role       = aws_iam_role.eks_cluster_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = aws_iam_role.eks_node_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "eks_cni_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       = aws_iam_role.eks_node_role.name
 }

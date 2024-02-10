@@ -100,20 +100,3 @@ resource "kubernetes_role" "pod_reader" {
   }
 }
 
-resource "kubernetes_role_binding" "read_pods" {
-  metadata {
-    name      = "read-pods"
-    namespace = "default"
-  }
-
-  subject {
-    kind     = "kube"
-    name     = "piter"
-  }
-
-  role_ref {
-    kind     = "kube"
-    name     = kubernetes_role.pod_reader.metadata.0.name
-    api_group = "rbac.authorization.k8s.io"
-  }
-}

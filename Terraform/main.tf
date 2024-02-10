@@ -100,7 +100,7 @@ resource "aws_subnet" "private_subnets" {
     availability_zone = data.aws_availability_zones.available.names[count.index]
     tags = {
       Name = "${var.env}-private-${count.index + 1}"
-      "kubernetes.io/role/internal-elb" = "1"
+      "kubernetes.io/role/internal-elb" = 1
     }
 }
 

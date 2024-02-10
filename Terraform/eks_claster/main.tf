@@ -88,12 +88,37 @@ resource "aws_iam_role" "eks_node_instance_role" {
   }
 }
 
+resource "aws_iam_policy" "eks_node_policy" {
+  name        = "eks-node-policy"
+  description = "Policy for EKS nodes to communicate with the EKS cluster"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Action": [
+        "eks:DescribeNodegroup",
+        "eks:ListNodegroups",
+        "eks:AccessKubernetesApi"
+      ],
+      "Resource": "*"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment" {
+  role       = aws_iam_role.eks_node_instance_role.name
+  policy_arn = aws_iam_policy.eks_node_policy.arn
+}
+
+
 resource "aws_eks_node_group" "worker_group_1" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "worker-group-1"
   node_role_arn   = aws_iam_role.eks_node_instance_role.arn
   subnet_ids      = data.terraform_remote_state.vpc.outputs.private_subnet_ids
   instance_types  = ["t2.small"]
+
   scaling_config {
     desired_size = 2
     max_size     = 2
@@ -113,3 +138,5 @@ resource "aws_eks_node_group" "worker_group_2" {
     min_size     = 1
   }
 }
+
+

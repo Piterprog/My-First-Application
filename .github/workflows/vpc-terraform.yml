@@ -8,7 +8,7 @@ on:
 
 jobs:
   create_vpc:
-    needs: [create_eks_claster]
+    needs: []
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository

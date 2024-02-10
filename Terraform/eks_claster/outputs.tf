@@ -1,28 +1,23 @@
-
-output "cluster_name" {
-  value = aws_eks_cluster.eks_cluster.name
+output "eks_cluster_id" {
+  value = module.eks_cluster.cluster_id
 }
 
-output "cluster_endpoint" {
-  value = aws_eks_cluster.eks_cluster.endpoint
+output "eks_cluster_endpoint" {
+  value = module.eks_cluster.cluster_endpoint
 }
 
-output "cluster_certificate_authority_data" {
-  value = aws_eks_cluster.eks_cluster.certificate_authority.0.data
+output "eks_cluster_certificate_authority_data" {
+  value = module.eks_cluster.cluster_certificate_authority_data
 }
 
-output "worker_group_1_id" {
-  value = aws_eks_node_group.worker_group_1.id
+output "eks_workers_1_instance_ids" {
+  value = module.eks_workers_1.instance_ids
 }
 
-output "worker_group_1_arn" {
-  value = aws_eks_node_group.worker_group_1.arn
+output "eks_workers_2_instance_ids" {
+  value = module.eks_workers_2.instance_ids
 }
 
-output "worker_group_2_id" {
-  value = aws_eks_node_group.worker_group_2.id
-}
-
-output "worker_group_2_arn" {
-  value = aws_eks_node_group.worker_group_2.arn
+output "eks_node_group_role_arn" {
+  value = module.eks_node_group_role.iam_role_arn
 }

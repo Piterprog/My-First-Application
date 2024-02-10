@@ -16,7 +16,7 @@ output "private_subnet_ids" {
 }
 
 output "database_subnet_ids" {
-  value = aws_subnet_database_subnets[*].id
+  value = aws_subnet.database_subnets[*].id
 }
 
 output "security_group_id" {

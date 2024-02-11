@@ -10,7 +10,8 @@ resource "aws_eks_cluster" "my_cluster" {
   version              = "1.29"
 
   vpc_config {
-    subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids   
+    subnet_ids         = ["subnet-05be4ae11280eae56","subnet-0a7316fef243fc8ba"]
+    security_group_ids =  ["sg-08cc06e46b548dea1"]
   }
 }
 
@@ -18,7 +19,7 @@ resource "aws_eks_node_group" "workers" {
   cluster_name    = aws_eks_cluster.my_cluster.name
   node_group_name = "workers"
   node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = data.terraform_remote_state.vpc.outputs.private_subnet_ids
+  subnet_ids      = ["subnet-05be4ae11280eae56","subnet-0a7316fef243fc8ba"]
   disk_size       = 8
   instance_types  = ["t2.micro"]
 
@@ -116,3 +117,4 @@ resource "aws_iam_policy" "eks_service_policy" {
   description = "Policy for EKS service"
   policy      = data.aws_iam_policy_document.eks_service_policy.json
 }
+

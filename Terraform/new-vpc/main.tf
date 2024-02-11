@@ -214,7 +214,7 @@ resource "aws_route" "private_route_b" {
 #------------------------------------------ Security group ----------------------------------------------
 
 
-resource "aws_security_group" "security_mew_vpc" {
+resource "aws_security_group" "security_new_vpc" {
   name        = "Security_vpc_new"
   description = "Security group"
   vpc_id      =  aws_vpc.main.id

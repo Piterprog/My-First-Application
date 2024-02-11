@@ -1,46 +1,29 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #cccccc;
-}
-
-header {
-    background: linear-gradient(to right, black, white);
-    padding: 20px;
+.verhniy-block {
     text-align: center;
-    color: white;
-}
-
-nav ul {
-    background: linear-gradient(to right, black, white);
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    color: white;
-}
-
-
-nav ul li {
-    float: left;
-}
-
-nav ul li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-nav ul li a:hover {
-    background-color: #007bff;
-}
-
-main {
     padding: 20px;
-    color: black;
+    background-color: lightblue;
 }
 
-footer {
-    background: linear-gradient(to right, black)
+.serum-zvetom {
+    font-size: 36px;
+    color: navy;
+}
+
+.nizhniy-block {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.knopka-kryglaya {
+    background-color: lightgray;
+    color: red;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.knopka-kryglaya:hover {
+    background-color: darkgray;
 }

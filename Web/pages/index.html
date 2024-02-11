@@ -1,41 +1,28 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="../styles/styles.css">
-    <title>Elegant Page</title>
-</head>
-
-<body>
-    <header>
-        <h1>Helo is my application.</h1>
-        <h1>Helo is my application.</h1>
-        <h1>Helo is my application.</h1>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="#section1">Section 1</a></li> 
-            <li><a href="#section2">Section 2</a></li>
-            <li><a href="#section3">Section 3</a></li>
-            <li><a href="#section4">Section 4</a></li>
-           
-        </ul>
-    </nav>
-    <main>
-        <section id="section1">
-            <h2>Section 1</h2>
-            <p>This is Section 1.</p>
-        </section>
-        <section id="section2">
-            <h2>Section 2</h2>
-            <p>This is Section 2.</p>
-        </section>
-        <section id="section3">
-            <h2>Section 3</h2>
-            <p>This is Section 3.</p>
-        </section>
-    </main>
-    <footer>
-        <p>Copyright © 2024</p>
-    </footer>
-</body>
-</html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Privetstvie</title>
+        <link rel="stylesheet" href="../styles/styles.css">
+    </head>
+    <body>
+        <div class="verhniy-block">
+            <h1 class="serum-zvetom">Welcome to my page ...</h1>
+            <p> Ip addres: <span id="ip-address">-</span></p>
+        </div>
+        <div class="nizhniy-block">
+            <button class="knopka-kryglaya">Engen</button>
+        </div>
+    
+        <script>
+            // Vash JavaScript dlya polucheniya IP adresa
+            var ipAddressElement = document.getElementById("ip-address");
+            // Zdes' mozhno ispol'zovat' kakoy-libo metod polucheniya IP adresa
+            // Naprimer, mozhno ispol'zovat' AJAX zapros k serveru ili kakoy-libo vneshniy servis dlya polucheniya IP
+            // Zdes' my prosto stavim znak procherka, poskol'ku nelzya poluchit' real'nyy IP adres v etom okruzhenii
+            ipAddressElement.innerText = "-";
+        </script>
+    </body>
+    </html>
+    

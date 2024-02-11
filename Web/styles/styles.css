@@ -27,3 +27,38 @@
 .knopka-kryglaya:hover {
     background-color: darkgray;
 }
+
+
+.left-menu {
+    float: left;
+    width: 50%;
+    padding: 0;
+    margin: 0;
+}
+
+.left-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.left-menu ul li {
+    margin-bottom: 5px;
+}
+
+.right-menu {
+    float: right;
+    width: 50%;
+    padding: 0;
+    margin: 0;
+}
+
+.right-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.right-menu ul li {
+    margin-bottom: 5px;
+}

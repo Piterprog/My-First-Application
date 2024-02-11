@@ -192,29 +192,6 @@ resource "aws_security_group" "Security_vpc_Musad" {
   }
 }
 
-#----------------------------------- Security group for Database ----------------------------
 
- resource "aws_security_group" "database_sg" {
-   name        = "Security grop Database"
-   description = "Securit Group"
-   vpc_id      = aws_vpc.main.id
-
- ingress = [
-    for cidr_block in var.database_subnet_cidrs : {
-      from_port   = 3306
-      to_port     = 3306
-      protocol    = "tcp"
-      description = "MySQL traffic"
-      cidr_blocks = [cidr_block]
-      ipv6_cidr_blocks = [] 
-      prefix_list_ids  = []
-      security_groups  = []
-      self             = false
-   }  
-  ]
-  tags = {
-    Name = "Security group Database"
-  }
-}
 
 #---------------------------------------------- END -----------------------------------------

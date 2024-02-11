@@ -8,7 +8,7 @@ on:
 
 jobs:
   create_vpc:
-    needs: [create_eks_claster]
+    needs: []
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -31,11 +31,11 @@ jobs:
       working-directory: ./Terraform
 
     - name: Apply Terraform changes
-      run: terraform destroy -auto-approve
+      run: terraform apply -auto-approve
       working-directory: ./Terraform
 
   create_eks_claster:
-      needs: []
+      needs: [create_vpc]
       runs-on: ubuntu-latest
       steps:
         - name: Checkout repository
@@ -58,5 +58,5 @@ jobs:
           working-directory: ./Terraform/eks_claster
         
         - name: Apply Terraform changes
-          run: terraform destroy -auto-approve
+          run: terraform apply -auto-approve
           working-directory: ./Terraform/eks_claster

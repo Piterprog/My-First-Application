@@ -32,28 +32,6 @@ resource "aws_eks_node_group" "workers" {
   remote_access {
     ec2_ssh_key = "SSH"
   }
-
-Конечно, вот как можно добавить полный доступ к ресурсам EKS нодам через политику AmazonEKSWorkerNodePolicy в вашем коде Terraform:
-
-terraform
-Copy code
-resource "aws_eks_node_group" "workers" {
-  cluster_name    = aws_eks_cluster.my_cluster.name
-  node_group_name = "workers"
-  node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = data.terraform_remote_state.vpc.outputs.private_subnet_ids
-  disk_size       = 8
-  instance_types  = ["t2.micro"]
-
-  scaling_config {
-    desired_size = 2
-    max_size     = 3
-    min_size     = 1
-  }
-
-  remote_access {
-    ec2_ssh_key = "SSH"
-  }
   
   depends_on = [aws_iam_role_policy_attachment.eks_node_policy_attachment]
 }

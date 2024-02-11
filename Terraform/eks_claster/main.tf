@@ -6,7 +6,7 @@
 
 resource "aws_eks_cluster" "my_cluster" {
   name                 = "my-cluster"
-  role_arn             =  aws_iam_role.eks_cluster_role.arn
+  role_arn             = aws_iam_role.eks_cluster_role.arn
   version              = "1.29"
 
   vpc_config {
@@ -33,7 +33,6 @@ resource "aws_eks_node_group" "workers" {
     ec2_ssh_key = "SSH"
   }
 }
-
 
 resource "aws_iam_role" "eks_cluster_role" {
   name = "eks-cluster-role"
@@ -86,6 +85,10 @@ resource "aws_iam_role_policy_attachment" "eks_cni_policy_attachment" {
   role       = aws_iam_role.eks_node_role.name
 }
 
+resource "aws_iam_role_policy_attachment" "eks_ec2_full_access" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+  role       = aws_iam_role.eks_cluster_role.name
+}
 
 data "aws_iam_policy_document" "eks_cluster_policy" {
   statement {
@@ -112,5 +115,3 @@ resource "aws_iam_policy" "eks_service_policy" {
   description = "Policy for EKS service"
   policy      = data.aws_iam_policy_document.eks_service_policy.json
 }
-
-

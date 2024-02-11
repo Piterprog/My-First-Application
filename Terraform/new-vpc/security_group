@@ -6,7 +6,7 @@ provider "aws" {
 resource "aws_security_group" "security_mew_vpc" {
   name        = "Security_vpc_new"
   description = "Security group"
-  vpc_id      = vpc-00498742ac88209cd
+  vpc_id      =  aws_vpc.main.id
 
   ingress {
     description = "SSH"

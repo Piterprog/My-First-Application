@@ -28,92 +28,54 @@
     background-color: darkgray;
 }
 
-
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0; 
+    background-color: #f0f0f0;
 }
 
-
-.left-menu {
+/* Stili dlya menyu */
+.menu {
     float: left;
     width: 50%;
+    padding: 20px;
 }
 
-.left-menu ul {
+.menu ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-.left-menu ul li {
+.menu ul li {
     margin-bottom: 5px;
 }
 
-
-.right-menu {
-    float: right;
-    width: 50%;
-}
-
-.right-menu ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.right-menu ul li {
-    margin-bottom: 5px;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0; 
-}
-
-
-.left-menu {
-    float: left;
-    width: 50%;
-}
-
-.left-menu ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.left-menu ul li {
-    margin-bottom: 5px;
-}
-
-
-.right-menu {
-    float: right;
-    width: 50%;
-}
-
-.right-menu ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.right-menu ul li {
-    margin-bottom: 5px;
-}
-
-
-.right-menu ul li a {
+/* Stili dlya kazhdoy bukvy v pravom menyu */
+.menu ul li a {
     display: block;
     padding: 10px;
     background: linear-gradient(to right, #ff6600, #ffcc00);
-    color: #fff; 
+    color: #fff;
     text-decoration: none;
     border-radius: 5px;
-    width: 90%; 
+    width: 90%;
+    margin-right: 10px;
+}
+
+/* Dodatok Styles */
+.right-menu {
+    float: right;
+    padding: 20px;
+}
+
+/* Inshі pravilo */
+.right-menu ul li {
+    text-align: right;
+}
+
+.right-menu ul li a {
+    padding: 5px 10px; /* Izmenyaem razmeri paddinga */
+    margin-bottom: 5px; /* Takzhe izmenyaem otstup mezhdu elementami */
 }

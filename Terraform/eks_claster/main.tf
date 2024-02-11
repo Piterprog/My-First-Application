@@ -11,7 +11,6 @@ resource "aws_eks_cluster" "my_cluster" {
 
   vpc_config {
     subnet_ids         = data.terraform_remote_state.vpc.outputs.private_subnet_ids   
-    security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id]
   }
 }
 

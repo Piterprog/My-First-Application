@@ -188,7 +188,7 @@ resource "aws_route_table_association" "private_association_b" {
 
 resource "aws_route_table_association" "database_association_a" {
   subnet_id      = aws_subnet.database_subnet_a.id
-  route_table_id = aws_route_table.database_route_table_.id
+  route_table_id = aws_route_table.database_route_table.id
 }
 
 resource "aws_route_table_association" "database_association_b" {

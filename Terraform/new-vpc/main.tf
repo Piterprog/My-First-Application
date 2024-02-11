@@ -156,6 +156,13 @@ resource "aws_route_table" "private_route_table_b" {
   }
 }
 
+resource "aws_route_table" "database_route_table" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "database_route_table"
+    Environment = "Staging"  
+  }
+}
 
 #------------------------------------ Ассоциация таблиц маршрутизации -----------------------------------------
 
@@ -179,6 +186,15 @@ resource "aws_route_table_association" "private_association_b" {
   route_table_id = aws_route_table.private_route_table_b.id
 }
 
+resource "aws_route_table_association" "database_association_a" {
+  subnet_id      = aws_subnet.database_subnet_a.id
+  route_table_id = aws_route_table.database_route_table_.id
+}
+
+resource "aws_route_table_association" "database_association_b" {
+  subnet_id      = aws_subnet.database_subnet_b.id
+  route_table_id = aws_route_table.database_route_table.id
+}
 #-------------------------------------- Routs NAT gatewaye --------------------------------------------
 
 

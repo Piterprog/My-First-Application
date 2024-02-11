@@ -1,12 +1,12 @@
 .verhniy-block {
     text-align: center;
     padding: 20px;
-    background-color: rgb(76, 76, 77);
+    background-color: rgb(135, 135, 137);
 }
 
 .serum-zvetom {
     font-size: 36px;
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
 }
 
 .nizhniy-block {
@@ -16,7 +16,7 @@
 
 .knopka-kryglaya {
     background-color: lightgray;
-    color: red;
+    color: rgb(3, 3, 3);
     font-size: 24px;
     padding: 15px 30px;
     border: none;

@@ -87,16 +87,30 @@ resource "aws_iam_role_policy_attachment" "eks_cni_policy_attachment" {
 }
 
 
-resource "kubernetes_role" "pod_reader" {
-  metadata {
-    name      = "pod-reader"
-    namespace = "default"
-  }
-
-  rule {
-    api_groups = [""]
-    resources  = ["pods"]
-    verbs      = ["get", "list"]
+data "aws_iam_policy_document" "eks_cluster_policy" {
+  statement {
+    actions   = ["eks:*"]
+    resources = ["*"]
   }
 }
+
+resource "aws_iam_policy" "eks_cluster_policy" {
+  name        = "AmazonEKSClusterPolicy"
+  description = "Policy for EKS cluster"
+  policy      = data.aws_iam_policy_document.eks_cluster_policy.json
+}
+
+data "aws_iam_policy_document" "eks_service_policy" {
+  statement {
+    actions   = ["eks:DescribeCluster", "eks:ListClusters"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "eks_service_policy" {
+  name        = "AmazonEKSServicePolicy"
+  description = "Policy for EKS service"
+  policy      = data.aws_iam_policy_document.eks_service_policy.json
+}
+
 

@@ -1,19 +1,101 @@
 <!DOCTYPE html>
-<html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Privetstvie</title>
-        <link rel="stylesheet" href="../styles/styles.css">
-    </head>
-    <body>
-        <div class="verhniy-block">
-            <h1 class="serum-zvetom">Welcome to my page ...</h1>
-            <p> Ip addres: <span id="ip-address">-</span></p>
-        </div>
-        <div class="nizhniy-block">
-            <button class="knopka-kryglaya">Engen</button>
-        </div> 
-    </body>
-    </html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker IP Address</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #header {
+            height: 60px;
+            background-color: #f0f0f0;
+        }
+        #header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #container {
+            height: 150px;
+            position: relative;
+        }
+        .ball {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            position: absolute;
+            animation: move 5s linear infinite;
+        }
+        #button {
+            background-color: turquoise;
+            color: red;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        #footer {
+            height: 20px;
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <img src="header.jpg" alt="Header Image">
+        <p id="ipAddress" style="position: absolute; top: 0; left: 10px;">IP Address: Loading...</p>
+    </div>
+    <div id="container">
+        <button id="button" onclick="speedUpBalls()">Push</button>
+        <script>
+            function speedUpBalls() {
+                const balls = document.querySelectorAll('.ball');
+                balls.forEach(ball => {
+                    const speed = parseFloat(ball.style.animationDuration.replace('s', '')) - 0.5;
+                    ball.style.animationDuration = speed + 's';
+                });
+            }
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function(event) {
+                const container = document.getElementById('container');
+                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8000', '#008000', '#800080', '#800000', '#008080', '#808000', '#808080', '#000080', '#800000'];
+                for (let i = 0; i < 15; i++) {
+                    const ball = document.createElement('div');
+                    ball.classList.add('ball');
+                    ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    ball.style.top = Math.random() * (container.offsetHeight - 20) + 'px';
+                    ball.style.left = Math.random() * (container.offsetWidth - 20) + 'px';
+                    container.appendChild(ball);
+                }
+            });
+        </script>
+    </div>
+    <div id="footer">
+        <button id="startButton" onclick="startTimer()">Start</button>
+        <p id="counter">0</p>
+        <script>
+            let count = 0;
+            function startTimer() {
+                const startButton = document.getElementById('startButton');
+                startButton.disabled = true;
+                count = 0;
+                const counter = document.getElementById('counter');
+                const interval = setInterval(() => {
+                    count++;
+                    counter.innerText = count;
+                    if (count === 100) {
+                        clearInterval(interval);
+                        alert("Давай тебе надо ускориться!");
+                    }
+                }, 100);
+            }
+        </script>
+    </div>
+</body>
+</html>
+
     

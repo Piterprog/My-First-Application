@@ -14,8 +14,32 @@ document.addEventListener("DOMContentLoaded", function(event) {
 document.getElementById('button').addEventListener('click', function() {
     const balls = document.querySelectorAll('.ball');
     balls.forEach(ball => {
-        const speed = parseFloat(ball.style.animationDuration.replace('s', '')) - 0.5;
-        ball.style.animationDuration = speed + 's';
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5 + 2;
+
+        function moveBall() {
+            let x = parseFloat(ball.style.left);
+            let y = parseFloat(ball.style.top);
+
+            x += Math.cos(angle) * speed;
+            y += Math.sin(angle) * speed;
+
+            if (x < 0 || x > container.offsetWidth - 20) {
+                angle = Math.PI - angle;
+                x = Math.max(0, Math.min(x, container.offsetWidth - 20));
+            }
+            if (y < 0 || y > container.offsetHeight - 20) {
+                angle = -angle;
+                y = Math.max(0, Math.min(y, container.offsetHeight - 20));
+            }
+
+            ball.style.left = x + 'px';
+            ball.style.top = y + 'px';
+
+            requestAnimationFrame(moveBall);
+        }
+
+        moveBall();
     });
 });
 

@@ -1,0 +1,23 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment-replicas
+  labels:
+    app  : my-k8s-application
+    env  : prod
+    owner: PiterKononihin
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      project: pedro
+  template:
+    metadata:
+      labels:
+        project: pedro
+    spec:
+      containers:
+        - name : cia-web
+          image: 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:240212Feb021707765462
+          ports:
+            - containerPort: 80

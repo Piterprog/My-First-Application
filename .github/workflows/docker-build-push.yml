@@ -10,6 +10,7 @@ on:
     paths:
       - 'Web/**/*.html' 
       - 'Web/**/*.css'
+      - 'Web/**/*.js'
 
 jobs:
   build-and-push:

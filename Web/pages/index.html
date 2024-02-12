@@ -4,115 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Docker IP Address</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        #header {
-            height: 60px;
-            background-color: #f0f0f0;
-            position: relative;
-        }
-        #header img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        #container {
-            height: 150px;
-            position: relative;
-        }
-        .ball {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            position: absolute;
-            animation: move 5s linear infinite;
-        }
-        #button {
-            background-color: turquoise;
-            color: red;
-            border: none;
-            border-radius: 50%;
-            padding: 10px;
-            cursor: pointer;
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        #startButton {
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 20px;
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        #footer {
-            height: 20px;
-            background-color: #ccc;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="header">
         <img src="header.jpg" alt="Header Image">
         <p id="ipAddress" style="position: absolute; top: 0; left: 10px;">IP Address: Loading...</p>
     </div>
-    <div id="container">
-        <script>
-            document.addEventListener("DOMContentLoaded", function(event) {
-                const container = document.getElementById('container');
-                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8000', '#008000', '#800080', '#800000', '#008080', '#808000', '#808080', '#000080', '#800000'];
-                for (let i = 0; i < 15; i++) {
-                    const ball = document.createElement('div');
-                    ball.classList.add('ball');
-                    ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    ball.style.top = Math.random() * (container.offsetHeight - 20) + 'px';
-                    ball.style.left = Math.random() * (container.offsetWidth - 20) + 'px';
-                    container.appendChild(ball);
-                }
-            });
-        </script>
-        <button id="button" onclick="speedUpBalls()">Push</button>
-        <script>
-            function speedUpBalls() {
-                const balls = document.querySelectorAll('.ball');
-                balls.forEach(ball => {
-                    const speed = parseFloat(ball.style.animationDuration.replace('s', '')) - 0.5;
-                    ball.style.animationDuration = speed + 's';
-                });
-            }
-        </script>
-    </div>
+    <div id="container"></div>
+    <button id="button">Push</button>
     <div id="footer">
-        <button id="startButton" onclick="startTimer()">Start</button>
+        <button id="startButton">Start</button>
         <p id="counter">60</p>
-        <script>
-            let count = 60;
-            function startTimer() {
-                const startButton = document.getElementById('startButton');
-                startButton.disabled = true;
-                const counter = document.getElementById('counter');
-                const interval = setInterval(() => {
-                    count--;
-                    counter.innerText = count;
-                    if (count === 30) {
-                        alert("Тебе нужно ускориться!");
-                    }
-                    if (count === 0) {
-                        clearInterval(interval);
-                        startButton.disabled = false;
-                    }
-                }, 1000);
-            }
-        </script>
     </div>
+    <script src="scripts.js"></script>
 </body>
 </html>

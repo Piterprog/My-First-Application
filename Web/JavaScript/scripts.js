@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         const ball = document.createElement('div');
         ball.classList.add('ball');
         ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        ball.style.top = Math.random() * (container.offsetHeight - 20) + 'px';
+        ball.style.top = Math.random() * 130 + 'px'; /* Изменено */
         ball.style.left = Math.random() * (container.offsetWidth - 20) + 'px';
         container.appendChild(ball);
     }
@@ -28,9 +28,9 @@ document.getElementById('button').addEventListener('click', function() {
                 angle = Math.PI - angle;
                 x = Math.max(0, Math.min(x, container.offsetWidth - 20));
             }
-            if (y < 0 || y > container.offsetHeight - 20) {
+            if (y < 0 || y > 130) { /* Изменено */
                 angle = -angle;
-                y = Math.max(0, Math.min(y, container.offsetHeight - 20));
+                y = Math.max(0, Math.min(y, 130)); /* Изменено */
             }
 
             ball.style.left = x + 'px';

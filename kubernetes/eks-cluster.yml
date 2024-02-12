@@ -7,15 +7,14 @@ metadata:
   region : us-east-1
   
 vpc:
- id : "vpc-07cb6fcc22c50a82a"
+ id : "&{data.aws_vpc.piterbog.id}"
  subnets:
    public:
-      us-east-1-1a: { id: subnet-063a96822929cbab1 }
-      us-east-1-1b: { id: subnet-03c865d5a8a93fc01 }
-
+      us-east-1-1a: { id: "${data.aws_subnet_ids.public_subnets.ids[0]}" }
+      us-east-1-1b: { id: "${data.aws_subnet_ids.public_subnets.ids[1]}" }
    private:
-      us-east-1-1a: { id: subnet-0728ae5c19419ae75 }
-      us-east-1-1b: { id: subnet-0136a969468f94531 }
+      us-east-1-1a: { id: "${data.aws_subnet_ids.private_subnets.ids[0]}" }
+      us-east-1-1b: { id: "${data.aws_subnet_ids.private_subnets.ids[1]}" }
 
 nodeGroups:
   - name             : worker

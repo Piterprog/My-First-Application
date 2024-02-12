@@ -2,19 +2,19 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name   : k8s-prod
+  name   : k8s-prodaction
   version: "1.29"
   region : us-east-1
   
 vpc:
- id : "&{data.aws_vpc.piterbog.id}"
+ id : "vpc-0166efea323af9af1"
  subnets:
    public:
-      us-east-1-1a: { id: "${data.aws_subnet_ids.public_subnets.ids[0]}" }
-      us-east-1-1b: { id: "${data.aws_subnet_ids.public_subnets.ids[1]}" }
+      us-east-1-1a: { id: "subnet-0d7037ec83b117c2d" }
+      us-east-1-1b: { id: "subnet-0e44987f3895053d3" }
    private:
-      us-east-1-1a: { id: "${data.aws_subnet_ids.private_subnets.ids[0]}" }
-      us-east-1-1b: { id: "${data.aws_subnet_ids.private_subnets.ids[1]}" }
+      us-east-1-1a: { id: "subnet-076f4204ba65481fd" }
+      us-east-1-1b: { id: "subnet-02a1db2854525f011" }
 
 nodeGroups:
   - name             : worker

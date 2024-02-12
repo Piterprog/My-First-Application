@@ -1,52 +1,8 @@
 body {
-    margin: 0;
+    background-color: #808080;
+    color: #ffffff;
     font-family: Arial, sans-serif;
+    text-align: center;
+    padding-top: 50px;
 }
-#header {
-    height: 60px;
-    background-color: #f0f0f0;
-    position: relative;
-}
-#header img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-#container {
-    height: 150px;
-    position: relative;
-    overflow: hidden; /* Добавлено */
-}
-.ball {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    position: absolute;
-    animation: move 5s linear infinite;
-}
-#button, #startButton {
-    background-color: turquoise;
-    color: red;
-    border: none;
-    border-radius: 50%;
-    padding: 10px;
-    cursor: pointer;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-}
-#startButton {
-    bottom: 40px; /* Подвинута наверх */
-}
-#footer {
-    height: 20px;
-    background-color: #ccc;
-}
-@keyframes move {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(50px, 50px); }
-    50% { transform: translate(100px, 0); }
-    75% { transform: translate(50px, -50px); }
-    100% { transform: translate(0, 0); }
-}
+

@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docker IP Address</title>
-    <link rel="stylesheet" href="../styles/styles.css">
+    <title>Welcome</title>
+    <link rel="stylesheet" type="text/css" href="../styles/styles.css">
 </head>
-<body>
-    <div id="header">
-        <img src="header.jpg" alt="Header Image">
-        <p id="ipAddress" style="position: absolute; top: 0; left: 10px;">IP Address: Loading...</p>
-    </div>
-    <div id="container"></div>
-    <button id="button">Push</button>
-    <button id="startButton">Start</button>
-    <div id="footer">
-        <p id="counter">60</p>
-    </div>
-    <script src="../JavaScript/scripts.js"></script>
-</body>
-</html>
 
+<body>
+    <h1>Welcome</h1>
+    <p>Hello! Welcome to my page.</p>
+    <p>Your IP address is: <span id="ip-address"></span></p>
+
+    <script>
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ip-address').textContent = data.ip;
+            })
+            .catch(error => {
+                console.error('Error fetching IP address:', error);
+            });
+    </script>
+</body>
+
+</html>

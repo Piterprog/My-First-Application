@@ -12,6 +12,7 @@
         #header {
             height: 60px;
             background-color: #f0f0f0;
+            position: relative;
         }
         #header img {
             width: 100%;
@@ -33,9 +34,25 @@
             background-color: turquoise;
             color: red;
             border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #startButton {
+            background-color: red;
+            color: white;
+            border: none;
             border-radius: 10px;
             padding: 10px 20px;
             cursor: pointer;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         #footer {
             height: 20px;
@@ -49,16 +66,6 @@
         <p id="ipAddress" style="position: absolute; top: 0; left: 10px;">IP Address: Loading...</p>
     </div>
     <div id="container">
-        <button id="button" onclick="speedUpBalls()">Push</button>
-        <script>
-            function speedUpBalls() {
-                const balls = document.querySelectorAll('.ball');
-                balls.forEach(ball => {
-                    const speed = parseFloat(ball.style.animationDuration.replace('s', '')) - 0.5;
-                    ball.style.animationDuration = speed + 's';
-                });
-            }
-        </script>
         <script>
             document.addEventListener("DOMContentLoaded", function(event) {
                 const container = document.getElementById('container');
@@ -73,29 +80,39 @@
                 }
             });
         </script>
+        <button id="button" onclick="speedUpBalls()">Push</button>
+        <script>
+            function speedUpBalls() {
+                const balls = document.querySelectorAll('.ball');
+                balls.forEach(ball => {
+                    const speed = parseFloat(ball.style.animationDuration.replace('s', '')) - 0.5;
+                    ball.style.animationDuration = speed + 's';
+                });
+            }
+        </script>
     </div>
     <div id="footer">
         <button id="startButton" onclick="startTimer()">Start</button>
-        <p id="counter">0</p>
+        <p id="counter">60</p>
         <script>
-            let count = 0;
+            let count = 60;
             function startTimer() {
                 const startButton = document.getElementById('startButton');
                 startButton.disabled = true;
-                count = 0;
                 const counter = document.getElementById('counter');
                 const interval = setInterval(() => {
-                    count++;
+                    count--;
                     counter.innerText = count;
-                    if (count === 100) {
-                        clearInterval(interval);
-                        alert("Давай тебе надо ускориться!");
+                    if (count === 30) {
+                        alert("Тебе нужно ускориться!");
                     }
-                }, 100);
+                    if (count === 0) {
+                        clearInterval(interval);
+                        startButton.disabled = false;
+                    }
+                }, 1000);
             }
         </script>
     </div>
 </body>
 </html>
-
-    

@@ -1,4 +1,4 @@
-name: Build Docker image
+name: Сборка и загрузка Docker образа
 
 on:
   push:
@@ -27,22 +27,15 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Получение текущей версии образа
-        id: get-image-version
-        run: echo "::set-output name=version::$(cat image_version.txt)"
-
-      - name: Увеличение версии образа
-        id: increment-version
-        run: echo "::set-output name=version::$(($(echo '${{ steps.get-image-version.outputs.version }}' | cut -c 2-) + 1))"
-
-      - name: Запись новой версии образа в файл
-        run: echo "v${{ steps.increment-version.outputs.version }}" > image_version.txt
+      - name: Получение даты сборки
+        id: date
+        run: echo "::set-output name=date::$(date +%Y-%m-%d)"
 
       - name: Сборка Docker образа
         run: |
-          docker build -t myapp:v${{ steps.increment-version.outputs.version}} .
-          docker tag myapp:v${{ steps.increment-version.outputs.version}} 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:v${{ steps.increment-version.outputs.version }}
+          docker build -t myapp:v1 .
+          docker tag myapp:v1 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:v1-${{ steps.date.outputs.date }}
 
       - name: Push image to ECR
         run: |
-         docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:v${{ steps.increment-version.outputs.version }}
+         docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:v1-${{ steps.date.outputs.date }}

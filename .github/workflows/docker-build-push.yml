@@ -1,6 +1,3 @@
-
-
-
 name: Build and Push to ECR
 
 on:
@@ -32,10 +29,9 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t myapp:latest .
-        docker tag myapp:latest 381491829424.dkr.ecr.us-east-1.amazonaws.com/myapp:latest
+        docker build -t myapp:${{ github.run_number }} .
+        docker tag myapp:${{ github.run_number }} 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ github.run_number }}
     
     - name: Push Docker image to ECR
       run: |
-        docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/myapp:latest
-    
+        docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ github.run_number }}

@@ -33,6 +33,6 @@ jobs:
     - name: Build and push Docker image
       run: |
         docker build -t myapp:latest .
-        docker tag myapp:latest 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
-        docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:myapp:latest
+        docker tag myapp:latest 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest .
+        docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
     

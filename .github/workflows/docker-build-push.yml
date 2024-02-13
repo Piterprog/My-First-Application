@@ -1,4 +1,4 @@
-name: Build and push Docker image
+name: Сборка и загрузка Docker образа
 
 on:
   push:
@@ -13,25 +13,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Клонирование репозитория
         uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
+      - name: Настройка учетных данных AWS
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Login to Amazon ECR
+      - name: Вход в Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Set IMAGE_NAME environment variable
-        run: |
-          echo "IMAGE_NAME=my_first_app" >> $GITHUB_ENV
+      - name: Сборка Docker образа
+        run: docker build -t 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog/my_first_app:latest .
 
-      - name: Build and push Docker image
+      - name: Перезапись существующего Docker образа в ECR
         run: |
-          docker build -t 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog${{ env.IMAGE_NAME }}:latest .
-          docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog${{ env.IMAGE_NAME }}:latest
+          docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog/my_first_app:latest

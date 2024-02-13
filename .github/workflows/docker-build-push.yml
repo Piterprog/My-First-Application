@@ -37,5 +37,5 @@ jobs:
     
     - name: Push Docker image to ECR
       run: |
-       docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
+        docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
     

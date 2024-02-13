@@ -27,12 +27,16 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Получение версии из репозитория
+        id: version
+        run: echo "::set-output name=version::$(git describe --tags --always)"
+
       - name: Сборка Docker образа
         run: |
-          docker build -t myapp .
-          docker tag myapp:latest 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
+          docker build -t myapp:${{ steps.version.outputs.version }} .
+          docker tag myapp:${{ steps.version.outputs.version }} 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.version.outputs.version }}
 
       - name: Push image to ECR
         run: |
-         docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
-      
+         docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.version.outputs.version }}
+

@@ -28,8 +28,8 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Сборка Docker образа
-        run: docker build -t 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog/my_first_app:latest .
+        run: docker build -t 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:my_first_app:latest .
 
       - name: Перезапись существующего Docker образа в ECR
         run: |
-          docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog/my_first_app:latest
+          docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:my_first_app:latest

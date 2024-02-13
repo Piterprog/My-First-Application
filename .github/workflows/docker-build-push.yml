@@ -32,4 +32,5 @@ jobs:
 
       - name: Перезапись существующего Docker образа в ECR
         run: |
-          docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:my_first_app:latest
+          docker build -t 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog/my_first_app:latest .
+      

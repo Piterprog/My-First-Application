@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Клонирование репозитория
+      - name: Clone repo
         uses: actions/checkout@v2
 
       - name: Настройка учетных данных AWS
@@ -23,7 +23,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Вход в Amazon ECR
+      - name: Enter to ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 

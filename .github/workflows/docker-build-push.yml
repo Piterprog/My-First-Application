@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Сборка и загрузка Docker образа
 
 on:
   push:
@@ -13,29 +13,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone repository
+      - name: Clone repo
         uses: actions/checkout@v2
 
-      - name: Set up AWS credentials
+      - name: Настройка учетных данных AWS
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Log in to Amazon ECR
+      - name: Вход в ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Get build date
-        id: date
-        run: echo "::set-output name=date::$(date +%Y-%m-%d)"
+      - name: Получение даты и времени сборки
+        id: datetime
+        run: echo "::set-output name=datetime::$(date +%Y-%m-%d_%H-%M-%S)"
 
-      - name: Build Docker image
+      - name: Сборка Docker образа
         run: |
-          docker build -t myapp:v1 .
-          docker tag myapp:v1 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:v1-${{ steps.date.outputs.date }}
+          docker build -t myapp:-latest${{ steps.datetime.outputs.datetime }} .
+          docker tag myapp:-latest${{ steps.datetime.outputs.datetime }} 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest-${{ steps.datetime.outputs.datetime }}
 
-      - name: Push image to Amazon ECR
+      - name: Отправка образа в ECR
         run: |
-          docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:v1-${{ steps.date.outputs.date }}
+         docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:-latest${{ steps.datetime.outputs.datetime }}

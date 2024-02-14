@@ -22,10 +22,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          
+          aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
 
       - name: Получить дату и время сборки
         id: datetime
+        run: echo "::set-output name=datetime::$(date +%Y-%m-%d_%H-%M-%S)"
 
       - name: Сборка Docker образа
         run: |
@@ -34,10 +35,10 @@ jobs:
           docker tag myapp1:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
 
       - name: Пушить образ в ECR
-        id: push-image
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest 
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }} 
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
+          
 
    
 

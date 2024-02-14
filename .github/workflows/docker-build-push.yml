@@ -27,13 +27,17 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Get build date and time
+        id: datetime
+        run: echo "::set-output name=datetime::$(date +%Y-%m-%d_%H-%M-%S)"
+
       - name: Build Docker image
         run: |
-          docker build -t myapp:latest .
-          docker tag myapp:latest 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
-          docker tag myapp:latest 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:test
+          docker build -t myapp1:latest .
+          docker tag myapp1:latest 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
+          docker tag myapp1:latest 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
 
       - name: Push image to ECR
         run: |
           docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
-          docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:test
+          docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}

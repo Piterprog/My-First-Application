@@ -39,4 +39,4 @@ jobs:
 
       - name: Отправка образа в ECR
         run: |
-         docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
+         docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest${{ steps.datetime.outputs.datetime }}

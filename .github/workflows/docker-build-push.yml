@@ -39,10 +39,20 @@ jobs:
           docker tag myapp1:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}-latest
       
       - name: Push image to ECR
+        id: push-image
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}-latest
+        # Обработка ошибок
+        continue-on-error: true
+
+      - name: Check for Docker push success
+        if: ${{ failure() }}
+        run: |
+          echo "Docker push failed"
+          # Дополнительные действия при ошибке
+
           
 
       # - name: Настроить kubectl

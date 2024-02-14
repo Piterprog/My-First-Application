@@ -58,4 +58,4 @@ jobs:
       #     aws-region: ${{ secrets.AWS_REGION }}
     
       # - name: Развернуть на EKS
-      #   run: kubectl apply -f deployment.yaml
+      #   run: kubectl apply -f kubernetes/deployment.yml

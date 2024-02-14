@@ -21,7 +21,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: us-east-1
           aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
 
       - name: Получить дату и время сборки
@@ -31,13 +31,13 @@ jobs:
       - name: Сборка Docker образа
         run: |
           docker build -t myapp1:latest .
-          docker tag myapp1:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest
-          docker tag myapp1:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
+          docker tag myapp1:latest 381491829424.dkr.us-east-1.amazonaws.com/piterbog:latest
+          docker tag myapp1:latest 381491829424.dkr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
 
       - name: Пушить образ в ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest 
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
+          docker push 381491829424.dkr.us-east-1.amazonaws.com/piterbog:latest 
+          docker push 381491829424.dkr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
           
 
    

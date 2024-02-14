@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Сборка и загрузка Docker образа
 
 on:
   push:
@@ -13,44 +13,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone repo
+      - name: Клонировать репозиторий
         uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
+      - name: Настройка учетных данных AWS
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          aws-accaunt-id : ${{ secrets.AWS_ACCOUNT_ID }}
-         
+          aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Get build date and time
+      - name: Получить дату и время сборки
         id: datetime
-        run: echo "::set-output name=datetime::$(date +%Y-%m-%d_%H-%M-%S)"
 
-      - name: Build Docker image
+      - name: Сборка Docker образа
         run: |
           docker build -t myapp1:latest .
           docker tag myapp1:latest 381491829424.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest
           docker tag myapp1:latest 381491829424.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
-      
-      - name: Push image to ECR
+
+      - name: Пушить образ в ECR
         id: push-image
         run: |
-          docker push 381491829424.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest
-          docker push 381491829424.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
-        
-        continue-on-error: true
+          docker push 381491829424.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest || true
+          docker push 381491829424.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }} || true
 
-      - name: Check for Docker push success
+      - name: Проверка успешности загрузки Docker образа
         if: ${{ failure() }}
         run: |
-          echo "Docker push failed"
+          echo "Ошибка загрузки Docker образа"
           
 
           

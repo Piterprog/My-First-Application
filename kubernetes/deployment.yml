@@ -9,15 +9,15 @@ metadata:
 spec:
   selector:
     matchLabels:
-      project: myapp
+      project: myapp1
   template:
     metadata:
       labels:
-        project: myapp
+        project: myapp1
     spec:
       containers:
-        - name : web-myapp
-          image: 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:2024-02-13_20-49-30
+        - name : web-myapp1
+          image: 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
           ports:
             - containerPort: 80
 

@@ -36,14 +36,10 @@ jobs:
       - name: Пушить образ в ECR
         id: push-image
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest || true
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }} || true
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest 
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }} 
 
-      - name: Проверка успешности загрузки Docker образа
-        if: ${{ failure() }}
-        run: |
-          echo "Ошибка загрузки Docker образа"
-          
+   
 
           
 

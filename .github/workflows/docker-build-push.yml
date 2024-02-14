@@ -30,14 +30,14 @@ jobs:
       - name: Сборка Docker образа
         run: |
           docker build -t myapp1:latest .
-          docker tag myapp1:latest 381491829424.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest
-          docker tag myapp1:latest 381491829424.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
+          docker tag myapp1:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest
+          docker tag myapp1:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
 
       - name: Пушить образ в ECR
         id: push-image
         run: |
-          docker push 381491829424.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest || true
-          docker push 381491829424.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }} || true
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest || true
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }} || true
 
       - name: Проверка успешности загрузки Docker образа
         if: ${{ failure() }}

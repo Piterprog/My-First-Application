@@ -36,7 +36,9 @@ jobs:
           docker build -t myapp:latest .
           docker tag myapp:latest 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
           docker tag myapp:latest 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
-
+      
       - name: Отправка образа в ECR
         run: |
-         docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest${{ steps.datetime.outputs.datetime }}
+          docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latest
+          docker push 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
+      

@@ -37,15 +37,13 @@ jobs:
           docker build -t myapp1:latest .
           docker tag myapp1:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest
           docker tag myapp1:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
-          docker tag myapp1:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}-latest
       
       - name: Push image to ECR
         id: push-image
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}-latest
-        # Обработка ошибок
+        
         continue-on-error: true
 
       - name: Check for Docker push success

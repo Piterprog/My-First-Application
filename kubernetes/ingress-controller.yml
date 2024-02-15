@@ -10,6 +10,6 @@ spec:
       paths: 
        - path: 
          - backend:
-             serviceName: web-myapp
+             serviceName: web-app
              servicePort: 80
 

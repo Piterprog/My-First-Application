@@ -5,7 +5,7 @@ metadata:
 
 spec:
   rules:
-  - host: www.adv-it.net
+  - host: ip-my-loadbalancer
     http:
       paths: 
        - path: 

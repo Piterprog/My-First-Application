@@ -9,14 +9,14 @@ metadata:
 spec:
   selector:
     matchLabels:
-      project: myapp1
+      project: myapp
   template:
     metadata:
       labels:
-        project: myapp1
+        project: myapp
     spec:
       containers:
-        - name : web-myapp1
+        - name : web-app
           image: image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
           ports:
             - containerPort: 80

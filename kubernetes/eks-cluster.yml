@@ -20,4 +20,8 @@ nodeGroups:
   - name             : worker
     instanceType     : t2.micro
     desiredCapacity  : 4
-    privateNetworking: true          
+    privateNetworking: true    
+
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["api", "audit", "authenticator", "controllerManager", "scheduler"]

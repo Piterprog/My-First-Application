@@ -56,13 +56,9 @@ jobs:
           aws-region: us-east-1
     
       - name: Развернуть на EKS
-<<<<<<< HEAD
-        run: kubectl apply -f kubernetes/deployment.yml 
-=======
         run: kubectl apply -f kubernetes/deployment.yml
         
         
      
         
->>>>>>> refs/remotes/origin/main
      

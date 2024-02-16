@@ -33,23 +33,36 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t myapp1:latestv1 .
-          docker tag myapp1:latestv1 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv1
-          docker tag myapp1:latestv1 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
+          docker build -t myapp1:latestv2 .
+          docker tag myapp1:latestv2 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv2
+          docker tag myapp1:latestv2 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
       
       - name: Push image to ECR
         id: push-image
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv1
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv2
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
-         
+
+      - name: Configure kubectl
+        run: |
+          mkdir -p ~/.kube
+          echo "$KUBE_CONFIG_DATA" | base64 -d > ~/.kube/config
+
       - name: Настроить kubectl
         uses: aws-actions/configure-aws-credentials@v1
         with:
-         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-         aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
     
       - name: Развернуть на EKS
+<<<<<<< HEAD
         run: kubectl apply -f kubernetes/deployment.yml 
+=======
+        run: kubectl apply -f kubernetes/deployment.yml
+        
+        
+     
+        
+>>>>>>> refs/remotes/origin/main
      

@@ -22,8 +22,9 @@ jobs:
       - name: Copy kube.config
         run: |
           mkdir -p ~/.kube
-          cp $KUBE_CONFIG_PATH ~/.kube/config
+          cp /home/piterk/.kube.config ~/.kube/config
           chmod 600 ~/.kube/config
+          sell: /usr/bin/bash -e {0}
 
       - name: Configure AWS credentials for ECR
         uses: aws-actions/configure-aws-credentials@v2

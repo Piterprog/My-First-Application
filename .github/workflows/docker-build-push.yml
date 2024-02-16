@@ -46,7 +46,7 @@ jobs:
       - name: Configure kubectl
         run: |
           mkdir -p ~/.kube
-          cp /home/piter-k/.kube/config ~/.kube/config
+          echo "$KUBE_CONFIG_DATA" | base64 -d > ~/.kube/config
 
       - name: Настроить kubectl
         uses: aws-actions/configure-aws-credentials@v1
@@ -57,6 +57,7 @@ jobs:
     
       - name: Развернуть на EKS
         run: kubectl apply -f kubernetes/deployment.yml
+        
         
      
         

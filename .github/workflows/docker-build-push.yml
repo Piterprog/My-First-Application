@@ -51,5 +51,5 @@ jobs:
          aws-region: us-east-1
     
       - name: Развернуть на EKS
-        run: kubectl apply -f kubernetes/deployment.yml --validate=false
+        run: kubectl apply -f kubernetes/deployment.yml 
      

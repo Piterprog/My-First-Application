@@ -12,9 +12,18 @@ jobs:
   build-push-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      KUBE_CONFIG_PATH: ${{ github.workspace }}/kube.config
+
     steps:
-      - name: Clone repo
+      - name: Clone repository
         uses: actions/checkout@v2
+
+      - name: Copy kube.config
+        run: |
+          mkdir -p ~/.kube
+          cp $KUBE_CONFIG_PATH ~/.kube/config
+          chmod 600 ~/.kube/config
 
       - name: Configure AWS credentials for ECR
         uses: aws-actions/configure-aws-credentials@v2
@@ -51,5 +60,6 @@ jobs:
 
       - name: Deploy to EKS
         run: kubectl apply -f kubernetes/deployment.yml 
+        
         
      

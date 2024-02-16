@@ -1,9 +1,9 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: my-web-deployment
+  name: my-web-dep
   labels:
-    app  : my-k8s-application
+    app  : my-k8s-app
     env  : prod
     owner: PiterKononihin
 spec:

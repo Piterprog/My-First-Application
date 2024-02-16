@@ -22,7 +22,7 @@ jobs:
       - name: Copy kube.config
         run: |
           mkdir -p ~/.kube
-          cp $KUBE_CONFIG_PATH ../My-First-Application/My-First-Application/.kube/config
+          cp $KUBE_CONFIG_PATH ~/.kube/config
           chmod 600 ~/.kube/config
 
       - name: Configure AWS credentials for ECR

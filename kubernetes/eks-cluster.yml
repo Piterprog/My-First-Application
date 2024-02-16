@@ -23,7 +23,7 @@ vpc:
 
 nodeGroups:
   - name             : worker
-    instanceType     : t2.micro
+    instanceType     : t3.micro
     desiredCapacity  : 2
     privateNetworking: true    
 

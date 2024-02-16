@@ -24,7 +24,7 @@ vpc:
 nodeGroups:
   - name             : worker
     instanceType     : t3.micro
-    desiredCapacity  : 2
+    desiredCapacity  : 3
     privateNetworking: true    
 
 cloudWatch:

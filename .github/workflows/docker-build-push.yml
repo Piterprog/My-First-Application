@@ -42,16 +42,22 @@ jobs:
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv1
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
-         
-      #- name: Настроить kubectl
-      #  uses: aws-actions/configure-aws-credentials@v1
-      #  with:
-      #    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #    aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Configure kubectl
+        run: |
+          mkdir -p ~/.kube
+          cp /home/piterk/.kube/config ~/.kube/config
+
+      - name: Настроить kubectl
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
     
-      #- name: Развернуть на EKS
-      #  run: kubectl apply -f kubernetes/deployment.yml
+      - name: Развернуть на EKS
+        run: kubectl apply -f kubernetes/deployment.yml
+        
      
         
      

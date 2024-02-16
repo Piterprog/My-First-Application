@@ -46,20 +46,20 @@ jobs:
           docker tag myapp1:latestv1 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv1
           docker tag myapp1:latestv1 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
       
-      - name: Push image to ECR
-        id: push-image
-        run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv1
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
+      #- name: Push image to ECR
+       # id: push-image
+       # run: |
+        #  docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv1
+        #  docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
 
-      - name: Configure kubectl
-        uses: aws-actions/configure-kubectl@v1
-        with:
-          eks-region: us-east-1
-          eks-cluster-name: k8s-prodaction 
+     # - name: Configure kubectl
+     #   uses: aws-actions/configure-kubectl@v1
+      #  with:
+      #    eks-region: us-east-1
+      #    eks-cluster-name: k8s-prodaction 
 
-      - name: Deploy to EKS
-        run: kubectl apply -f kubernetes/deployment.yml 
+     # - name: Deploy to EKS
+     #   run: kubectl apply -f kubernetes/deployment.yml 
         
         
      

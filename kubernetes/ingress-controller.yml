@@ -1,17 +1,17 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: my-app-ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-
+  name: ingress-hosts
 spec:
+  ingressClassName: ingress-nginx
   rules:
-  - host: ip-my-loadbalancer
+  - host: a9465cdc854dc4760816d11a6cdf789a-312847125.us-east-1.elb.amazonaws.com
     http:
-      paths: 
-       - path: 
-         - backend:
-             serviceName: web-app
-             servicePort: 80
-
+      paths:
+      - path: /
+        pathType: Prefix  # Specify the pathType here
+        backend:
+          service:
+            name: my-web-dep
+            port:
+              number: 80

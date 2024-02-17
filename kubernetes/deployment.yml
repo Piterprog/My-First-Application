@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: web-app
-          image: adv4000/k8sphp:version2
+          image: 
           ports:
             - containerPort: 80
 

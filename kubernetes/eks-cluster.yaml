@@ -12,18 +12,18 @@ metadata:
   region : us-east-1
   
 vpc:
- id : "vpc-0395073cf81238cd2"
+ id : "vpc-0c94e8e1a024fabb2"
  subnets:
    public:
-      us-east-1-1a: { id: "subnet-06367ffa572162cbe" }
-      us-east-1-1b: { id: "subnet-0acd683ec649583aa" }
+      us-east-1-1a: { id: "subnet-079ed810f757a3ca0" }
+      us-east-1-1b: { id: "subnet-01dab896d6c4c2917" }
    private:
-      us-east-1-1a: { id: "subnet-061892a7d5da60f93" }
-      us-east-1-1b: { id: "subnet-02dcb75a1ee4a8d82" }
+      us-east-1-1a: { id: "subnet-0102b9a2c95a21f3b" }
+      us-east-1-1b: { id: "subnet-088366ead0605bcdc" }
 
 nodeGroups:
   - name             : workers
-    instanceType     : t2.micro
+    instanceType     : t2.medium
     desiredCapacity  : 4
     privateNetworking: true    
 

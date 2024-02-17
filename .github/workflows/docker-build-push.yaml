@@ -56,7 +56,8 @@ jobs:
           aws-region: us-east-1
     
       - name: Развернуть на EKS
-        run: kubectl apply -f kubernetes/deployment.yaml --validate=false
+        run: kubectl apply -f kubernetes/deployment.yaml --server=localhost:6443 --validate=false
+
         
         
      

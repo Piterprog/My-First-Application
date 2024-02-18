@@ -7,7 +7,7 @@ metadata:
 
 spec:
   rules:
-   - host: a0328100174664ea9999d9f2159cac67-99cec48b55703a4f.elb.us-east-1.amazonaws.com
+   - host: ""
      http:
         paths:
           - pathType: Prefix
@@ -15,5 +15,15 @@ spec:
             backend:
               service:
                 name: kuber-service-1
+                port: 
+                  number: 80
+   - host: ""
+     http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: kuber-service-2
                 port: 
                   number: 80

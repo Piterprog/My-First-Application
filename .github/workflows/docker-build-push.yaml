@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build and Deploy to EKS
 
 on:
   push:
@@ -9,22 +9,21 @@ on:
       - 'Web/**/*.css'
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone repo
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
       - name: Login to Amazon ECR
-        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Get build date and time
@@ -43,20 +42,8 @@ jobs:
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv2
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
 
-      - name: Configure kubectl
-        run: |
-          mkdir -p ~/.kube
-          echo "$KUBE_CONFIG_DATA" | base64 -d > ~/.kube/config
-
-      - name: Настроить kubectl
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-    
-      - name: Развернуть на EKS
-        run: kubectl apply -f kubernetes/deployment.yaml 
+      - name: Deploy to EKS
+        run: kubectl apply -f kubernetes/deployment.yaml
 
         
         

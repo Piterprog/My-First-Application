@@ -14,6 +14,7 @@ jobs:
 
     env:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
     steps:
       - name: Checkout code
@@ -29,9 +30,6 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Get build date and time
-        run: echo "BUILD_DATETIME=$(date +%Y-%m-%d_%H-%M-%S)" >> .env
-
       - name: Build Docker image
         run: |
           docker build -t myapp1:latestv3 .
@@ -40,3 +38,12 @@ jobs:
       - name: Push image to ECR
         run: |
           docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv3
+
+      - name: Setup kubectl
+        run: |
+          export KUBECONFIG=<(echo "$KUBE_CONFIG_DATA")
+
+      - name: Deploy to EKS
+        run: |
+          kubectl apply -f kubernetis/deploy-svc-1.yaml
+          

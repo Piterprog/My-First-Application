@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'Web/**/*.php'
+      - 'Web/**/*.html'
       - 'Web/**/*.css'
 
 jobs:
@@ -34,13 +34,11 @@ jobs:
         run: |
           docker build -t myapp1:latestv3 .
           docker tag myapp1:latestv3 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv3
-          docker tag myapp1:latestv3 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
       
       - name: Push image to ECR
         id: push-image
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv3
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:${{ steps.datetime.outputs.datetime }}
 
         
         

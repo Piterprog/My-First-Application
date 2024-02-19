@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: kuber-app
-        image: 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:2024-02-19_03-47-19
+        image: 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:2024-02-19_03-55-17
         ports:
         - containerPort: 80
 ---

@@ -17,13 +17,4 @@ spec:
                 name: kuber-service-1
                 port: 
                   number: 80
-   - host: "www.1piter-bog.com"
-     http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: kuber-service-2
-                port: 
-                  number: 80
+    

@@ -12,14 +12,14 @@ metadata:
   region : us-east-1
   
 vpc:
- id : "vpc-0c94e8e1a024fabb2"
+ id : "vpc-0309eaa461a851d13"
  subnets:
    public:
-      us-east-1-1a: { id: "subnet-079ed810f757a3ca0" }
-      us-east-1-1b: { id: "subnet-01dab896d6c4c2917" }
+      us-east-1-1a: { id: "subnet-04aab94785fafc7be" }
+      us-east-1-1b: { id: "subnet-0110ff078a0c67513" }
    private:
-      us-east-1-1a: { id: "subnet-0102b9a2c95a21f3b" }
-      us-east-1-1b: { id: "subnet-088366ead0605bcdc" }
+      us-east-1-1a: { id: "subnet-0218e930c5ac54eda" }
+      us-east-1-1b: { id: "subnet-05057739401ff6572" }
 
 nodeGroups:
   - name             : workers

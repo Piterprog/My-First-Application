@@ -32,12 +32,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t myapp1:latestv .
-          docker tag myapp1:latestv ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv
+          docker build -t myapp1:latestv6 .
+          docker tag myapp1:latestv6${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv6
       
       - name: Push image to ECR
         run: |
-          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv6
 
       # - name: Setup kubectl
       #   run: |

@@ -13,7 +13,7 @@
     <p>Hello! Welcome to my page.</p>
     <p>Your IP address is: <?php echo $_SERVER['REMOTE_ADDR']; ?></p>
     <p>Create by: Piter Kononihin...........</p>
-    <p>Hello! from kubernetes..........</p>
+    <p>Hello! from kubernetes................</p>
 </body>
 
 </html>

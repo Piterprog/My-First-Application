@@ -1,9 +1,7 @@
 FROM ubuntu:latest
 
-# Обновляем пакеты и устанавливаем nginx
-RUN apt-get update && apt-get install -y nginx
-RUN apt-get -y install epel-release && \
-    apt-get -y install php
+# Обновляем пакеты и устанавливаем nginx и PHP
+RUN apt-get update && apt-get install -y nginx php
 
 # Копируем веб-страницы
 COPY ./Web/pages /var/www/html/
@@ -14,4 +12,3 @@ CMD ["nginx", "-g", "daemon off;"]
 
 # Открываем порт 80
 EXPOSE 80
-

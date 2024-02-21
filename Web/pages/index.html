@@ -11,10 +11,28 @@
 <body>
     <h1>Welcome</h1>
     <p>Hello! Welcome to my page.</p>
-    <p>Create be : Piter Kononihin.</p>
-    <p>Hello! from kubernetis...</p>
-    <p>Server ip Address: <?php echo $_SERVER['SERVER_ADDR']; ?></p>
+    <p>Create be: Piter Kononihin.</p>
+    <p>Hello! from kubernetes...</p>
+    <p id="ipAddress">Client IP Address: Loading...</p>
 
+    <script>
+        // Функция для получения IP-адреса клиента
+        function getIPAddress() {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ipAddress').textContent = 'Client IP Address: ' + data.ip;
+                })
+                .catch(error => {
+                    console.error('Error fetching IP address:', error);
+                    document.getElementById('ipAddress').textContent = 'Unable to fetch IP address';
+                });
+        }
+
+        // Вызов функции для получения IP-адреса при загрузке страницы
+        getIPAddress();
+    </script>
 </body>
 
 </html>
+

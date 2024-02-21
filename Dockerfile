@@ -4,7 +4,7 @@ FROM ubuntu:latest
 RUN apt-get update && apt-get install -y tzdata
 
 # Обновляем пакеты и устанавливаем nginx и PHP
-RUN apt-get update && apt-get install -y nginx php
+RUN apt-get update && apt-get install -y nginx 
 
 # Устанавливаем часовой пояс для Израиля (Tel Aviv)
 RUN ln -fs /usr/share/zoneinfo/Asia/Jerusalem /etc/localtime

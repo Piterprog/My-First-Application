@@ -1,5 +1,8 @@
 FROM ubuntu:latest
 
+# Устанавливаем tzdata для настройки часового пояса
+RUN apt-get update && apt-get install -y tzdata
+
 # Обновляем пакеты и устанавливаем nginx и PHP
 RUN apt-get update && apt-get install -y nginx php
 

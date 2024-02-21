@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'Web/**/*.html'
+      - 'Web/**/*.php'
       - 'Web/**/*.css'
 
 jobs:
@@ -32,12 +32,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t myapp1:latestv4 .
-          docker tag myapp1:latestv4 ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv4
+          docker build -t myapp1:latestv1 .
+          docker tag myapp1:latestv1 ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv1
       
       - name: Push image to ECR
         run: |
-          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv4
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv1
 
       - name: Setup kubectl
         run: |

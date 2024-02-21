@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'Web/**/*.php'
+      - 'Web/**/*.html'
       - 'Web/**/*.css'
 
 jobs:

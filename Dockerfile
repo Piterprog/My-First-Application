@@ -3,9 +3,8 @@ FROM ubuntu:latest
 # Обновляем пакеты и устанавливаем nginx и PHP
 RUN apt-get update && apt-get install -y nginx php
 
-# Настройка часового пояса для Израиля (Tel Aviv)
-RUN ln -fs /usr/share/zoneinfo/Israel /etc/localtime && \
-    dpkg-reconfigure -f noninteractive tzdata
+# Устанавливаем часовой пояс для Израиля (Tel Aviv)
+RUN ln -fs /usr/share/zoneinfo/Asia/Jerusalem /etc/localtime
 
 # Копируем веб-страницы
 COPY ./Web/pages /var/www/html/

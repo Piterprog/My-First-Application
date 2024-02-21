@@ -2,7 +2,8 @@ FROM ubuntu:latest
 
 # Обновляем пакеты и устанавливаем nginx
 RUN apt-get update && apt-get install -y nginx
-RUN yum -y install php
+RUN yum -y install epel-release && \
+    yum -y install php
 
 # Копируем веб-страницы
 COPY ./Web/pages /var/www/html/

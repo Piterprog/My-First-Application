@@ -33,7 +33,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t myapp1:latestv5 .
-          docker tag myapp1:latestv5${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv5
+          docker tag myapp1:latestv5 ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv5
       
       - name: Push image to ECR
         run: |

@@ -38,8 +38,9 @@ jobs:
       - name: Push image to ECR
         run: |
           docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secret.AWS_REGION }}.amazonaws.com/piterbog:latestv10
- jobs:
+
   deploy:
+    needs: build-and-deploy
     name: Deploy to EKS
     runs-on: ubuntu-latest
 
@@ -56,5 +57,6 @@ jobs:
       - name: Deploy to EKS
         run: kubectl apply -f ./kubernetes/deploy-svc-1.yaml
         working-directory: ./kubernetes
+        
 
           

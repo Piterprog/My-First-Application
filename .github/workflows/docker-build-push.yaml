@@ -44,6 +44,6 @@ jobs:
       #     export KUBECONFIG=<(echo "$KUBE_CONFIG_DATA")
       
       # - name: Deploy to EKS
-      #   run: |
+      #   run: kubectl apply -f
       #     kubectl apply -f kubernetes/deploy-svc-1.yaml
           

@@ -9,7 +9,7 @@ spec:
   tls:
   - hosts:
     - app.piterbog.com
-    secretName: 
+    secretName: tls-secret-name
   rules:
   - host: "app.piterbog.com"
     http:

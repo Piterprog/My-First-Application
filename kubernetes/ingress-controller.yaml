@@ -7,7 +7,7 @@ metadata:
 
 spec:
   rules:
-   - host: "www.piter-bog.com"
+   - host: "www.piterbog.com"
      http:
         paths:
           - pathType: Prefix

@@ -24,14 +24,14 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secret.AWS_REGION }}
+        aws-region: ${{ secrets.AWS_REGION }}
 
     - name: Initialize Terraform
       run: terraform init
       working-directory: ./Terraform
 
     - name: Apply Terraform changes
-      run: terraform destroy -auto-approve
+      run: terraform apply -auto-approve
       working-directory: ./Terraform
 
 

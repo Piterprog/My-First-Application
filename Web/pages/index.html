@@ -9,24 +9,24 @@
 <body>
     <h1>Welcome</h1>
     <p>Hello! Welcome to my page.</p>
-    <p id="container-ip">Container IP Address: Loading...</p>
-    <p>Create by: Piter Kononihin...........</p>
-    <p>Hello! from kubernetes................</p>
+    <p>Your internal IP address is: <span id="ip-address"></span></p>
+    <p>Create by: Piter Kononihin.</p>
+    <p>Hello! from kubernetes.</p>
 
     <script>
-        function getContainerIPAddress() {
-            fetch('http://host.docker.internal:8888')
+        function getInternalIPAddress() {
+            fetch('http://my-service.namespace.svc.cluster.local') 
                 .then(response => response.text())
                 .then(data => {
-                    document.getElementById('container-ip').textContent = 'Container IP Address: ' + data;
+                    document.getElementById('ip-address').textContent = data;
                 })
                 .catch(error => {
-                    console.error('Error fetching container IP address:', error);
-                    document.getElementById('container-ip').textContent = 'Unable to fetch container IP address';
+                    console.error('Error fetching internal IP address:', error);
+                    document.getElementById('ip-address').textContent = 'Unable to fetch internal IP address';
                 });
         }
 
-        getContainerIPAddress();
+        getInternalIPAddress();
     </script>
 </body>
 </html>

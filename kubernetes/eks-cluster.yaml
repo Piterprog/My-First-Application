@@ -12,14 +12,14 @@ metadata:
   region : us-east-1
   
 vpc:
- id : "vpc-00577c65e850cc2ee"
+ id : "vpc-06cc182ad4581b34f"
  subnets:
    public:
-      us-east-1-1a: { id: "subnet-0bc4f1dd575d7506b" }
-      us-east-1-1b: { id: "subnet-0873acb1faa4273a8" }
+      us-east-1-1a: { id: "subnet-0f1d1ac4cce3c2bee" }
+      us-east-1-1b: { id: "subnet-0547fed60b54f6a67" }
    private:
-      us-east-1-1a: { id: "subnet-0aaa72cf4ae9d3a56" }
-      us-east-1-1b: { id: "subnet-0e29c9cd6f560e7c7" }
+      us-east-1-1a: { id: "subnet-0046c5879af8ac914" }
+      us-east-1-1b: { id: "subnet-00bd0a1bdcb1e359f" }
 
 nodeGroups:
   - name             : workers
@@ -27,6 +27,3 @@ nodeGroups:
     desiredCapacity  : 4
     privateNetworking: true    
 
-cloudWatch:
-  clusterLogging:
-    enableTypes: ["api", "audit", "authenticator", "controllerManager", "scheduler"]

@@ -4,9 +4,7 @@ metadata:
   name: main-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # Перенаправление с HTTP на HTTPS
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"  # Принудительное перенаправление на HTTPS
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"  # Протокол бэкэнда HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # Перенаправление с HTTP на HTTP
 
 spec:
   rules:

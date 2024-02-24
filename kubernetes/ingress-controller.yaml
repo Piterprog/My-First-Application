@@ -9,7 +9,7 @@ spec:
   tls:
   - hosts:
     - app.piterbog.com
-    secretName: arn:aws:acm:us-east-1:381491829424:certificate/9e16dc87-be99-4341-b0f0-d2dbbe8ee63e
+    secretName: 
   rules:
   - host: "app.piterbog.com"
     http:

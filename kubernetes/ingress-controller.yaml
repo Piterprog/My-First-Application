@@ -1,23 +1,28 @@
-apiVersion: networking.k8s.io/v1
+ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: main-ingress
   annotations:
-    kubernetes.io/ingress.class: "nginx"  # или ваш класс Ingress
-    nginx.ingress.kubernetes.io/backend-protocol: "TCP"
+    kubernetes.io/ingress.class: "nginx"  # Используйте ваш класс Ingress
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"  # Укажите, что бэкенд работает по протоколу HTTPS
 spec:
   ingressClassName: nginx
   rules:
-  - host: "web.piterbog.com"
+  - host: "web.piterbog.com"  # Ваш домен
     http:
       paths:
       - pathType: Prefix
         path: /
         backend:
           service:
-            name: kuber-service-1
+            name: kuber-service-1  # Название вашего сервиса
             port:
-              number: 80
+              number: 80  # Порт, на котором работает ваш сервис
+  tls:
+  - hosts:
+    - "web.piterbog.com"  # Ваш домен
+    secretName: tls-secret-name  # Имя секрета Kubernetes, содержащего SSL-сертификат и приватный ключ из ACM
+    
               
 
                   

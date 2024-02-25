@@ -11,12 +11,13 @@
     <p>Hello! Welcome to my page.</p>
     <p>Create by: Piter Kononihin.</p>
     <p>Hello! from kubernetes.</p>
-    <p>Zaya I love you !!!</p>
-    <p>Zaya I love you more then life !!!</p>
+    
+    <p>Internal IP Address: <span id="ip-address"></span></p>
 
     <script>
+        // Функция для получения и отображения внутреннего IP-адреса
         function getInternalIPAddress() {
-            fetch('http://my-service.namespace.svc.cluster.local') 
+            fetch('/get-ip') // Путь к серверному эндпоинту, который будет возвращать IP-адрес
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('ip-address').textContent = data;
@@ -27,8 +28,13 @@
                 });
         }
 
+        // Запускаем функцию для получения IP-адреса при загрузке страницы
         getInternalIPAddress();
+
+        // Запускаем таймер для обновления IP-адреса каждые 5 секунд
+        setInterval(getInternalIPAddress, 5000);
     </script>
 </body>
 </html>
+
 

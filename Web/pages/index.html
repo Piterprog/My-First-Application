@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
     <link rel="stylesheet" type="text/css" href="../styles/styles.css">
+    <style>
+        /* Стили для времени */
+        #current-time {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome</h1>
@@ -12,29 +21,32 @@
     <p>Create by: Piter Kononihin.</p>
     <p>Hello! from kubernetes.</p>
     
-    <p>Internal IP Address: <span id="ip-address"></span></p>
+    <!-- Элемент для отображения текущего времени -->
+    <div id="current-time"></div>
 
     <script>
-        // Функция для получения и отображения внутреннего IP-адреса
-        function getInternalIPAddress() {
-            fetch('/get-ip') // Путь к серверному эндпоинту, который будет возвращать IP-адрес
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('ip-address').textContent = data;
-                })
-                .catch(error => {
-                    console.error('Error fetching internal IP address:', error);
-                    document.getElementById('ip-address').textContent = 'Unable to fetch internal IP address';
-                });
+        // Функция для получения текущего времени и обновления его на странице
+        function updateCurrentTime() {
+            var currentTimeElement = document.getElementById('current-time');
+            var currentTime = new Date();
+            var hours = currentTime.getHours();
+            var minutes = currentTime.getMinutes();
+            var seconds = currentTime.getSeconds();
+            // Добавляем ноль перед однозначными числами минут и секунд
+            minutes = (minutes < 10 ? '0' : '') + minutes;
+            seconds = (seconds < 10 ? '0' : '') + seconds;
+            // Форматируем время в формат ЧЧ:ММ:СС
+            var formattedTime = hours + ':' + minutes + ':' + seconds;
+            // Обновляем содержимое элемента с текущим временем
+            currentTimeElement.textContent = 'Current Time: ' + formattedTime;
         }
 
-        // Запускаем функцию для получения IP-адреса при загрузке страницы
-        getInternalIPAddress();
+        // Запускаем функцию для обновления времени при загрузке страницы
+        updateCurrentTime();
 
-        // Запускаем таймер для обновления IP-адреса каждые 5 секунд
-        setInterval(getInternalIPAddress, 5000);
+        // Запускаем таймер для обновления времени каждую секунду
+        setInterval(updateCurrentTime, 1000);
     </script>
 </body>
 </html>
-
 

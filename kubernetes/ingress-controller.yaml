@@ -3,12 +3,11 @@ kind: Ingress
 metadata:
   name: main-ingress
   annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"  
-
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
+  ingressClassName: nginx
   rules:
-   - host: "app.piterbog.com"
+   - host: "web.piterbog.com"
      http:
         paths:
           - pathType: Prefix
@@ -18,5 +17,3 @@ spec:
                 name: kuber-service-1
                 port:
                   number: 80
-
-    

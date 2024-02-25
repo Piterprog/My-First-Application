@@ -17,3 +17,8 @@ spec:
                 name: kuber-service-1
                 port:
                   number: 80
+  tls:
+  - hosts:
+    - web.piterbog.com
+    secretName: tls-secret-name # имя вашего Kubernetes секрета, содержащего SSL-сертификат и приватный ключ
+    

@@ -3,22 +3,22 @@ kind: Ingress
 metadata:
   name: main-ingress
   annotations:
-    kubernetes.io/ingress.class: "nginx"  # Если используется Nginx Ingress Controller
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    alb.ingress.kubernetes.io/scheme: "internet-facing"  # (Необходимо, если ALB настроен для внешнего доступа)
-    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-east-1:123456789012:certificate/your-certificate-arn"  # ARN SSL-сертификата в ACM
+    kubernetes.io/ingress.class: "nginx"  # или ваш класс Ingress
+    nginx.ingress.kubernetes.io/backend-protocol: "TCP"
 spec:
   ingressClassName: nginx
   rules:
-   - host: "web.piterbog.com"
-     http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: kuber-service-1
-                port:
-                  number: 80
+  - host: "web.piterbog.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: kuber-service-1
+            port:
+              number: 80
+              
+
                   
     

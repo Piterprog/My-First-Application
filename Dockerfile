@@ -18,4 +18,4 @@ CMD ["nginx", "-g", "daemon off;"]
 
 # Открываем порт 80
 EXPOSE 80
-EXPOSE 443
+

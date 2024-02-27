@@ -32,14 +32,15 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t myapp1:latestv4 .
-          docker tag myapp1:latestv4 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv4
+          docker build -t myapp1:latestvnew .
+          docker tag myapp1:latestvnew ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestvnew
       
       - name: Push image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv4
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestvnew
 
   deploy:
+    needs: build-and-deploy
     runs-on: ubuntu-latest
         
     steps:

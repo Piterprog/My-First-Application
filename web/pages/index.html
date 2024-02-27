@@ -1,57 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
+    <title>Добро пожаловать</title>
     <link rel="stylesheet" type="text/css" href="../styles/styles.css">
-    <style>
-        /* Стили для времени */
-        #current-time {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            font-size: 18px;
-        }
-    </style>
 </head>
 <body>
-    <p> Welcome to my page.</p>
-    <p> Hello! from kubernetes.</p>
-    <p> Is my first project off create pipeline for my app.</p>
-    <p> I beginer in DevOps world. </p>
-    <p> I from Israel</p>   
-    <p> I 33 yer old.</p>
-    <p> I love world.</p>
-    <p> Create by: Piter Kononihin.</p>
+    <p>Добро пожаловать на мою страницу.</p>
+    <p>Привет! от Kubernetes.</p>
+    <p>Это мой первый проект по созданию конвейера для моего приложения.</p>
+    <p>Я новичок в мире DevOps.</p>
+    <p>Я из Израиля.</p>
+    <p>Мне 33 года.</p>
+    <p>Я люблю мир.</p>
+    <p>Создано: Питер Кононихин.</p>
     
-    
-    <!-- Элемент для отображения текущего времени -->
     <div id="current-time"></div>
 
     <script>
-        // Функция для получения текущего времени и обновления его на странице
         function updateCurrentTime() {
             var currentTimeElement = document.getElementById('current-time');
             var currentTime = new Date();
             var hours = currentTime.getHours();
             var minutes = currentTime.getMinutes();
             var seconds = currentTime.getSeconds();
-            // Добавляем ноль перед однозначными числами минут и секунд
+            var day = currentTime.getDate();
+            var month = currentTime.getMonth() + 1; 
+            var year = currentTime.getFullYear();
+
+            
             minutes = (minutes < 10 ? '0' : '') + minutes;
             seconds = (seconds < 10 ? '0' : '') + seconds;
-            // Форматируем время в формат ЧЧ:ММ:СС
+
             var formattedTime = hours + ':' + minutes + ':' + seconds;
-            // Обновляем содержимое элемента с текущим временем
-            currentTimeElement.textContent = 'Current Time: ' + formattedTime;
+            var formattedDate = day + '/' + month + '/' + year;
+
+            currentTimeElement.textContent = 'Текущее время: ' + formattedTime + ' | ' + 'Текущая дата: ' + formattedDate;
         }
 
-        // Запускаем функцию для обновления времени при загрузке страницы
         updateCurrentTime();
 
-        // Запускаем таймер для обновления времени каждую секунду
         setInterval(updateCurrentTime, 1000);
     </script>
 </body>
 </html>
-

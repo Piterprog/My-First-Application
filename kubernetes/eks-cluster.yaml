@@ -27,7 +27,7 @@ nodeGroups:
     desiredCapacity  : 2
     privateNetworking: true    
 
-  - name             : workers-2
-    instanceType     : t2.medium
-    desiredCapacity  : 2
-    privateNetworking: true  
+  # - name             : workers-2
+  #   instanceType     : t2.medium
+  #   desiredCapacity  : 2
+  #   privateNetworking: true  

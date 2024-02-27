@@ -30,12 +30,21 @@ jobs:
 
       - name: Build Docker image
         run: |
+<<<<<<< HEAD
           docker build -t myapp1:latestv1 .
           docker tag myapp1:latestv1 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv1
       
       - name: Push image to ECR
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv1
+=======
+          docker build -t myapp1:latestv1.03 .
+          docker tag myapp1:latestv1.03 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv1.03
+      
+      - name: Push image to ECR
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv1.03
+>>>>>>> refs/remotes/origin/main
 
   deploy:
     needs: build-and-deploy
@@ -57,7 +66,11 @@ jobs:
         run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog
         
       - name: Pull image from ECR
+<<<<<<< HEAD
         run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv1
+=======
+        run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv1.03
+>>>>>>> refs/remotes/origin/main
         
       - name: Configure kubectl
         run: aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name k8s-cluster

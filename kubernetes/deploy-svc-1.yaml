@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: kuber-app
-        image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestvnew
+        image: 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:latestv100
         ports:
         - containerPort: 80
 ---

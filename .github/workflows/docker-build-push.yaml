@@ -32,12 +32,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t myapp1:latestvnew .
-          docker tag myapp1:latestvnew ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestvnew
+          docker build -t myapp1:latestv100 .
+          docker tag myapp1:latestv100 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv100
       
       - name: Push image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestvnew
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv100
 
   deploy:
     needs: build-and-deploy
@@ -59,17 +59,7 @@ jobs:
         run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog
         
       - name: Pull image from ECR
-        run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestvnew
-        
-      # - name: Install kubectl
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y apt-transport-https
-      #     sudo apt-get install -y curl
-      #     sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-      #     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-      #     sudo apt-get update
-      #     sudo apt-get install -y kubectl
+        run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv100
         
       - name: Configure kubectl
         run: aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name k8s-cluster

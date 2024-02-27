@@ -31,12 +31,8 @@ jobs:
       working-directory: ./terraform
 
     - name: Apply Terraform changes
-      run: terraform destroy -auto-approve
-<<<<<<< HEAD
+      run: terraform apply -auto-approve
       working-directory: ./terraform
-=======
-      working-directory: ./Terraform
->>>>>>> refs/remotes/origin/main
 
 
       

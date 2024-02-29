@@ -29,12 +29,12 @@ jobs:
         run: echo "::set-output name=version::$(date +%Y%m%d%H%M%S)"
       - name: Build Docker image
         run: |
-          docker build -t myapp1:v2 .
-          docker tag myapp1:v2 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:v2
+          docker build -t myapp1:v3 .
+          docker tag myapp1:v3 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:v3
     
       - name: Push image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:v2
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:v3
 
   deploy:
     needs: build-and-deploy

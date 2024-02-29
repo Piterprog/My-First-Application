@@ -26,16 +26,19 @@ jobs:
 
       - name: Set version
         id: set_version
-        run: echo "::set-output name=version::$(date +%Y%m%d%H%M%S)"
+        run: |
+          current_datetime=$(date +%Y%m%d%H%M%S)
+          formatted_datetime=$(echo $current_datetime | sed 's/\(....\)\(..\)\(..\)\(..\)\(..\)\(..\)/\1.\2.\3.\4.\5.\6/')
+          echo "::set-output name=version::$formatted_datetime"
 
       - name: Build Docker image
         run: |
-          docker build -t myapp1:${{ steps.set_version.outputs.version }} .
-          docker tag myapp1:${{ steps.set_version.outputs.version }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.set_version.outputs.version }}
+          docker build -t myapp1:latest${{ steps.set_version.outputs.version }} .
+          docker tag myapp1:latest${{ steps.set_version.outputs.version }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latest${{ steps.set_version.outputs.version }}
     
       - name: Push image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.set_version.outputs.version }}
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latesr${{ steps.set_version.outputs.version }}
 
   deploy:
     needs: build-and-deploy

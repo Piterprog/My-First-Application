@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'web/**'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -23,14 +24,18 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Set version
+        id: set_version
+        run: echo "::set-output name=version::$(date +%Y%m%d%H%M%S)"
+
       - name: Build Docker image
         run: |
-          docker build -t myapp1:latestv5 .
-          docker tag myapp1:latestv5 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv5
+          docker build -t myapp1:${{ steps.set_version.outputs.version }} .
+          docker tag myapp1:${{ steps.set_version.outputs.version }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.set_version.outputs.version }}
     
       - name: Push image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv5
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.set_version.outputs.version }}
 
   deploy:
     needs: build-and-deploy
@@ -52,7 +57,7 @@ jobs:
         run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog
         
       - name: Pull image from ECR
-        run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:latestv5
+        run: docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:${{ steps.set_version.outputs.version }}
         
       - name: Configure kubectl
         run: aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name k8s-cluster

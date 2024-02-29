@@ -29,12 +29,12 @@ jobs:
         run: echo "::set-output name=version::$(date +%Y%m%d%H%M%S)"
       - name: Build Docker image
         run: |
-          docker build -t myapp1:v1 .
-          docker tag myapp1:v1 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:v1
+          docker build -t myapp1:v2 .
+          docker tag myapp1:v2 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:v2
     
       - name: Push image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:v1
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog:v2
 
   deploy:
     needs: build-and-deploy
@@ -54,13 +54,9 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/piterbog
-        
-      - name: Delete existing deployment
-        run: kubectl delete -f kubernetes/deploy-svc-1.yaml
-        
+
       - name: Configure kubectl
         run: aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name k8s-cluster
-        
+
       - name: Deploy to EKS
         run: kubectl apply -f kubernetes/deploy-svc-1.yaml
-        

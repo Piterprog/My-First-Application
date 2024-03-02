@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set version
-        run: echo "APP_VERSION=v6" >> $GITHUB_ENV
+        run: echo "APP_VERSION=v6.latest" >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2

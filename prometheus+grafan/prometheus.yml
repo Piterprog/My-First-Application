@@ -8,8 +8,8 @@ scrape_configs:
     - targets: ['localhost:9090'] ## IP Address of the localhost
   - job_name: 'ec2_aws_node_exporter_discovery'
     ec2_sd_configs:
-      - port: 9100 # referred to nodeExporter exposed port
-        #role_arn: arn:aws:iam::342241566140:role/Ec2-Instance-Role
+      - port: 9100 
+        role_arn: arn:aws:iam::381491829424:role/for_ecs
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
@@ -17,7 +17,7 @@ scrape_configs:
   - job_name: ecs_CAdvisor
     ec2_sd_configs:
       - port: 9200 
-        #role_arn: arn:aws:iam::342241566140:role/Ec2-Instance-Role
+        role_arn: arn:aws:iam::381491829424:role/for_ecs
         filters:
         - name: tag:aws:autoscaling:groupName
           values:

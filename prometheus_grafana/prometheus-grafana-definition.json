@@ -11,7 +11,7 @@
                 "essential": false,
                 "command": [
                     "wget",
-                    "https://raw.githubusercontent.com/santosh07bec/ecs-monitoring-with-prometheus-grafana/master/prometheus.yml",
+                    "https://github.com/Piterprog/My-First-Application/blob/main/prometheus_grafana/prometheus.yml",
                     "-P",
                     "/mnt"
                 ],

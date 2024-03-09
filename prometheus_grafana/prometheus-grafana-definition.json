@@ -13,18 +13,18 @@
                     "wget",
                     "https://github.com/Piterprog/My-First-Application/blob/main/prometheus_grafana/prometheus.yml",
                     "-P",
-                    "/mnt"
+                    "/etc/prometheus/"
                 ],
                 "mountPoints": [
                     {
                         "sourceVolume": "prometheus_config",
-                        "containerPath": "/mnt"
+                        "containerPath": "/etc/prometheus/"
                     }
                 ]
             },
             {
                 "name": "prometheus",
-                "image": "prom/prometheus:v2.4.0",
+                "image": "prom/prometheus:v2.50.1",
                 "cpu": 512,
                 "memory": 512,
                 "memoryReservation": 256,
@@ -51,7 +51,7 @@
             },
             {
                 "name": "grafana",
-                "image": "grafana/grafana",
+                "image": "grafana/grafana:latest",
                 "cpu": 512,
                 "memory": 512,
                 "memoryReservation": 128,

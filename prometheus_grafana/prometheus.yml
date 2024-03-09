@@ -20,6 +20,6 @@ scrape_configs:
         - name: tag:aws:cloudformation:stack-name
           values:
           - Infra-ECS-Cluster-Dev-cluster-85c1fdf0
-  - job_name: 'ecs_CAdvisor'
+  - job_name: 'ecs_CAdviso'
     static_configs:
     - targets: ['54.158.220.234:9200']

@@ -11,14 +11,14 @@
                 "essential": false,
                 "command": [
                     "wget",
-                    "https://github.com/Piterprog/My-First-Application/blob/main/prometheus_grafana/prometheus.yml",
+                    "https://raw.githubusercontent.com/Piterprog/My-First-Application/main/prometheus_grafana/prometheus.yml",
                     "-P",
-                    "/etc/prometheus"
+                    "/mnt"
                 ],
                 "mountPoints": [
                     {
                         "sourceVolume": "prometheus_config",
-                        "containerPath": "/etc/prometheus"
+                        "containerPath": "/mnt"
                     }
                 ]
             },

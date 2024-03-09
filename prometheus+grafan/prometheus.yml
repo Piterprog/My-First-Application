@@ -13,7 +13,7 @@ scrape_configs:
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
-          - ECS
+          - Infra-ECS-Cluster-ECScluster-468c07e9-ECSAutoScalingGroup-Z28pQRB3mhZj
   - job_name: ecs_CAdvisor
     ec2_sd_configs:
       - port: 9200 
@@ -21,4 +21,4 @@ scrape_configs:
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
-          - ECS
+          - Infra-ECS-Cluster-ECScluster-468c07e9-ECSAutoScalingGroup-Z28pQRB3mhZj

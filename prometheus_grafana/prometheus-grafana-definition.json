@@ -13,12 +13,12 @@
                     "wget",
                     "https://github.com/Piterprog/My-First-Application/blob/main/prometheus_grafana/prometheus.yml",
                     "-P",
-                    "/etc/prometheus/"
+                    "/etc/prometheus"
                 ],
                 "mountPoints": [
                     {
                         "sourceVolume": "prometheus_config",
-                        "containerPath": "/etc/prometheus/"
+                        "containerPath": "/etc/prometheus"
                     }
                 ]
             },

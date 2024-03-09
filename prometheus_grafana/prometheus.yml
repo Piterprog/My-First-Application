@@ -6,12 +6,20 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
     - targets: ['localhost:9090'] ## IP Address of the localhost
-  - job_name: 'node-exporter'
-    static_configs:
-    - targets: ['34.200.253.245:9100 ']
-  - job_name: 'cadvisor-exporter'
+  - job_name: 'ec2_aws_node_exporter_discovery'
+    ec2_sd_configs:
+      - port: 9100 # referred to nodeExporter exposed port
+        filters:
+        - name: tag:aws:cloudformation:stack-name
+          values:
+          - Infra-ECS-Cluster-Dev-cluster-85c1fdf0
+  - job_name: ecs_CAdvisor
+    ec2_sd_configs:
+      - port: 9200 # referred to cAdvisor exposed port
+        filters:
+        - name: tag:aws:cloudformation:stack-name
+          values:
+          - Infra-ECS-Cluster-Dev-cluster-85c1fdf0
+  - job_name: 'custom_target'
     static_configs:
     - targets: ['54.158.220.234:9200']
-  - job_name: 'web-application'
-    static_configs:
-    - targets: ['34.200.253.245:9999']

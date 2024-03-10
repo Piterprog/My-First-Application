@@ -1,6 +1,6 @@
 {
     "family": "cadvisor-node-exporter-definition",
-    "taskRoleArn": "",
+    "taskRoleArn": "arn:aws:iam::381491829424:role/permissionecs2",
         "containerDefinitions": [
             {
                 "name": "node-exporter",

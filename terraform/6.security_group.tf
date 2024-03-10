@@ -32,8 +32,8 @@ resource "aws_security_group" "Security_vpc_musad" {
 
   ingress {
     description = "Application-container"
-    from_port   = 3000-65535
-    to_port     = 3000-65535
+    from_port   = 3000
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

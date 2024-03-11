@@ -1,1 +1,1 @@
-~ECS monitoring using Prometheus and Grafana
+ECS monitoring using Prometheus and Grafana

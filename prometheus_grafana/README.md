@@ -2,7 +2,8 @@ ECS monitoring using Prometheus and Grafana
 
 1.Create Task Definitions for cAdvisor, Node-Exporter, Prometheus and Grafana:
 
- a. aws ecs register-task-definition --cli-input-json file://./cadvisor-node-exporter-definition.json --region us-east-1
+ a. aws ecs register-task-definition --cli-input-json file://./cadvisor-node-exporter-definition.json --region us-east-1       
+ 
  b. aws ecs register-task-definition --cli-input-json file://./prometheus-grafana-definition.json --region us-east-1
 
 2.Create a DAEMON Service to run cAdvisor, Node-Exporter on every node in ECS Cluster:

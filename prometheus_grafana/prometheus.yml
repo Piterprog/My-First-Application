@@ -6,19 +6,9 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
     - targets: ['localhost:9090'] ## IP Address of the localhost
-  - job_name: 'ec2_aws_node_exporter_discovery'
-    ec2_sd_configs:
-      - port: 9100 
-        role_arn: arn:aws:iam::381491829424:role/newec2
-        filters:
-        - name: tag:aws:autoscaling:groupName
-          values:
-          - Infra-ECS-Cluster-clusterDev-f0431260-ECSAutoScalingGroup-wnGZSkt29ImN
-  - job_name: ecs_CAdvisor
-    ec2_sd_configs:
-      - port: 9200 
-        role_arn: arn:aws:iam::381491829424:role/newec2
-        filters:
-        - name: tag:aws:autoscaling:groupName
-          values:
-          - Infra-ECS-Cluster-clusterDev-f0431260-ECSAutoScalingGroup-wnGZSkt29ImN
+  - job_name: 'node-exporter'
+    static_configs:
+    - targets: ['44.202.224.95:9010','34.207.173.254:9010','3.90.177.253:9010']
+  - job_name: 'cadvisor-exporter'
+    static_configs:
+    - targets: ['44.202.224.95:9200','34.207.173.254:9200','3.90.177.253:9200']

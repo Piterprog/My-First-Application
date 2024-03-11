@@ -21,3 +21,9 @@ ECS monitoring using Prometheus and Grafana
 
 5.After logginig in, add datasource:
 
+ 
+6.Useful Grafana Dashboards:
+
+Docker Host Monitoring: 11074, 10619, 395
+Docker Monitoring: 193
+Docker monitoring with Node selection: 8321

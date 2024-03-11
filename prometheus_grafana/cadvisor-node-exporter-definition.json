@@ -1,6 +1,6 @@
 {
     "family": "cadvisor-node-exporter-definition",
-    "taskRoleArn": "arn:aws:iam::381491829424:role/ecsmoyarol",
+    "taskRoleArn": "arn:aws:iam::381491829424:role/all",
         "containerDefinitions": [
             {
                 "name": "node-exporter",

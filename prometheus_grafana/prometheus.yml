@@ -12,15 +12,15 @@ scrape_configs:
       - port: 9100 # referred to nodeExporter exposed port
         #role_arn: arn:aws:iam::381491829424:role/ecsmoyarol
         filters:
-        - name: aws:ecs:serviceName
+        - name: "tag:aws:autoscaling:groupName"
           values:
-          - cadvisor-node-exporter
+          - "Infra-ECS-Cluster-dev-cluster-9dedfac2-ECSAutoScalingGroup-c83DVPlDLULW"
   - job_name: ecs_CAdvisor
     ec2_sd_configs: 
       - region: 'us-east-1'
       - port: 9200 # referred to cAdvisor exposed port
         #role_arn: arn:aws:iam::381491829424:role/ecsmoyarol
         filters:
-        - name: aws:ecs:serviceName
+        - name: "tag:aws:autoscaling:groupName"
           values:
-          - cadvisor-node-exporter
+          - "Infra-ECS-Cluster-dev-cluster-9dedfac2-ECSAutoScalingGroup-c83DVPlDLULW"

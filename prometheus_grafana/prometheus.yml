@@ -8,7 +8,7 @@ scrape_configs:
     - targets: ['localhost:9090'] ## IP Address of the localhost
   - job_name: 'node-exporter'
     static_configs:
-    - targets: ['44.202.224.95:9100','34.207.173.254:9100','3.90.177.253:9100']
+    - targets: ['3.219.218.158:9100','3.218.143.62:9100','184.72.166.10:9100']
   - job_name: 'cadvisor-exporter'
     static_configs:
-    - targets: ['44.202.224.95:9200','34.207.173.254:9200','3.90.177.253:9200']
+    - targets: ['3.219.218.158:9200','3.218.143.62:9200','184.72.166.10:9200']

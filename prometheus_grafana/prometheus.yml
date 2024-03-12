@@ -10,7 +10,7 @@ scrape_configs:
     ec2_sd_configs:
       - region: 'us-east-1'
       - port: 9100 # referred to nodeExporter exposed port
-        role_arn: arn:aws:iam::381491829424:role/ecsmoyarol
+        #role_arn: arn:aws:iam::381491829424:role/ecsmoyarol
         filters:
         - name: aws:ecs:serviceName
           values:
@@ -19,7 +19,7 @@ scrape_configs:
     ec2_sd_configs: 
       - region: 'us-east-1'
       - port: 9200 # referred to cAdvisor exposed port
-        role_arn: arn:aws:iam::381491829424:role/ecsmoyarol
+        #role_arn: arn:aws:iam::381491829424:role/ecsmoyarol
         filters:
         - name: aws:ecs:serviceName
           values:

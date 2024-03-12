@@ -17,7 +17,7 @@ scrape_configs:
               - cluster
           - name: tag:ecs:service
             values:
-              - YourECSServiceName
+              - cadvisor-node-exporter
 
   - job_name: 'ecs_cadvisor'
     ec2_sd_configs:
@@ -28,6 +28,6 @@ scrape_configs:
               - cluster
           - name: tag:ecs:service
             values:
-              - YourECSServiceName
+              - cadvisor-node-exporter
               
 

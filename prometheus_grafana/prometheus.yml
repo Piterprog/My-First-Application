@@ -8,6 +8,7 @@ scrape_configs:
     - targets: ['localhost:9090'] ## IP Address of the localhost
   - job_name: 'ec2_aws_node_exporter_discovery'
     ec2_sd_configs:
+      - region: 'us-east-1'
       - port: 9100 # referred to nodeExporter exposed port
         role_arn: arn:aws:iam::381491829424:instance-profile/ecsInstanceRole
         filters:
@@ -15,7 +16,8 @@ scrape_configs:
           values:
           - ECS Instance - dev-cluster
   - job_name: ecs_CAdvisor
-    ec2_sd_configs:
+    ec2_sd_configs: 
+      - region: 'us-east-1'
       - port: 9200 # referred to cAdvisor exposed port
         role_arn: arn:aws:iam::381491829424:instance-profile/ecsInstanceRole
         filters:

@@ -9,8 +9,6 @@ scrape_configs:
   - job_name: 'node-exporter'
     static_configs:
     - targets: ['3.219.218.158:9100','3.218.143.62:9100','184.72.166.10:9100']
-     role_arn: arn:aws:iam::381491829424:role/newec2
   - job_name: 'cadvisor-exporter'
     static_configs:
     - targets: ['3.219.218.158:9200','3.218.143.62:9200','184.72.166.10:9200']
-     role_arn: arn:aws:iam::381491829424:role/newec2

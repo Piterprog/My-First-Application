@@ -13,12 +13,11 @@ scrape_configs:
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
-          - arn:aws:autoscaling:us-east-1:381491829424:autoScalingGroup:6761545e-ba5d-4169-be38-fbf487f09217:autoScalingGroupName/Infra-ECS-Cluster-cluster-da68bf3a-ECSAutoScalingGroup-PcjMjar6wCiw
-  - job_name: ecs_CAdvisor
+          - Infra-ECS-Cluster-cluster-da68bf3a-ECSAutoScalingGroup-PcjMjar6wCiw
     ec2_sd_configs:
       - port: 9200 # referred to cAdvisor exposed port
         role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
-          - arn:aws:autoscaling:us-east-1:381491829424:autoScalingGroup:6761545e-ba5d-4169-be38-fbf487f09217:autoScalingGroupName/Infra-ECS-Cluster-cluster-da68bf3a-ECSAutoScalingGroup-PcjMjar6wCiw
+          - Infra-ECS-Cluster-cluster-da68bf3a-ECSAutoScalingGroup-PcjMjar6wCiw

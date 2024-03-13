@@ -10,9 +10,9 @@ scrape_configs:
     ecs_sd_configs:
       - port: 9100 # referred to nodeExporter exposed port
         task_definition_name: 'cadvisor-node-exporter-definition'
-        cluster_name: 'cluster'
+        cluster_name: 'clus'
   - job_name: ecs_CAdvisor
     ecs_sd_configs:
       - port: 9200 # referred to cAdvisor exposed port
         task_definition_name: 'cadvisor-node-exporter-definition'
-        cluster_name: 'cluster'
+        cluster_name: 'clus'

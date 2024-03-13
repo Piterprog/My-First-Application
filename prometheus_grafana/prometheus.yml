@@ -11,13 +11,13 @@ scrape_configs:
       - port: 9100 # referred to nodeExporter exposed port
         role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
         filters:
-        - name: aws:cloudformation:stack-id
+        - name: Name
           values:
-          - arn:aws:cloudformation:us-east-1:381491829424:stack/Infra-ECS-Cluster-cluster-da68bf3a/1d6af420-e13c-11ee-b0e1-122b7d23f8ab
+          - ECS Instance - cluster
     ec2_sd_configs:
       - port: 9200 # referred to cAdvisor exposed port
         role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
         filters:
-        - name: aws:cloudformation:stack-id
+        - name: Name
           values:
-          - arn:aws:cloudformation:us-east-1:381491829424:stack/Infra-ECS-Cluster-cluster-da68bf3a/1d6af420-e13c-11ee-b0e1-122b7d23f8ab
+          - ECS Instance - cluster

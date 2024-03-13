@@ -11,13 +11,13 @@ scrape_configs:
       - port: 9100 # referred to nodeExporter exposed port
         role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
         filters:
-        - name: Name
+        - name: aws:autoscaling:groupName
           values:
-          - ECS Instance - cluster
+          - ECS
     ec2_sd_configs:
       - port: 9200 # referred to cAdvisor exposed port
         role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
         filters:
-        - name: Name
+        - name: aws:autoscaling:groupName
           values:
-          - ECS Instance - cluster
+          - ECS

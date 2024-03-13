@@ -11,7 +11,6 @@ scrape_configs:
       - port: 9100 # referred to nodeExporter exposed port
         task_definition_name: ''
         cluster_name: ''
-          - ECS
   - job_name: ecs_CAdvisor
     ecs_sd_configs:
       - port: 9200 # referred to cAdvisor exposed port

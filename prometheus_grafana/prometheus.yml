@@ -5,7 +5,7 @@ global:
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
-    - targets: ['44.193.28.202:9090'] ## IP Address of the localhost
+    - targets: ['http://monitor_ec2_public_ip:9090/targets'] ## IP Address of the localhost
   - job_name: 'ec2_aws_node_exporter_discovery'
     ec2_sd_configs:
       - port: 9100 # referred to nodeExporter exposed port

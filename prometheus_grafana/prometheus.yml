@@ -7,14 +7,14 @@ scrape_configs:
     static_configs:
     - targets: ['localhost:9090'] ## IP Address of the localhost
   - job_name: 'ec2_aws_node_exporter_discovery'
-    ec2_sd_configs:
+    ecs_sd_configs:
       - port: 9100 # referred to nodeExporter exposed port
         role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
         filters:
         - name: aws:autoscaling:groupName
           values:
           - ECSAutoScalingGroup-PcjMjar6wCiw
-    ec2_sd_configs:
+    ecs_sd_configs:
       - port: 9200 # referred to cAdvisor exposed port
         role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
         filters:

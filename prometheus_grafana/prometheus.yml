@@ -10,7 +10,15 @@ scrape_configs:
     static_configs:
       - targets: ['node-exporter:9100'] # referred to nodeExporter exposed port
         role_arn: arn:aws:iam::381491829424:role/forEC2fromECS
+        filters:
+        - name: tag:aws:autoscaling:groupName
+          values:
+          - Infra-ECS-Cluster-DevOps-7f3f11f5-ECSAutoScalingGroup-MilNE1gFgVOk
   - job_name: ecs_CAdvisor
     static_configs:
       - targets: ['cadvisor-exporter:9200'] # referred to cAdvisor exposed port
         role_arn: arn:aws:iam::381491829424:role/forEC2fromECS
+        filters:
+        - name: tag:aws:autoscaling:groupName
+          values:
+          - Infra-ECS-Cluster-DevOps-7f3f11f5-ECSAutoScalingGroup-MilNE1gFgVOk

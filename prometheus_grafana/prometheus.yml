@@ -6,9 +6,14 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
     - targets: ['localhost:9090'] ## IP Address of the localhost
-  - job_name: 'node_exporter'
-    static_configs:
-      - targets: [':9100'] 
+  - job_name: 'ecs_aws_node_exporter_discovery'
+    ecs_sd_configs:
+      - port: 9100 # referred to nodeExporter exposed port
+        task_definition_name: ''
+        cluster_name: ''
+          - ECS
   - job_name: ecs_CAdvisor
-    static_configs:
-      - targets: [':9200'] 
+    ecs_sd_configs:
+      - port: 9200 # referred to cAdvisor exposed port
+        task_definition_name: ''
+        cluster_name: ''

@@ -6,19 +6,9 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
     - targets: ['localhost:9090'] ## IP Address of the localhost
-  - job_name: 'ec2_aws_node_exporter_discovery'
-    ecs_sd_configs:
-      - port: 9100 # referred to nodeExporter exposed port
-        role_arn: arn:aws:iam::381491829424:role/Piterpolicyec2DescribeInstances
-        filters:
-        - name: aws:autoscaling:groupName
-          values:
-          - 	Infra-ECS-Cluster-Cluster-d75dc68b-ECSAutoScalingGroup-ennCoKN5hp6m
-    ecs_sd_configs:
-      - port: 9200 # referred to cAdvisor exposed port
-        role_arn: arn:aws:iam::381491829424:role/Piterpolicyec2DescribeInstances
-        filters:
-        - name: aws:autoscaling:groupName
-          values:
-          - Infra-ECS-Cluster-Cluster-d75dc68b-ECSAutoScalingGroup-ennCoKN5hp6m
- 
+  - job_name: 'node-exporter'
+    static_configs:
+    - targets: ['3.230.1.71','54.80.17.152:9100','3.210.197.253:9100']
+  - job_name: 'cadvisor-exporter'
+    static_configs:
+    - targets: ['3.230.1.71:9200','54.80.17.152:9200','3.210.197.253:9200']

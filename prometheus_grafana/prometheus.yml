@@ -9,14 +9,14 @@ scrape_configs:
   - job_name: 'ec2_aws_node_exporter_discovery'
     ec2_sd_configs:
       - port: 9100 # referred to nodeExporter exposed port
-        role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
+        #role_arn: arn:aws:iam::381491829424:role/Piterpolicyec2DescribeInstances
         filters:
         - name: aws:autoscaling:groupName
           values:
           - Infra-ECS-Cluster-Cluster-d75dc68b-ECSAutoScalingGroup-ennCoKN5hp6m
     ec2_sd_configs:
       - port: 9200 # referred to cAdvisor exposed port
-        role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
+        #role_arn: arn:aws:iam::381491829424:role/Piterpolicyec2DescribeInstances
         filters:
         - name: aws:autoscaling:groupName
           values:

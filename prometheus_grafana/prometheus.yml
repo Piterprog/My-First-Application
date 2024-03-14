@@ -8,6 +8,8 @@ scrape_configs:
     - targets: ['localhost:9090'] ## IP Address of the localhost
   - job_name: 'ec2_aws_node_exporter_discovery'
     ec2_sd_configs:
+      - endpoint: "ec2.us-east-1.amazonaws.com"
+        region: "us-east-1"
       - port: 9100 # referred to nodeExporter exposed port
         role_arn: arn:aws:iam::381491829424:role/Piterpolicyec2DescribeInstances
         filters:
@@ -16,6 +18,8 @@ scrape_configs:
           - Infra-ECS-Cluster-Cluster-d75dc68b-ECSAutoScalingGroup-ennCoKN5hp6m
   - job_name: ecs_CAdvisor
     ec2_sd_configs:
+      - endpoint: "ec2.us-east-1.amazonaws.com"
+        region: "us-east-1"
       - port: 9200 # referred to cAdvisor exposed port
         role_arn: arn:aws:iam::381491829424:role/Piterpolicyec2DescribeInstances
         filters:

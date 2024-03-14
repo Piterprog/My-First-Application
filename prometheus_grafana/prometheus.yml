@@ -15,7 +15,7 @@ scrape_configs:
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
-          - Infra-ECS-Cluster-clus-17b4e162-ECSAutoScalingGroup-DNfheOSzmc6b
+          - Infra-ECS-Cluster-cluster-da68bf3a-ECSAutoScalingGroup-oEDkkKx0GvXt
   - job_name: ecs_CAdvisor
     ec2_sd_configs:
       - endpoint: "ec2.us-east-1.amazonaws.com"
@@ -25,4 +25,4 @@ scrape_configs:
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
-          - Infra-ECS-Cluster-clus-17b4e162-ECSAutoScalingGroup-DNfheOSzmc6b
+          - Infra-ECS-Cluster-cluster-da68bf3a-ECSAutoScalingGroup-oEDkkKx0GvXt

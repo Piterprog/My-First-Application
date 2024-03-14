@@ -13,11 +13,11 @@ scrape_configs:
         filters:
         - name: aws:autoscaling:groupName
           values:
-          - Infra-ECS-Cluster-ClusoterProd-78cd83ae-ECSAutoScalingGroup-oPuTKD4fypP7
+          - Infra-ECS-Cluster-Cluster-d75dc68b-ECSAutoScalingGroup-ennCoKN5hp6m
     ec2_sd_configs:
       - port: 9200 # referred to cAdvisor exposed port
         role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
         filters:
         - name: aws:autoscaling:groupName
           values:
-          - Infra-ECS-Cluster-ClusoterProd-78cd83ae-ECSAutoScalingGroup-oPuTKD4fypP7
+          - Infra-ECS-Cluster-Cluster-d75dc68b-ECSAutoScalingGroup-ennCoKN5hp6m

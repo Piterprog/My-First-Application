@@ -11,18 +11,18 @@ scrape_configs:
       - endpoint: "ec2.us-east-1.amazonaws.com"
         region: "us-east-1"
       - port: 9100 # referred to nodeExporter exposed port
-        role_arn: arn:aws:iam::381491829424:role/Piterpolicyec2DescribeInstances
+        role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
-          - Infra-ECS-Cluster-Cluster-d75dc68b-ECSAutoScalingGroup-ennCoKN5hp6m
+          - Infra-ECS-Cluster-clus-17b4e162-ECSAutoScalingGroup-DNfheOSzmc6b
   - job_name: ecs_CAdvisor
     ec2_sd_configs:
       - endpoint: "ec2.us-east-1.amazonaws.com"
         region: "us-east-1"
       - port: 9200 # referred to cAdvisor exposed port
-        role_arn: arn:aws:iam::381491829424:role/Piterpolicyec2DescribeInstances
+        role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
-          - Infra-ECS-Cluster-Cluster-d75dc68b-ECSAutoScalingGroup-ennCoKN5hp6m
+          - Infra-ECS-Cluster-clus-17b4e162-ECSAutoScalingGroup-DNfheOSzmc6b

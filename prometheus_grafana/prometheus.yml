@@ -13,7 +13,6 @@ scrape_configs:
       - port: 9100 # referred to nodeExporter exposed port
         role_arn: arn:aws:iam::381491829424:role/Piterpolicyec2DescribeInstances
         filters:
-          tag:PublicIP: public
         - name: tag:aws:autoscaling:groupName
           values:
           - Infra-ECS-Cluster-Cluster-d75dc68b-ECSAutoScalingGroup-ennCoKN5hp6m
@@ -24,7 +23,6 @@ scrape_configs:
       - port: 9200 # referred to cAdvisor exposed port
         role_arn: arn:aws:iam::381491829424:role/Piterpolicyec2DescribeInstances
         filters:
-          tag:PublicIP: public
         - name: tag:aws:autoscaling:groupName
           values:
           - Infra-ECS-Cluster-Cluster-d75dc68b-ECSAutoScalingGroup-ennCoKN5hp6m

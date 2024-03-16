@@ -17,7 +17,7 @@ scrape_configs:
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
-          - Infra-ECS-Cluster-cluster-da68bf3a-ECSAutoScalingGroup-oEDkkKx0GvXt
+          - Infra-ECS-Cluster-Clusterpiter-2558a95e-ECSAutoScalingGroup-umGoIffWyZoq
 
   - job_name: ecs_CAdvisor
     ec2_sd_configs:
@@ -28,7 +28,7 @@ scrape_configs:
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
-          - Infra-ECS-Cluster-cluster-da68bf3a-ECSAutoScalingGroup-oEDkkKx0GvXt
+          - Infra-ECS-Cluster-Clusterpiter-2558a95e-ECSAutoScalingGroup-umGoIffWyZoq
 
     params:
       ACCESS_KEY_ID: /parameter/ACCESS_KEY_ID

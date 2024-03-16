@@ -8,7 +8,7 @@
 
 2.Create a DAEMON Service to run cAdvisor, Node-Exporter on every node in ECS Cluster:
 
-  aws ecs create-service --cluster MyWorkingCluster --service-name cadvisor-node-exporter --task-definition cadvisor-node- 
+  aws ecs create-service --cluster MyWorkingCluster --service-name cadvisor-node-exporter-task-definition cadvisor-node- 
      exporter-definition:1 --launch-type EC2 --scheduling-strategy DAEMON --region us-east-1
 
 3.Run one ECS Task for Prometheus and Grafana in the clsuter:

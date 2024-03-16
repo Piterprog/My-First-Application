@@ -2,10 +2,12 @@ global:
   scrape_interval: 5s
   external_labels:
     monitor: 'devopsage-monitor'
+
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
     - targets: ['localhost:9090'] ## IP Address of the localhost
+
   - job_name: 'ec2_aws_node_exporter_discovery'
     ec2_sd_configs:
       - endpoint: "ec2.us-east-1.amazonaws.com"
@@ -16,6 +18,7 @@ scrape_configs:
         - name: tag:aws:autoscaling:groupName
           values:
           - Infra-ECS-Cluster-cluster-da68bf3a-ECSAutoScalingGroup-oEDkkKx0GvXt
+
   - job_name: ecs_CAdvisor
     ec2_sd_configs:
       - endpoint: "ec2.us-east-1.amazonaws.com"
@@ -26,3 +29,7 @@ scrape_configs:
         - name: tag:aws:autoscaling:groupName
           values:
           - Infra-ECS-Cluster-cluster-da68bf3a-ECSAutoScalingGroup-oEDkkKx0GvXt
+
+    params:
+      ACCESS_KEY_ID: /parameter/ACCESS_KEY_ID
+      SECRET_ACCESS_KEY: /parameter/SECRET_ACCESS_KEY

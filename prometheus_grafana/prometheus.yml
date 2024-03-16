@@ -29,7 +29,6 @@ scrape_configs:
         - name: tag:aws:autoscaling:groupName
           values:
           - Infra-ECS-Cluster-Clusterfortest-d90bddc7-ECSAutoScalingGroup-St8hjDSjKUNo
-
     params:
       ACCESS_KEY_ID: /parameter/ACCESS_KEY_ID
       SECRET_ACCESS_KEY: /parameter/SECRET_ACCESS_KEY

@@ -15,7 +15,7 @@ scrape_configs:
         filters:
           - name: "tag:aws:autoscaling:groupName"
             values:
-              - "Infra-ECS-Cluster-Clusterfortest-d90bddc7-ECSAutoScalingGroup-St8hjDSjKUNo"
+              - "Infra-ECS-Cluster-Piter-cf33d05b-ECSAutoScalingGroup-xFIKDEpDG45K"
 
   - job_name: 'ec2-cadvisor-exporter'
     ec2_sd_configs:
@@ -24,4 +24,4 @@ scrape_configs:
         filters:
           - name: "tag:aws:autoscaling:groupName"
             values:
-              - "Infra-ECS-Cluster-Clusterfortest-d90bddc7-ECSAutoScalingGroup-St8hjDSjKUNo"
+              - "Infra-ECS-Cluster-Piter-cf33d05b-ECSAutoScalingGroup-xFIKDEpDG45K"

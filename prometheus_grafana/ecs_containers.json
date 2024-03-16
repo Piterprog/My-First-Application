@@ -1,0 +1,10 @@
+[
+    {
+      "targets": ["cadvisor-exporter:9200"],
+      "labels": {
+        "job": "ecs_CAdvisor",
+        "cluster": "Clusterfortest"
+      }
+    }
+  ]
+  

@@ -5,25 +5,25 @@ global:
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
-    - targets: ['localhost:9090'] ## IP Address of the localhost
+    - targets: ['localhost:9090'] # IP Address of the localhost
   - job_name: 'ec2_aws_node_exporter_discovery'
     ec2_sd_configs:
       - endpoint: "ec2.us-east-1.amazonaws.com"
         region: "us-east-1"
-      - port: 9100 # referred to nodeExporter exposed port
-        role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
+        port: 9100 # referred to nodeExporter exposed port
         filters:
         - name: tag:aws:autoscaling:groupName
           values:
           - Infra-ECS-Cluster-Clusterfortest-d90bddc7-ECSAutoScalingGroup-St8hjDSjKUNo
   - job_name: ecs_CAdvisor
-    static_configs:
-      - targets: ['cadvisor-exporter:9200'] # referred to cAdvisor exposed port
-        role_arn: arn:aws:iam::381491829424:role/ECSroleEC2
-        filters:
-        - name: tag:aws:autoscaling:groupName
-          values:
-          - Infra-ECS-Cluster-Clusterfortest-d90bddc7-ECSAutoScalingGroup-St8hjDSjKUNo
+    file_sd_configs:
+      - files:
+          - ./ecs_containers.json
+    relabel_configs:
+      - source_labels: [__meta_ecs_container_name]
+        action: keep
+        regex: "cadvisor.*"
+    metrics_path: /metrics
     params:
       ACCESS_KEY_ID: /parameter/ACCESS_KEY_ID
       SECRET_ACCESS_KEY: /parameter/SECRET_ACCESS_KEY

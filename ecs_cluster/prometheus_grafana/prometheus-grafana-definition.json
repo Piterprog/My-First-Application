@@ -11,7 +11,7 @@
                 "essential": false,
                 "command": [
                     "wget",
-                    "https://raw.githubusercontent.com/Piterprog/My-First-Application/main/prometheus_grafana/prometheus.yml",
+                    "https://raw.githubusercontent.com/Piterprog/My-First-Application/main/ecs_cluster/prometheus_grafana/prometheus.yml",
                     "-P",
                     "/etc/prometheus"
                 ],

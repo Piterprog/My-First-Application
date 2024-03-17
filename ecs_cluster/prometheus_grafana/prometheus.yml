@@ -3,15 +3,14 @@ global:
   external_labels:
     monitor: 'devopsage-monitor'
 
-
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
-    - targets: ['localhost:9090'] ## IP Address of the localhost
+    - targets: ['localhost:9090'] 
   - job_name: 'ec2-node-exporter'
     ec2_sd_configs:
       - region: "us-east-1"
-        port: 9100 # Assuming your node-exporter runs on this port
+        port: 9100 
         filters:
           - name: "tag:aws:autoscaling:groupName"
             values:
@@ -20,7 +19,7 @@ scrape_configs:
   - job_name: 'ec2-cadvisor-exporter'
     ec2_sd_configs:
       - region: "us-east-1"
-        port: 9200 # Assuming your cadvisor-exporter runs on this port
+        port: 9200 
         filters:
           - name: "tag:aws:autoscaling:groupName"
             values:

@@ -1,9 +1,9 @@
 {
     "executionRoleArn": "",
     "taskRoleArn": "",
-      "family": "web-main-app",
-        "containerDefinitions": [
-       {
+    "family": "web-app-hello-from-ecs-cluster",
+    "containerDefinitions": [
+      {
         "name": "web-app",
         "image": "381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:v10.latest",
         "cpu": 256,
@@ -17,6 +17,9 @@
         ],
         "essential": true
       }
+    ],
+    "compatibilities": [
+      "EC2"
     ],
     "networkMode": "bridge"
   }

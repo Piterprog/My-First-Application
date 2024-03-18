@@ -1,0 +1,23 @@
+{
+    "executionRoleArn": "",
+    "taskRoleArn": "",
+      "family": "web-application",
+        "containerDefinitions": [
+       {
+        "name": "web-app",
+        "image": "381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:v10.latest",
+        "cpu": 256,
+        "memory": 512,
+        "portMappings": [
+          {
+            "containerPort": 80,
+            "hostPort": 0,
+            "protocol": "tcp"
+          }
+        ],
+        "essential": true
+      }
+    ],
+    "networkMode": "bridge"
+  }
+  

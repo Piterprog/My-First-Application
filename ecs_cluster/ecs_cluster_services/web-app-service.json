@@ -1,7 +1,7 @@
 {
     "serviceName": "web-app-service",
     "cluster": "Ecs_cluster", 
-    "taskDefinition": "web-app-hello-from-ecs-cluster",
+    "taskDefinition": "web-app-hello-from-ecs-cluster:1",
     "loadBalancers": [
       {
         "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/my-target-group/abcdef123456",

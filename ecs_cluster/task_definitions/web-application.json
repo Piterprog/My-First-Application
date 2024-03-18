@@ -1,7 +1,7 @@
 {
     "executionRoleArn": "",
     "taskRoleArn": "",
-      "family": "web-application",
+      "family": "web-main-app",
         "containerDefinitions": [
        {
         "name": "web-app",

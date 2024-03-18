@@ -6,7 +6,7 @@
       {
         "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/my-target-group/abcdef123456",
         "containerName": "web-app",
-        "containerPort": 443
+        "containerPort": 80
       }
     ],
     "desiredCount": 2,

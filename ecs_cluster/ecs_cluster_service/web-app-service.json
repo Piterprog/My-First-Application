@@ -1,0 +1,16 @@
+{
+    "serviceName": "web-app-service",
+    "cluster": "Ecs_cluster", 
+    "taskDefinition": "web-app-hello-from-ecs-cluster",
+    "loadBalancers": [
+      {
+        "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/my-target-group/abcdef123456",
+        "containerName": "web-app",
+        "containerPort": 443
+      }
+    ],
+    "desiredCount": 2,
+    "launchType": "EC2",
+    "schedulingStrategy": "REPLICA"
+  }
+  

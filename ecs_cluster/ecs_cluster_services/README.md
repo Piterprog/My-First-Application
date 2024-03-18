@@ -1,3 +1,7 @@
 # aws cli command for create service
 
-aws ecs create-service --cli-input-json file://
+aws ecs create-service --cli-input-json file://web-app-service.json --cluster Ecs_cluster
+
+# aws cli commnad for update service
+
+aws ecs update-service --cluster Ecs_cluster --service 

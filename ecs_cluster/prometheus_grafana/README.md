@@ -13,7 +13,7 @@
 
 3.Run one ECS Task for Prometheus and Grafana in the clsuter:
 
-  aws ecs run-task --cluster MyWorkingCluster --task-definition prometheus-grafana-definition:1  --region us-east-1
+  aws ecs run-task --cluster Ecs_cluster --task-definition prometheus-grafana-definition:1  --region us-east-1
 
 4.Access Grafana Dashboard using URL: http://monitor_ec2_public_ip:3000 Use user:admin and password:admin to login and then 
   reset the password.

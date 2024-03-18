@@ -1,6 +1,6 @@
 # aws cli command for create service
 
-aws ecs create-service --cli-input-json file://web-app-service.json --region us-east-1
+aws ecs create-service --cli-input-json file://./web-app-service.json --region us-east-1
 
 
 # aws cli commnad for update service

@@ -18,9 +18,6 @@
         "essential": true
       }
     ],
-    "compatibilities": [
-      "EC2"
-    ],
     "networkMode": "bridge"
   }
   

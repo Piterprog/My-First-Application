@@ -16,7 +16,7 @@ vpc:
  subnets:
    public:
       us-east-1-1a: { id: "subnet-0eb06d27c51515011" }
-      us-east-1-1b: { id: "subnet-0309186d6f4cdca58" }
+      us-east-1-1b: { id: "subnet-0f1516e4abc528741" }
    private:
       us-east-1-1a: { id: "subnet-03a62711e40d5d045" }
       us-east-1-1b: { id: "subnet-00aded8ae99a215ba" }

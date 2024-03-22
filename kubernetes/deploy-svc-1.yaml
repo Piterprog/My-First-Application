@@ -13,12 +13,19 @@ spec:
     metadata:
       labels:
         app: http-server-1
-  spec:
-    containers:
-    - name: kuber-app
-      image: 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:v7.latest
-      ports:
-    - containerPort: 80
+    spec:  
+      containers:
+      - name: kuber-app
+        image: 381491829424.dkr.ecr.us-east-1.amazonaws.com/piterbog:v5.latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "1"
+            memory: "512Mi"
+          requests:
+            cpu: "0.5"
+            memory: "256Mi"
 ---
 apiVersion: v1
 kind: Service
@@ -32,4 +39,5 @@ spec:
       port: 80
       targetPort: 80
   type: ClusterIP
+
 

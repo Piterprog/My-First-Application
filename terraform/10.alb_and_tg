@@ -1,6 +1,3 @@
-provider "aws" {
-  region = "your_region"
-}
 
 data "aws_vpc" "selected" {
   tags = {

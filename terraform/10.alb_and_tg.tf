@@ -1,4 +1,6 @@
-
+variable "cerificate_arn" {
+ description = "arn SSL/TLS"
+}
 
 resource "aws_lb" "alb_web" {
   name               = "alb-web"

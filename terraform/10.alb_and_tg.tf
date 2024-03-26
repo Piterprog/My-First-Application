@@ -8,6 +8,7 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
+
 resource "aws_lb" "alb_web" {
   name               = "alb-web"
   internal           = false

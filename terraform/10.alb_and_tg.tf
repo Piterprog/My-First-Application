@@ -1,4 +1,4 @@
-variable "cerificate_arn" {
+variable "certificate_arn" {
  description = "arn SSL/TLS"
 }
 

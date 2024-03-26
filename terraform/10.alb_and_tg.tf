@@ -50,12 +50,12 @@ resource "aws_lb_listener" "https" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.tg_web.arn
+    target_group_arn = aws_lb_target_group.tg_web.id
   }
 }
 
 resource "aws_lb_listener_certificate" "cert" {
   listener_arn    = aws_lb_listener.https.id
-  certificate_arn = "arn:aws:acm:us-east-1:381491829424:certificate/d0baa0ea-790a-46bb-98b3-aa31ebc56f99"
+  certificate_arn = "d0baa0ea-790a-46bb-98b3-aa31ebc56f99"
 }
 

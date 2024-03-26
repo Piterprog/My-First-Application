@@ -1,1 +1,53 @@
+provider "aws" {
+  region = "your_region"
+}
+
+resource "aws_lb" "example" {
+  name               = "example-alb"
+  internal           = false
+  load_balancer_type = "application"
+  subnets            = ["subnet-id-1", "subnet-id-2"] # замените subnet-id-1 и subnet-id-2 на ваши публичные subnets
+  security_groups    = ["security-group-id"]         # замените security-group-id на вашу существующую группу безопасности
+
+  enable_deletion_protection = false
+
+  tags = {
+    Name = "example-alb"
+  }
+}
+
+resource "aws_lb_target_group" "example" {
+  name        = "example-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = "your-vpc-id"                        # замените your-vpc-id на ID вашей существующей VPC
+  target_type = "instance"
+
+  health_check {
+    path                = "/"
+    protocol            = "HTTP"
+    port                = "traffic-port"
+    interval            = 30
+    timeout             = 10
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+}
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.example.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.example.arn
+  }
+}
+
+resource "aws_lb_listener_certificate" "cert" {
+  listener_arn    = aws_lb_listener.https.arn
+  certificate_arn = "your-certificate-arn"  # Замените your-certificate-arn на ARN вашего сертификата из ACM
+}
 

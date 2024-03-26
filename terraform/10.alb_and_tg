@@ -2,12 +2,26 @@ provider "aws" {
   region = "your_region"
 }
 
+data "aws_vpc" "selected" {
+  tags = {
+    Name = "your-vpc-name"  # замените на имя вашей VPC или используйте другие фильтры для выбора
+  }
+}
+
+data "aws_subnet_ids" "selected" {
+  vpc_id = data.aws_vpc.selected.id
+}
+
+data "aws_security_group" "selected" {
+  name = "your-security-group-name" # замените на имя вашей группы безопасности
+}
+
 resource "aws_lb" "example" {
   name               = "example-alb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = ["subnet-id-1", "subnet-id-2"] # замените subnet-id-1 и subnet-id-2 на ваши публичные subnets
-  security_groups    = ["security-group-id"]         # замените security-group-id на вашу существующую группу безопасности
+  subnets            = data.aws_subnet_ids.selected.ids
+  security_groups    = [data.aws_security_group.selected.id]
 
   enable_deletion_protection = false
 
@@ -20,7 +34,7 @@ resource "aws_lb_target_group" "example" {
   name        = "example-tg"
   port        = 80
   protocol    = "HTTP"
-  vpc_id      = "your-vpc-id"                        # замените your-vpc-id на ID вашей существующей VPC
+  vpc_id      = data.aws_vpc.selected.id
   target_type = "instance"
 
   health_check {
@@ -50,4 +64,5 @@ resource "aws_lb_listener_certificate" "cert" {
   listener_arn    = aws_lb_listener.https.arn
   certificate_arn = "your-certificate-arn"  # Замените your-certificate-arn на ARN вашего сертификата из ACM
 }
+
 

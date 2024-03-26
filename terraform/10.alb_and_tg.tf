@@ -3,8 +3,8 @@ resource "aws_lb" "alb_web" {
   name               = "alb-web"
   internal           = false
   load_balancer_type = "application"
-  subnets            = ["subnet-0bf3ed62be2d2984d", "subnet-08c413be331a5c39a"] 
-  security_groups    = ["sg-05ef7b5e4cf2b433c"]       
+  subnets            = ["subnet-081bf307e3e3c8d1b", "subnet-0e737729b771feef0"] 
+  security_groups    = ["sg-0036443491e318478"]       
 
   enable_deletion_protection = false
 
@@ -17,7 +17,7 @@ resource "aws_lb_target_group" "tg_web" {
   name        = "tg-web"
   port        = 80
   protocol    = "HTTP"
-  vpc_id      = "vpc-0213b8ce21396f811"                        
+  vpc_id      = "vpc-050567b109290b0fd"                        
   target_type = "instance"
 
   health_check {

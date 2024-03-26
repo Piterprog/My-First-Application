@@ -52,8 +52,21 @@ resource "aws_lb_listener" "https" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.tg_web.arn
   }
+}
 
-  certificate_arn = "arn:aws:acm:us-east-1:381491829424:certificate/d0baa0ea-790a-46bb-98b3-aa31ebc56f99"  
+resource "aws_lb_listener" "http_redirect" {
+  load_balancer_arn = aws_lb.alb_web.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
 }
 
 

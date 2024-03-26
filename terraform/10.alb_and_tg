@@ -4,7 +4,7 @@ resource "aws_lb" "alb_web" {
   internal           = false
   load_balancer_type = "application"
   subnets            = data.aws_subnet.public_subnets[*].id
-  security_groups    = ["sg-0036443491e318478"]       
+  security_groups    = data.aws_security_group.Security_vpc_musad.id       
 
   enable_deletion_protection = false
 

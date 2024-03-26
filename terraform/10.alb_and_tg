@@ -1,37 +1,37 @@
 
 data "aws_vpc" "selected" {
   tags = {
-    Name = "your-vpc-name"  # замените на имя вашей VPC или используйте другие фильтры для выбора
+    Name = "Piterbog" 
   }
 }
 
-data "aws_subnet_ids" "selected" {
-  vpc_id = data.aws_vpc.selected.id
+data "aws_subnet_ids" "public_subnet" {
+  vpc_id = data.aws_vpc.public_subnet[*].id
 }
 
-data "aws_security_group" "selected" {
-  name = "your-security-group-name" # замените на имя вашей группы безопасности
+data "aws_security_group" "security_group" {
+  name = "Security_vpc_musad" 
 }
 
-resource "aws_lb" "example" {
-  name               = "example-alb"
+resource "aws_lb" "alb_web" {
+  name               = "alb-web"
   internal           = false
   load_balancer_type = "application"
-  subnets            = data.aws_subnet_ids.selected.ids
-  security_groups    = [data.aws_security_group.selected.id]
+  subnets            = data.aws_subnet_ids.public_subnet.ids
+  security_groups    = [data.aws_security_group.security_group.id]
 
   enable_deletion_protection = false
 
   tags = {
-    Name = "example-alb"
+    Name = "alb_web"
   }
 }
 
-resource "aws_lb_target_group" "example" {
+resource "aws_lb_target_group" "web_app_tg" {
   name        = "example-tg"
   port        = 80
   protocol    = "HTTP"
-  vpc_id      = data.aws_vpc.selected.id
+  vpc_id      = data.aws_vpc.main_vpc.id
   target_type = "instance"
 
   health_check {
@@ -59,7 +59,7 @@ resource "aws_lb_listener" "https" {
 
 resource "aws_lb_listener_certificate" "cert" {
   listener_arn    = aws_lb_listener.https.arn
-  certificate_arn = "your-certificate-arn"  # Замените your-certificate-arn на ARN вашего сертификата из ACM
+  certificate_arn = "arn:aws:acm:us-east-1:381491829424:certificate/d0baa0ea-790a-46bb-98b3-aa31ebc56f99"  
 }
 
 

@@ -1,9 +1,9 @@
 data "terraform_remote_state" "vpc" {
   backend = "remote"
   config = {
-    organization = "<your_organization_name>"
+    organization = "piterprog_prod"
     workspaces = {
-      name = "vpc"
+      name = "My-First-Application"
     }
   }
 }

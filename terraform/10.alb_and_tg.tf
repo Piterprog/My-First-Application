@@ -12,11 +12,6 @@ resource "aws_lb" "alb_web" {
   depends_on = [data.terraform_remote_state.vpc]
 }
 
-resource "aws_lb_target_group" "tg_web" {
-  depends_on = [data.terraform_remote_state.vpc]
-}
-
-
 variable "certificate_arn" {
  description = "arn SSL/TLS"
 }

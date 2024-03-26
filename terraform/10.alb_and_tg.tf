@@ -1,10 +1,16 @@
 
+variable "vpc_id" {}
+variable "database_subnet_ids" {}
+variable "private_subnet_ids" {}
+variable "public_subnet_ids" {}
+variable "security_group_id" {}
+
 resource "aws_lb" "alb_web" {
   name               = "alb-web"
   internal           = false
   load_balancer_type = "application"
-  subnets            = data.aws_subnet.public_subnets[*].id
-  security_groups    = [data.aws_security_group.Security_vpc_musad.id]       
+  subnets            = var.public_subnet_ids
+  security_groups    = [var.security_group_id]       
 
   enable_deletion_protection = false
 
@@ -17,7 +23,7 @@ resource "aws_lb_target_group" "tg_web" {
   name        = "tg-web"
   port        = 80
   protocol    = "HTTP"
-  vpc_id      = data.aws_vpc.main.id                     
+  vpc_id      = var.vpc_id                     
   target_type = "instance"
 
   health_check {

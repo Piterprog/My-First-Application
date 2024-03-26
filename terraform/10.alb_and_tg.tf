@@ -20,7 +20,6 @@ resource "aws_lb" "alb_web" {
   security_groups    = [data.terraform_remote_state.vpc.outputs.security_group_id]
 
   enable_deletion_protection = false
-  depends_on = [data.terraform_remote_state.vpc]
 
   tags = {
     Name = "alb_web"

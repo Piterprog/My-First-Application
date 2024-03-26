@@ -1,8 +1,6 @@
 
 variable "vpc_id" {}
-variable "database_subnet_ids" {}
 variable "private_subnet_ids" {}
-variable "public_subnet_ids" {}
 variable "security_group_id" {}
 
 resource "aws_lb" "alb_web" {

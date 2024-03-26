@@ -8,10 +8,6 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
-resource "aws_lb" "alb_web" {
-  depends_on = [data.terraform_remote_state.vpc]
-}
-
 variable "certificate_arn" {
  description = "arn SSL/TLS"
 }
@@ -24,6 +20,7 @@ resource "aws_lb" "alb_web" {
   security_groups    = [data.terraform_remote_state.vpc.outputs.security_group_id]
 
   enable_deletion_protection = false
+  depends_on = [data.terraform_remote_state.vpc]
 
   tags = {
     Name = "alb_web"

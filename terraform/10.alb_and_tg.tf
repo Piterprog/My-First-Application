@@ -1,14 +1,19 @@
-variable "certificate_arn" {
- description = "arn SSL/TLS"
+data "terraform_remote_state" "vpc" {
+  backend = "remote"
+  config = {
+    organization = "<your_organization_name>"
+    workspaces = {
+      name = "vpc"
+    }
+  }
 }
-
 
 resource "aws_lb" "alb_web" {
   name               = "alb-web"
   internal           = false
   load_balancer_type = "application"
-  subnets            = ["subnet-03c9c198e429cfd46" ,"subnet-07b2da7ab5a1f0186"]
-  security_groups    = ["sg-0fe319958dcce6d4d"]       
+  subnets            = data.terraform_remote_state.vpc.outputs.public_subnet_ids
+  security_groups    = [data.terraform_remote_state.vpc.outputs.security_group_id]
 
   enable_deletion_protection = false
 
@@ -21,7 +26,7 @@ resource "aws_lb_target_group" "tg_web" {
   name        = "tg-web"
   port        = 80
   protocol    = "HTTP"
-  vpc_id      = "vpc-0d642f52164c9b4a8"                  
+  vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
   target_type = "instance"
 
   health_check {

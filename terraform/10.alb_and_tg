@@ -3,7 +3,7 @@ resource "aws_lb" "alb_web" {
   name               = "alb-web"
   internal           = false
   load_balancer_type = "application"
-  subnets            = ["subnet-081bf307e3e3c8d1b", "subnet-0e737729b771feef0"] 
+  subnets            = data.aws_subnet.public_subnets[*].id
   security_groups    = ["sg-0036443491e318478"]       
 
   enable_deletion_protection = false

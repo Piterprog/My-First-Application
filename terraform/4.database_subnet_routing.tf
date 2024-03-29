@@ -3,7 +3,7 @@
 resource "aws_subnet" "database_subnets" {
   count                     = length(var.database_subnet_cidrs)
   vpc_id                    = aws_vpc.main.id
-  cidr_block                = element(var.database_subnet_cidrs, count.index)
+  cidr_block                = element(var.database_subnet_cidrs,count.index)
   availability_zone         = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch   = false
   tags = {

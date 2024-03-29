@@ -33,11 +33,11 @@ resource "aws_db_subnet_group" "mysql" {
 
 
 resource "aws_db_instance" "mysql" {
-  engine                 = "mysql"
+  engine                 = "MySQL"
   identifier             = "myrdsinstance"
-  allocated_storage      =  10
-  engine_version         = "5.7"
-  instance_class         = "db.t2.micro"
+  allocated_storage      =  20
+  engine_version         = "8.0.35"
+  instance_class         = "db.t3.micro"
   username               = var.db_username
   password               = var.db_password
   parameter_group_name   = "default.mysql5.7"
@@ -56,7 +56,7 @@ output "db_instance_endpoint" {
 
 resource "aws_instance" "bastion" {
   ami                    = "ami-0c101f26f147fa7fd" 
-  instance_type          = "t2.macro"
+  instance_type          = "t2.micro"
   subnet_id              = "subnet-046174e7c08fc2aac"
   key_name               = "SSH-connetion" 
 

@@ -54,14 +54,14 @@ output "db_instance_endpoint" {
 
 #----------------------------------- instance bastion for connetion database -------------------------
 
-resource "aws_instance" "bastion" {
-  ami                    = "ami-0c101f26f147fa7fd" 
-  instance_type          = "t2.micro"
-  subnet_id              = "subnet-046174e7c08fc2aac"
-  key_name               = "SSH-connetion" 
+# resource "aws_instance" "bastion" {
+#   ami                    = "ami-0c101f26f147fa7fd" 
+#   instance_type          = "t2.micro"
+#   subnet_id              = "subnet-046174e7c08fc2aac"
+#   key_name               = "SSH-connetion" 
 
-  tags = {
-    Name                 = "bastion_host"
-  } 
+#   tags = {
+#     Name                 = "bastion_host"
+#   } 
 
-}
+# }

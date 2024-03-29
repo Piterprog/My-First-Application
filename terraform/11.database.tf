@@ -1,0 +1,67 @@
+variable "db_username" {
+  type = string
+  description = "Username off my database"
+}
+
+variable "db_password" {
+  type = string
+  description = "Password off my database"
+}
+
+#------------------------------------------------- data source ---------------------------------------
+
+data "terraform_remote_state" "vpc" {
+  backend = "remote"
+  config = {
+    organization = "piterprog_prod"
+    workspaces = {
+      name = "My-First-Application"
+    }
+  }
+}
+
+#--------------------------------------------------  database ----------------------------------------
+
+resource "aws_db_subnet_group" "mysql" {
+  name       = "mysql"
+  subnet_ids = ["subnet-047ce0155b86bac99", "subnet-00e4005620f99f16f"]
+
+  tags = {
+    Name = "My MySQL DB Subnet Group"
+  }
+}
+
+
+resource "aws_db_instance" "mysql" {
+  engine                 = "mysql"
+  identifier             = "myrdsinstance"
+  allocated_storage      =  10
+  engine_version         = "5.7"
+  instance_class         = "db.t2.micro"
+  username               = var.db_username
+  password               = var.db_password
+  parameter_group_name   = "default.mysql5.7"
+  vpc_security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id]
+  skip_final_snapshot    = true
+  publicly_accessible    =  false
+  
+}
+
+output "db_instance_endpoint" {
+  value       = aws_db_instance.mysql.endpoint
+}
+
+
+#----------------------------------- instance bastion for connetion database -------------------------
+
+resource "aws_instance" "bastion" {
+  ami                    = "ami-0c101f26f147fa7fd" 
+  instance_type          = "t2.macro"
+  subnet_id              = "subnet-046174e7c08fc2aac"
+  key_name               = "SSH-connetion" 
+
+  tags = {
+    Name                 = "bastion_host"
+  } 
+
+}

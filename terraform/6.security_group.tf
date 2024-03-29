@@ -38,6 +38,14 @@ resource "aws_security_group" "Security_vpc_musad" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress = {
+    description = "Database-port"
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
   ingress {
     description = "node-exporter"
     from_port   = 9100

@@ -40,7 +40,7 @@ resource "aws_db_instance" "mysql" {
   instance_class         = "db.t3.micro"
   username               = var.db_username
   password               = var.db_password
-  parameter_group_name   = "default.mysql5.7"
+  parameter_group_name   = "default.mysql8.0.35"
   vpc_security_group_ids = ["sg-05217f2d9186e931a"]
   skip_final_snapshot    = true
   publicly_accessible    =  false

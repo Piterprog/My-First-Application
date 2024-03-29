@@ -41,7 +41,7 @@ resource "aws_db_instance" "mysql" {
   username               = var.db_username
   password               = var.db_password
   parameter_group_name   = "default.mysql5.7"
-  vpc_security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id]
+  vpc_security_group_ids = ["vpc-021ee220c52a30223"]
   skip_final_snapshot    = true
   publicly_accessible    =  false
   

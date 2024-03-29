@@ -5,7 +5,6 @@ resource "aws_security_group" "Security_vpc_musad" {
   description = "Security group"
   vpc_id      = aws_vpc.main.id 
 
-  
   ingress {
     description = "SSH"
     from_port   = 22
@@ -38,7 +37,7 @@ resource "aws_security_group" "Security_vpc_musad" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress = {
+  ingress {
     description = "Database-port"
     from_port   = 3306
     to_port     = 3306
@@ -79,10 +78,10 @@ resource "aws_security_group" "Security_vpc_musad" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
   }
 
   tags = {

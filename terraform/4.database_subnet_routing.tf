@@ -12,6 +12,7 @@ resource "aws_subnet" "database_subnets" {
 }
 
 resource "aws_route_table" "database_subnets" {
+    count          = length(var.database_subnets_cidrs)
     vpc_id         = aws_vpc.main.id
     tags = {
       Name = "${var.env}-route-database-subnets"

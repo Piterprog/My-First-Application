@@ -19,10 +19,14 @@ resource "aws_route_table" "database_subnets" {
     }
 }
 
-resource "aws_route_table_association" "database_routes" {
+# resource "aws_route_table_association" "database_routes" {
+#   count          = length(aws_subnet.database_subnets[*].id)
+#   route_table_id = aws_route_table.database_subnets[count.index].id
+#   subnet_id      = element(aws_subnet.database_subnets[*].id, count.index)
+# }
+
+resource "aws_route_table_association" "main" {
   count          = length(aws_subnet.database_subnets[*].id)
-  route_table_id = aws_route_table.database_subnets[count.index].id
   subnet_id      = element(aws_subnet.database_subnets[*].id, count.index)
+  route_table_id = aws_vpc.main.default_route_table_id
 }
-
-

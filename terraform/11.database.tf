@@ -1,6 +1,7 @@
 
 
 
+
 variable "db_username" {
   description = "Username for the database"
   type        = string

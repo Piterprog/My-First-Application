@@ -1,4 +1,12 @@
-
+data "terraform_remote_state" "vpc" {
+  backend = "remote"
+  config = {
+    organization = "piterprog_prod"
+    workspaces = {
+      name = "My-First-Application"
+    }
+  }
+}
 
 variable "db_username" {
   description = "Username for the database"

@@ -13,7 +13,7 @@ variable "db_password" {
 }
 
 resource "aws_db_subnet_group" "my_db_subnet_group" {
-  name       = "security_vpc_musad"
+  name       = "security_group_db"
   subnet_ids = ["subnet-09b818015684f552c", "subnet-0d092aaad9191bcb5"]  # Замените на фактические subnet_id в вашей VPC
 }
 

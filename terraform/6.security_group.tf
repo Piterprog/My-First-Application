@@ -2,7 +2,7 @@
 
 resource "aws_security_group" "security_vpc_musad" {
   name        = "security_vpc_musad"
-  description = "Security group"
+  description = "security group"
   vpc_id      = aws_vpc.main.id 
 
   ingress {
@@ -85,6 +85,6 @@ resource "aws_security_group" "security_vpc_musad" {
   }
 
   tags = {
-    Name = "Security group Musad"
+    Name = "security group Musad"
   }
 }

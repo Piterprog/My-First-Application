@@ -27,7 +27,7 @@ resource "aws_db_instance" "my_db_instance" {
   username             = var.db_username
   password             = var.db_password
   db_subnet_group_name = aws_db_subnet_group.my_db_subnet_group.name
-  vpc_security_group_ids = ["sg-0e1b9ccaadaf27bad"]  # Замените на фактический ID вашей security group
+  vpc_security_group_ids = ["sg-023721f8e2af68130"]  # Замените на фактический ID вашей security group
 }
 
 output "rds_endpoint" {

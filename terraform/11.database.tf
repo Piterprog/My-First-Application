@@ -24,7 +24,6 @@ resource "aws_db_instance" "my_db_instance" {
   engine               = "mysql"
   engine_version       = "8.0.35"
   instance_class       = "db.t3.micro"
-  name                 = "database"
   username             = var.db_username
   password             = var.db_password
   db_subnet_group_name = aws_db_subnet_group.my_db_subnet_group.name

@@ -1,6 +1,5 @@
-provider "aws" {
-  region = "your_region"
-}
+
+
 
 variable "db_username" {
   description = "Username for the database"

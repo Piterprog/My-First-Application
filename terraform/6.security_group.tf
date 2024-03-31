@@ -1,7 +1,7 @@
 
 
-resource "aws_security_group" "Security_vpc_musad" {
-  name        = "Security_vpc_musad"
+resource "aws_security_group" "security_vpc_musad" {
+  name        = "security_vpc_musad"
   description = "Security group"
   vpc_id      = aws_vpc.main.id 
 

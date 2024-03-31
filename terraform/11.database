@@ -20,7 +20,7 @@ variable "db_password" {
 
 resource "aws_db_subnet_group" "my_db_subnet_group" {
   name       = "security_group_db"
-  subnet_ids = data.terraform_remote_state.vpc.outputs.database_subnet_ids  # Замените на фактические subnet_id в вашей VPC
+  subnet_ids = data.terraform_remote_state.vpc.outputs.database_subnet_ids  
 }
 
 resource "aws_db_instance" "my_db_instance" {
@@ -33,7 +33,7 @@ resource "aws_db_instance" "my_db_instance" {
   username               = var.db_username
   password               = var.db_password
   db_subnet_group_name   = aws_db_subnet_group.my_db_subnet_group.name
-  vpc_security_group_ids = ["sg-023721f8e2af68130"]  # Замените на фактический ID вашей security group
+  vpc_security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id]  
   publicly_accessible    = false
   deletion_protection    = false
 }

@@ -48,7 +48,7 @@ output "rds_endpoint" {
 resource "aws_instance" "database_instance" {
     ami           = "ami-0c101f26f147fa7fd"
     instance_type = "t2.micro"
-    subnet_id     = "subnet-0156c1ea2dcc323ce"
+    subnet_id     = "subnet-03d1054297ed8f151"
     key_name      = "SSH-connetion"
     
     tags = {

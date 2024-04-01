@@ -52,7 +52,7 @@ resource "aws_instance" "database_instance" {
     key_name      = "SSH-connetion"
     
     tags = {
-      name = "instance connet to database"
+      Name = "instance connet to database"
     }
     
     depends_on = [aws_db_instance.my_db_instance]

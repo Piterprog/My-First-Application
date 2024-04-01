@@ -1,3 +1,6 @@
+
+
+
 data "terraform_remote_state" "vpc" {
   backend = "remote"
   config = {
@@ -17,6 +20,8 @@ variable "db_password" {
   description = "Password for the database"
   type        = string
 }
+
+#------------------------------------------- Create RDS instances Mysql -------------------------------------------
 
 resource "aws_db_subnet_group" "my_db_subnet_group" {
   name       = "security_group_db"
@@ -38,23 +43,26 @@ resource "aws_db_instance" "my_db_instance" {
   deletion_protection    = false
 }
 
-
 output "rds_endpoint" {
   value = aws_db_instance.my_db_instance.endpoint
 }
 
-#------------------------------------------ instance for connet to database ---------------------------------
+#------------------------------------- instance for connect to database RDS mysql ---------------------------------
 
 resource "aws_instance" "database_instance" {
     ami                    = "ami-033a1ebf088e56e81"
     instance_type          = "t2.micro"
-    subnet_id              = "subnet-03d1054297ed8f151"
+    subnet_id              = data.terraform_remote_state.vpc.outputs.public_subnet_ids
     key_name               = "SSH-connetion"
-    vpc_security_group_ids = ["sg-0bdd7631e9c68c669"]
+    vpc_security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id]
     
     tags = {
-      Name = "instance connet to database"
+      Name = "Connector RDS"
     }
     
     depends_on = [aws_db_instance.my_db_instance]
+}
+
+output "ip_database_instance" {
+  value = aws_instance.database_instance.public_ip
 }

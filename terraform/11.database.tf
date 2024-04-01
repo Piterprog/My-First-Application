@@ -43,3 +43,17 @@ output "rds_endpoint" {
   value = aws_db_instance.my_db_instance.endpoint
 }
 
+#------------------------------------------ instance for connet to database ---------------------------------
+
+resource "aws_instance" "database_instance" {
+    ami           = "ami-0c101f26f147fa7fd"
+    instance_type = "t2.micro"
+    subnet_id     = "subnet-0156c1ea2dcc323ce"
+    key_name      = "SSH-connetion"
+    
+    tags = {
+      name = "instance connet to database"
+    }
+    
+    depends_on = [aws_db_instance.my_db_instance]
+}

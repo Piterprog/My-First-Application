@@ -46,10 +46,11 @@ output "rds_endpoint" {
 #------------------------------------------ instance for connet to database ---------------------------------
 
 resource "aws_instance" "database_instance" {
-    ami           = "ami-0c101f26f147fa7fd"
-    instance_type = "t2.micro"
-    subnet_id     = "subnet-03d1054297ed8f151"
-    key_name      = "SSH-connetion"
+    ami                    = "ami-0c101f26f147fa7fd"
+    instance_type          = "t2.micro"
+    subnet_id              = "subnet-03d1054297ed8f151"
+    key_name               = "SSH-connetion"
+    vpc_security_group_ids = ["sg-0bdd7631e9c68c669"]
     
     tags = {
       Name = "instance connet to database"

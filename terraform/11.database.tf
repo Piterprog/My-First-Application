@@ -52,7 +52,7 @@ output "rds_endpoint" {
 resource "aws_instance" "database_instance" {
     ami                    = "ami-033a1ebf088e56e81"
     instance_type          = "t2.micro"
-    subnet_id              = data.terraform_remote_state.vpc.outputs.public_subnet_ids
+    subnet_id              = data.terraform_remote_state.vpc.outputs.public_subnet_ids[0]
     key_name               = "SSH-connetion"
     vpc_security_group_ids = [data.terraform_remote_state.vpc.outputs.security_group_id]
     

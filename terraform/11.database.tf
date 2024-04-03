@@ -44,7 +44,7 @@ resource "aws_db_instance" "my_db_instance" {
 }
 
 output "rds_endpoint" {
-  value = aws_db_instance.my_db_instance.endpoints
+  value = aws_db_instance.my_db_instance.endpoint
 }
 
 #------------------------------------- instance for connect to database RDS mysql ---------------------------------

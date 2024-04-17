@@ -4,7 +4,7 @@
   "taskDefinition": "web-app-hello-from-ecs-cluster:1",
   "loadBalancers": [
     {
-      "targetGroupArn":"arn:aws:elasticloadbalancing:us-east-1:381491829424:loadbalancer/app/alb-web/ae450a4bce7472f2",
+      "targetGroupArn":"arn:aws:elasticloadbalancing:us-east-1:381491829424:targetgroup/tg-web/364d40181c7bb72c",
       "containerName": "web-app",
       "containerPort": 80
     }

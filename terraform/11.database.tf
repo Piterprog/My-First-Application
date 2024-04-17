@@ -66,3 +66,4 @@ resource "aws_instance" "database_instance" {
 output "ip_database_instance" {
   value = aws_instance.database_instance.public_ip
 }
+

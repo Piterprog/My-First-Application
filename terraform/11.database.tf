@@ -1,7 +1,7 @@
 
 
 
-data "terraform_remote_state" "vpc" {
+data "terraform_remote_state" "vpc_secondary" {
   backend = "remote"
   config = {
     organization = "piterprog_prod"

@@ -16,7 +16,7 @@ resource "aws_lb" "alb_web" {
   name               = "alb-web"
   internal           = false
   load_balancer_type = "application"
-  subnets            = data.terraform_remote_state.vpc.outputs.public_subnet_ids
+  subnets            = data.terraform_remote_state.vpc.outputs.private_subnet_ids
   security_groups    = [data.terraform_remote_state.vpc.outputs.security_group_id]
 
   enable_deletion_protection = false

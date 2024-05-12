@@ -25,4 +25,6 @@ output "security_group_id" {
 }
 
 
-
+output "database_subnet_ids" {
+  value = aws_db_instance.my_db_instance.id
+}

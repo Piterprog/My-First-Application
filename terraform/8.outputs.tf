@@ -24,7 +24,7 @@ output "security_group_id" {
   value = aws_security_group.security_vpc_musad.id
 }
 
-output "database_subnet_ids" {
+output "database_subnet_id" {
   value = aws_db_instance.my_db_instance.id
 }
 

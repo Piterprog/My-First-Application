@@ -1,5 +1,3 @@
-# my outputs
-
 
 output "vpc_id" {
   value = aws_vpc.main.id
@@ -25,7 +23,4 @@ output "security_group_id" {
   value = aws_security_group.security_vpc_musad.id
 }
 
-output "database_subnet_ids" {
-  value = aws_db_instance.my_db_instance.id
-}
 

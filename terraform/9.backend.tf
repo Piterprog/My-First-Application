@@ -1,5 +1,5 @@
 
-
+# backend to s3 bucket
 terraform {
   backend "s3" {
     bucket     = "vpc-piter-kononihin-terraform"

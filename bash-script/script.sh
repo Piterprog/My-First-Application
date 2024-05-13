@@ -44,3 +44,5 @@ elif [ "$task_status" == "STOPPED" ]; then
 else
     echo "Не удалось запустить задачу."
 fi
+
+

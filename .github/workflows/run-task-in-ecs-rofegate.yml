@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'bash-script/**'
+      - 'bash-script/script.sh'
 
 jobs:
   deploy:

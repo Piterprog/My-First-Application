@@ -1,54 +1,49 @@
 #!/bin/bash
 
-# Check if the correct number of arguments is provided
+# Проверяем, правильное ли количество аргументов передано
 if [ "$#" -ne 5 ]; then
-    echo "Usage: $0 {cluster} {task-definition} {subnet-id} {security-group-id} {service-name}"
+    echo "Использование: $0 {cluster} {task-definition} {subnet-id} {security-group-id} {service-name}"
     exit 1
 fi
 
-# Assign input variables
+# Присваиваем входные данные переменным
 cluster=$1
 task_definition=$2
 subnet_id=$3
 security_group_id=$4
 service_name=$5
 
-# Create a new ECS service
-echo "Creating service in Amazon ECS..."
+# Создаем новый сервис ECS
+echo "Создание сервиса в Amazon ECS..."
 aws ecs create-service --cluster "$cluster" --service-name "$service_name" --task-definition "$task_definition" --desired-count 1 --network-configuration "awsvpcConfiguration={subnets=[$subnet_id],securityGroups=[$security_group_id]}"
 
-# Start the service
-echo "Starting the service..."
-aws ecs update-service --cluster "$cluster" --service "$service_name" --desired-count 1
-
-# Get the latest task definition ARN by name
+# Получаем последнюю версию задачи по имени
 task_definition=$(aws ecs list-task-definitions --family-prefix "$task_definition" --sort DESC | jq -r '.taskDefinitionArns[0]')
 
-# Run the task in the specified environment
-echo "Running task in Amazon ECS..."
+# Запускаем задачу в указанной среде
+echo "Запуск задачи в Amazon ECS..."
 result=$(aws ecs run-task --task-definition "$task_definition" --launch-type FARGATE --cluster "$cluster" --network-configuration "awsvpcConfiguration={subnets=[$subnet_id],securityGroups=[$security_group_id]}")
 
-# Extract the task ID
+# Извлекаем идентификатор задачи
 task_id=$(echo "$result" | jq -r '.tasks[0].taskArn' | cut -d '/' -f 2)
 
-# Get the task status
-echo "Getting task status..."
+# Получаем статус задачи
+echo "Получение статуса задачи..."
 task_status=$(aws ecs describe-tasks --tasks "$task_id" --cluster "$cluster" | jq -r '.tasks[0].lastStatus')
 
-# Form the link to the log group
+# Формируем ссылку на группу журналов
 log_group_link="https://console.aws.amazon.com/cloudwatch/home#logsV2:log-groups/log-group/"
 
-# Display the task status and log group link
+# Отображаем статус задачи и ссылку на группу журналов
 if [ "$task_status" == "RUNNING" ]; then
-    echo "The task is currently running."
-    echo "Log Group Link: $log_group_link"
+    echo "Задача в данный момент выполняется."
+    echo "Ссылка на группу журналов: $log_group_link"
 elif [ "$task_status" == "STOPPED" ]; then
-    echo "The task has stopped."
-    echo "Log Group Link: $log_group_link"
+    echo "Задача остановлена."
+    echo "Ссылка на группу журналов: $log_group_link"
 else
-    echo "Failed to start the task."
+    echo "Не удалось запустить задачу."
 fi
-
 
 
 

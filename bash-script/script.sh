@@ -15,7 +15,7 @@ service_name=$5
 
 # Создаем новый сервис ECS
 echo "Создание сервиса в Amazon ECS..."
-aws ecs create-service --cluster "$cluster" --service-name "$service_name" --task-definition "$task_definition"
+aws ecs create-service --cluster "$cluster" --service-name "$service_name" --task-definition "$task_definition" --desired-count 1
 
 # Обновляем настройки сервиса ECS с указанными VPC и Security Group
 echo "Обновление настроек сервиса ECS..."
@@ -31,7 +31,7 @@ task_definition=$(aws ecs list-task-definitions --family-prefix "$task_definitio
 
 # Запускаем задачу в указанном окружении
 echo "Запуск задачи в Amazon ECS..."
-result=$(aws ecs run-task --task-definition "$task_definition" --launch-type FARGATE --cluster "$cluster")
+result=$(aws ecs run-task --task-definition "$task_definition" --launch-type FARGATE --cluster "$cluster" --network-configuration "awsvpcConfiguration={subnets=[$subnet_id],securityGroups=[$security_group_id]}")
 
 # Извлекаем идентификатор задачи
 task_id=$(echo "$result" | jq -r '.tasks[0].taskArn' | cut -d '/' -f 2)

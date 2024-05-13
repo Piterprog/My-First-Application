@@ -2,4 +2,4 @@
 # dont forgot giv permissions  
 chmod +x script.sh
 
-./script.sh eodhd-worker production
+Замените cluster-name, task-definition, subnet-id, security-group-id, service-name и vpc-id

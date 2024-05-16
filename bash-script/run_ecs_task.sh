@@ -20,11 +20,11 @@ LOG_PREFIX="/ecs"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
-  DEFAULT_SECURITY_GROUP="sg-07ee605260e72ee45"
-  DEFAULT_SUBNET="subnet-007ccb5717e938863"  # Replace with the actual default subnet ID for production
-  DEFAULT_VPC_ID="vpc-0a0d5e6731a83b9ac"  # Replace with the actual default VPC ID for production
+  DEFAULT_SECURITY_GROUP=""  # Replace with the actual default security group ID for production
+  DEFAULT_SUBNET=""  # Replace with the actual default subnet ID for production
+  DEFAULT_VPC_ID=""  # Replace with the actual default VPC ID for production
 else
-  DEFAULT_SECURITY_GROUP="sg-07ee605260e72ee45"
+  DEFAULT_SECURITY_GROUP="sg-07ee605260e72ee45"  # Default security group for staging
   DEFAULT_SUBNET="subnet-007ccb5717e938863"  # Replace with the actual default subnet ID for staging
   DEFAULT_VPC_ID="vpc-0a0d5e6731a83b9ac"  # Replace with the actual default VPC ID for staging
 fi
@@ -41,6 +41,22 @@ echo "Cluster: $CLUSTER"
 echo "Security Group: $SECURITY_GROUP"
 echo "Subnet: $SUBNET"
 echo "VPC ID: $VPC_ID"
+
+# Verify that the subnet exists
+SUBNET_EXISTS=$(aws ec2 describe-subnets --subnet-ids $SUBNET --region $REGION --query 'Subnets[0].SubnetId' --output text)
+if [ -z "$SUBNET_EXISTS" ]; then
+  echo "Error: Subnet ID '$SUBNET' does not exist."
+  exit 1
+fi
+
+# Verify that the security group exists
+if [ -n "$SECURITY_GROUP" ]; then
+  SECURITY_GROUP_EXISTS=$(aws ec2 describe-security-groups --group-ids $SECURITY_GROUP --region $REGION --query 'SecurityGroups[0].GroupId' --output text)
+  if [ -z "$SECURITY_GROUP_EXISTS" ]; then
+    echo "Error: Security Group ID '$SECURITY_GROUP' does not exist."
+    exit 1
+  fi
+fi
 
 # Define the log group name
 LOG_GROUP="$LOG_PREFIX/$SERVICE_NAME/$ENVIRONMENT"
@@ -85,7 +101,6 @@ LOG_GROUP_LINK="https://console.aws.amazon.com/cloudwatch/home?region=$REGION#lo
 # Outputting the Task ARN and log group link
 echo "Task ARN: $TASK_ARN"
 echo "Log Group Link: $LOG_GROUP_LINK"
-
 
 
 

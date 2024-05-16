@@ -122,10 +122,19 @@ LOG_GROUP_LINK="https://console.aws.amazon.com/cloudwatch/home?region=$REGION#lo
 echo "Task ARN: $TASK_ARN"
 echo "Log Group Link: $LOG_GROUP_LINK"
 
+# Wait for the task to reach a stable state
+echo "Waiting for the task to reach a stable state..."
+while true; do
+  TASK_STATUS=$(aws ecs describe-tasks --cluster $CLUSTER --tasks $TASK_ARN --region $REGION --query 'tasks[0].lastStatus' --output text)
+  echo "Current Task Status: $TASK_STATUS"
+  if [ "$TASK_STATUS" == "RUNNING" ] || [ "$TASK_STATUS" == "STOPPED" ]; then
+    break
+  fi
+  sleep 10
+done
+
 # Fetch the task status
-echo "Fetching the task status..."
-TASK_STATUS=$(aws ecs describe-tasks --cluster $CLUSTER --tasks $TASK_ARN --region $REGION --query 'tasks[0].lastStatus' --output text)
-echo "Task Status: $TASK_STATUS"
+echo "Final Task Status: $TASK_STATUS"
 
 # Fetch the task details for further diagnostics
 echo "Fetching the task details..."
@@ -142,7 +151,5 @@ fi
 CONTAINER_NAME=$(echo $TASK_DETAILS | jq -r '.containers[0].name')
 echo "Fetching container logs for container: $CONTAINER_NAME"
 aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $CONTAINER_NAME --region $REGION --limit 10 --query 'events[*].message' --output text
-
-
 
 

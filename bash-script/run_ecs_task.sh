@@ -23,6 +23,13 @@ else
   DEFAULT_VPC_ID="vpc-03dab4e3ca86969fb"  # Specify the default VPC value for staging
 fi
 
+echo "Service Name: $SERVICE_NAME"
+echo "Environment: $ENVIRONMENT"
+echo "Cluster: $CLUSTER"
+echo "Security Group: $SECURITY_GROUP"
+echo "Subnet: $SUBNET"
+echo "VPC ID: $VPC_ID"
+
 # Override default values if not provided
 SECURITY_GROUP=${SECURITY_GROUP:-$DEFAULT_SECURITY_GROUP}
 SUBNET=${SUBNET:-$DEFAULT_SUBNET}

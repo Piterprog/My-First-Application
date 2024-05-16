@@ -4,13 +4,10 @@
 SERVICE_NAME=$1  # The name of the task or task family
 ENVIRONMENT=$2  # The environment (e.g., production, staging)
 CLUSTER=$3  # The name of the ECS cluster
-SECURITY_GROUP=${4:-default}  # The security group ID (default based on environment)
-SUBNET=${5:-default}  # The subnet ID (default based on environment)
-VPC_ID=${6:-default}  # The VPC ID (default based on environment)
 
 # Check for required parameters
 if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ] || [ -z "$CLUSTER" ]; then
-  echo "Usage: $0 <SERVICE_NAME> <ENVIRONMENT> <CLUSTER> [SECURITY_GROUP] [SUBNET] [VPC_ID]"
+  echo "Usage: $0 <SERVICE_NAME> <ENVIRONMENT> <CLUSTER>"
   exit 1
 fi
 
@@ -20,19 +17,14 @@ LOG_PREFIX="/ecs"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
-  DEFAULT_SECURITY_GROUP=""  # Replace with the actual default security group ID for production
-  DEFAULT_SUBNET=""  # Replace with the actual default subnet ID for production
-  DEFAULT_VPC_ID=""  # Replace with the actual default VPC ID for production
+  SECURITY_GROUP="sg-0123456789abcdef0"  # Replace with the actual security group ID for production
+  SUBNET="subnet-0123456789abcdef0"  # Replace with the actual subnet ID for production
+  VPC_ID="vpc-0123456789abcdef0"  # Replace with the actual VPC ID for production
 else
-  DEFAULT_SECURITY_GROUP="sg-07ee605260e72ee45"  # Default security group for staging
-  DEFAULT_SUBNET="subnet-007ccb5717e938863"  # Replace with the actual default subnet ID for staging
-  DEFAULT_VPC_ID="vpc-0a0d5e6731a83b9ac"  # Replace with the actual default VPC ID for staging
+  SECURITY_GROUP="sg-07ee605260e72ee45"  # Replace with the actual security group ID for staging
+  SUBNET="subnet-007ccb5717e938863"  # Replace with the actual subnet ID for staging
+  VPC_ID="vpc-0a0d5e6731a83b9ac"  # Replace with the actual VPC ID for staging
 fi
-
-# Override default values if not provided
-SECURITY_GROUP=${SECURITY_GROUP:-$DEFAULT_SECURITY_GROUP}
-SUBNET=${SUBNET:-$DEFAULT_SUBNET}
-VPC_ID=${VPC_ID:-$DEFAULT_VPC_ID}
 
 # Debug output
 echo "Service Name: $SERVICE_NAME"
@@ -51,13 +43,11 @@ if [ -z "$SUBNET_EXISTS" ]; then
 fi
 
 # Verify that the security group exists
-if [ -n "$SECURITY_GROUP" ]; then
-  echo "Checking if security group exists..."
-  SECURITY_GROUP_EXISTS=$(aws ec2 describe-security-groups --group-ids $SECURITY_GROUP --region $REGION --query 'SecurityGroups[0].GroupId' --output text)
-  if [ -z "$SECURITY_GROUP_EXISTS" ]; then
-    echo "Error: Security Group ID '$SECURITY_GROUP' does not exist."
-    exit 1
-  fi
+echo "Checking if security group exists..."
+SECURITY_GROUP_EXISTS=$(aws ec2 describe-security-groups --group-ids $SECURITY_GROUP --region $REGION --query 'SecurityGroups[0].GroupId' --output text)
+if [ -z "$SECURITY_GROUP_EXISTS" ]; then
+  echo "Error: Security Group ID '$SECURITY_GROUP' does not exist."
+  exit 1
 fi
 
 # Define the log group name
@@ -108,4 +98,3 @@ LOG_GROUP_LINK="https://console.aws.amazon.com/cloudwatch/home?region=$REGION#lo
 # Outputting the Task ARN and log group link
 echo "Task ARN: $TASK_ARN"
 echo "Log Group Link: $LOG_GROUP_LINK"
-

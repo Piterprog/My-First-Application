@@ -155,3 +155,8 @@ aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $CONTAINER
 
 
 
+
+
+
+
+

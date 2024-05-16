@@ -33,7 +33,7 @@ jobs:
       working-directory: ./terraform
 
     - name: Apply Terraform changes
-      run: terraform detroy -auto-approve
+      run: terraform destroy-auto-approve
       working-directory: ./terraform
 
 

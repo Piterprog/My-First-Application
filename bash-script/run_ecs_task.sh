@@ -14,7 +14,7 @@ LOG_PREFIX="/ecs"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
-  DEFAULT_SECURITY_GROUP="production-ecs-svc-sg"
+  DEFAULT_SECURITY_GROUP=""
   DEFAULT_SUBNET="subnet-prod-default"  # Specify the default subnet value for production
   DEFAULT_VPC_ID="vpc-prod-default"  # Specify the default VPC value for production
 else

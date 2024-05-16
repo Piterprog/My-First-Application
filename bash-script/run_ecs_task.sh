@@ -16,13 +16,13 @@ LOG_PREFIX="/ecs"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
-  CLUSTER="production-cluster"  # Hardcoded name of the production cluster
-  SECURITY_GROUP="sg-0123456789abcdef0"  # Replace with the actual security group ID for production
-  PRIMARY_SUBNET="subnet-0123456789abcdef0"  # Replace with the primary subnet ID for production
-  SECONDARY_SUBNET="subnet-1234567890abcdef1"  # Replace with the secondary subnet ID for production
-  VPC_ID="vpc-0123456789abcdef0"  # Replace with the actual VPC ID for production
+  CLUSTER="production"  # Hardcoded name of the production cluster
+  SECURITY_GROUP=""  # Replace with the actual security group ID for production
+  PRIMARY_SUBNET=""  # Replace with the primary subnet ID for production
+  SECONDARY_SUBNET=""  # Replace with the secondary subnet ID for production
+  VPC_ID=""  # Replace with the actual VPC ID for production
 else
-  CLUSTER="staging-cluster"  # Hardcoded name of the staging cluster
+  CLUSTER="staging"  # Hardcoded name of the staging cluster
   SECURITY_GROUP="sg-07ee605260e72ee45"  # Replace with the actual security group ID for staging
   PRIMARY_SUBNET="subnet-007ccb5717e938863"  # Replace with the primary subnet ID for staging
   SECONDARY_SUBNET="subnet-1234567890abcdef1"  # Replace with the secondary subnet ID for staging

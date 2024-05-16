@@ -144,3 +144,5 @@ echo "Fetching container logs for container: $CONTAINER_NAME"
 aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $CONTAINER_NAME --region $REGION --limit 10 --query 'events[*].message' --output text
 
 
+
+

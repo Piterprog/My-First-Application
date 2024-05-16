@@ -17,10 +17,10 @@ LOG_PREFIX="/ecs"
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
   CLUSTER="production"  # Hardcoded name of the production cluster
-  SECURITY_GROUP=""  # Replace with the actual security group ID for production
-  PRIMARY_SUBNET=""  # Replace with the primary subnet ID for production
-  SECONDARY_SUBNET=""  # Replace with the secondary subnet ID for production
-  VPC_ID=""  # Replace with the actual VPC ID for production
+  SECURITY_GROUP="sg-0123456789abcdef0"  # Replace with the actual security group ID for production
+  PRIMARY_SUBNET="subnet-0123456789abcdef0"  # Replace with the primary subnet ID for production
+  SECONDARY_SUBNET="subnet-1234567890abcdef1"  # Replace with the secondary subnet ID for production
+  VPC_ID="vpc-0123456789abcdef0"  # Replace with the actual VPC ID for production
 else
   CLUSTER="staging"  # Hardcoded name of the staging cluster
   SECURITY_GROUP="sg-07ee605260e72ee45"  # Replace with the actual security group ID for staging
@@ -122,6 +122,25 @@ LOG_GROUP_LINK="https://console.aws.amazon.com/cloudwatch/home?region=$REGION#lo
 echo "Task ARN: $TASK_ARN"
 echo "Log Group Link: $LOG_GROUP_LINK"
 
+# Fetch the task status
+echo "Fetching the task status..."
+TASK_STATUS=$(aws ecs describe-tasks --cluster $CLUSTER --tasks $TASK_ARN --region $REGION --query 'tasks[0].lastStatus' --output text)
+echo "Task Status: $TASK_STATUS"
 
+# Fetch the task details for further diagnostics
+echo "Fetching the task details..."
+TASK_DETAILS=$(aws ecs describe-tasks --cluster $CLUSTER --tasks $TASK_ARN --region $REGION --query 'tasks[0]')
+echo "Task Details: $TASK_DETAILS"
+
+# Fetch the task stop reason if task is stopped
+if [ "$TASK_STATUS" == "STOPPED" ]; then
+  STOP_REASON=$(aws ecs describe-tasks --cluster $CLUSTER --tasks $TASK_ARN --region $REGION --query 'tasks[0].stopReason' --output text)
+  echo "Task Stop Reason: $STOP_REASON"
+fi
+
+# Fetch the container logs
+CONTAINER_NAME=$(echo $TASK_DETAILS | jq -r '.containers[0].name')
+echo "Fetching container logs for container: $CONTAINER_NAME"
+aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $CONTAINER_NAME --region $REGION --limit 10 --query 'events[*].message' --output text
 
 

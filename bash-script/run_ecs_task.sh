@@ -20,13 +20,13 @@ LOG_PREFIX="/ecs"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
-  DEFAULT_SECURITY_GROUP="production-ecs-svc-sg"
-  DEFAULT_SUBNET="subnet-12345678"  # Replace with the actual default subnet ID for production
-  DEFAULT_VPC_ID="vpc-12345678"  # Replace with the actual default VPC ID for production
+  DEFAULT_SECURITY_GROUP="sg-07ee605260e72ee45"
+  DEFAULT_SUBNET="subnet-007ccb5717e938863"  # Replace with the actual default subnet ID for production
+  DEFAULT_VPC_ID="vpc-0a0d5e6731a83b9ac"  # Replace with the actual default VPC ID for production
 else
-  DEFAULT_SECURITY_GROUP="sg-054071f2335d2c51e"
-  DEFAULT_SUBNET="subnet-07f3c1a3fa7940df9"  # Replace with the actual default subnet ID for staging
-  DEFAULT_VPC_ID="vpc-03dab4e3ca86969fb"  # Replace with the actual default VPC ID for staging
+  DEFAULT_SECURITY_GROUP="sg-07ee605260e72ee45"
+  DEFAULT_SUBNET="subnet-007ccb5717e938863"  # Replace with the actual default subnet ID for staging
+  DEFAULT_VPC_ID="vpc-0a0d5e6731a83b9ac"  # Replace with the actual default VPC ID for staging
 fi
 
 # Override default values if not provided

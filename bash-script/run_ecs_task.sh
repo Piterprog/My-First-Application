@@ -16,13 +16,13 @@ LOG_PREFIX="/ecs"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
-  CLUSTER="production"  # Hardcoded name of the production cluster
+  CLUSTER="production-cluster"  # Hardcoded name of the production cluster
   SECURITY_GROUP="sg-0123456789abcdef0"  # Replace with the actual security group ID for production
   PRIMARY_SUBNET="subnet-0123456789abcdef0"  # Replace with the primary subnet ID for production
   SECONDARY_SUBNET="subnet-1234567890abcdef1"  # Replace with the secondary subnet ID for production
   VPC_ID="vpc-0123456789abcdef0"  # Replace with the actual VPC ID for production
 else
-  CLUSTER="staging"  # Hardcoded name of the staging cluster
+  CLUSTER="staging-cluster"  # Hardcoded name of the staging cluster
   SECURITY_GROUP="sg-07ee605260e72ee45"  # Replace with the actual security group ID for staging
   PRIMARY_SUBNET="subnet-007ccb5717e938863"  # Replace with the primary subnet ID for staging
   SECONDARY_SUBNET="subnet-1234567890abcdef1"  # Replace with the secondary subnet ID for staging
@@ -148,14 +148,24 @@ if [ "$TASK_STATUS" == "STOPPED" ]; then
 fi
 
 # Extract log stream name from task details
-LOG_STREAM_NAME=$(echo $TASK_DETAILS | jq -r '.containers[0].logConfiguration.options["awslogs-stream"]')
+CONTAINER_DETAILS=$(echo $TASK_DETAILS | jq -r '.containers[0]')
+CONTAINER_NAME=$(echo $CONTAINER_DETAILS | jq -r '.name')
+CONTAINER_RUNTIME_ID=$(echo $CONTAINER_DETAILS | jq -r '.runtimeId')
+LOG_STREAM_NAME=$(echo $CONTAINER_DETAILS | jq -r '.logConfiguration.options["awslogs-stream-prefix"]')"/"$CONTAINER_RUNTIME_ID
 
 # Wait for log stream to be available
 echo "Waiting for log stream to be available..."
 sleep 30
 
+# Check if log stream exists
+LOG_STREAM_EXISTS=$(aws logs describe-log-streams --log-group-name $LOG_GROUP --log-stream-name-prefix $LOG_STREAM_NAME --region $REGION --query "logStreams[?logStreamName=='$LOG_STREAM_NAME'].logStreamName" --output text)
+
+if [ -z "$LOG_STREAM_EXISTS" ]; then
+  echo "Error: Log stream '$LOG_STREAM_NAME' does not exist."
+  exit 1
+fi
+
 # Fetch the container logs
 echo "Fetching container logs for container: $LOG_STREAM_NAME"
 aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $LOG_STREAM_NAME --region $REGION --limit 10 --query 'events[*].message' --output text
-
 

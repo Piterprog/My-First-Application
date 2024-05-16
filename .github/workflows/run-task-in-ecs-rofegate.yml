@@ -29,6 +29,6 @@ jobs:
       - name: Run ECS Task
         run: |
           chmod +x bash-script/run_ecs_task.sh
-          ./bash-script/run_ecs_task.sh web-app-hello-from-ecs-cluster staging staging
+          ./bash-script/run_ecs_task.sh web-app-hello-from-ecs-cluster staging
 
 

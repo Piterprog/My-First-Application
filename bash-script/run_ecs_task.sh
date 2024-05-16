@@ -12,6 +12,12 @@ VPC_ID=${6:-default}  # The VPC ID (default based on environment)
 REGION="us-east-1"  # Specified AWS region
 LOG_PREFIX="/ecs"
 
+# Check for required parameters
+if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ] || [ -z "$CLUSTER" ]; then
+  echo "Usage: $0 <SERVICE_NAME> <ENVIRONMENT> <CLUSTER> [SECURITY_GROUP] [SUBNET] [VPC_ID]"
+  exit 1
+fi
+
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
   DEFAULT_SECURITY_GROUP=""

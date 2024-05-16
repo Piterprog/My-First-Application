@@ -17,9 +17,9 @@ LOG_PREFIX="/ecs"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
-  SECURITY_GROUP="sg-0123456789abcdef0"  # Replace with the actual security group ID for production
-  SUBNET="subnet-0123456789abcdef0"  # Replace with the actual subnet ID for production
-  VPC_ID="vpc-0123456789abcdef0"  # Replace with the actual VPC ID for production
+  SECURITY_GROUP=""  # Replace with the actual security group ID for production
+  SUBNET=""  # Replace with the actual subnet ID for production
+  VPC_ID=""  # Replace with the actual VPC ID for production
 else
   SECURITY_GROUP="sg-07ee605260e72ee45"  # Replace with the actual security group ID for staging
   SUBNET="subnet-007ccb5717e938863"  # Replace with the actual subnet ID for staging

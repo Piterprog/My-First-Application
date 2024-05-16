@@ -12,7 +12,7 @@ if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
 fi
 
 # Constant values
-REGION="us-east-1"  # Specified AWS region
+REGION="us-east-1"  
 LOG_PREFIX="/ecs"
 
 # Define default values based on environment
@@ -24,10 +24,10 @@ if [ "$ENVIRONMENT" == "production" ]; then
   VPC_ID=""  # Replace with the actual VPC ID for production
 else
   CLUSTER="staging"  # Hardcoded name of the staging cluster
-  SECURITY_GROUP="sg-07ee605260e72ee45"  # Replace with the actual security group ID for staging
-  PRIMARY_SUBNET="subnet-007ccb5717e938863"  # Replace with the primary subnet ID for staging
-  SECONDARY_SUBNET="subnet-1234567890abcdef1"  # Replace with the secondary subnet ID for staging
-  VPC_ID="vpc-0a0d5e6731a83b9ac"  # Replace with the actual VPC ID for staging
+  SECURITY_GROUP=""  # Replace with the actual security group ID for staging
+  PRIMARY_SUBNET=""  # Replace with the primary subnet ID for staging
+  SECONDARY_SUBNET=""  # Replace with the secondary subnet ID for staging
+  VPC_ID=""  # Replace with the actual VPC ID for staging
 fi
 
 # Debug output

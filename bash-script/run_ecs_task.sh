@@ -58,3 +58,4 @@ LOG_GROUP_LINK="https://console.aws.amazon.com/cloudwatch/home?region=$REGION#lo
 echo "Task ARN: $TASK_ARN"
 echo "Log Group Link: $LOG_GROUP_LINK"
 
+

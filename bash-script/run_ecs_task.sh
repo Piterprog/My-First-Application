@@ -18,12 +18,14 @@ LOG_PREFIX="/ecs"
 if [ "$ENVIRONMENT" == "production" ]; then
   CLUSTER="production-cluster"  # Hardcoded name of the production cluster
   SECURITY_GROUP="sg-0123456789abcdef0"  # Replace with the actual security group ID for production
-  SUBNETS=("subnet-0123456789abcdef0" "subnet-1234567890abcdef1")  # Replace with actual subnet IDs for production
+  PRIMARY_SUBNET="subnet-0123456789abcdef0"  # Replace with the primary subnet ID for production
+  SECONDARY_SUBNET="subnet-1234567890abcdef1"  # Replace with the secondary subnet ID for production
   VPC_ID="vpc-0123456789abcdef0"  # Replace with the actual VPC ID for production
 else
-  CLUSTER="staging"  # Hardcoded name of the staging cluster
+  CLUSTER="staging-cluster"  # Hardcoded name of the staging cluster
   SECURITY_GROUP="sg-07ee605260e72ee45"  # Replace with the actual security group ID for staging
-  SUBNETS=("subnet-0a7fd9277351bf325" "subnet-007ccb5717e938863")  # Replace with actual subnet IDs for staging
+  PRIMARY_SUBNET="subnet-007ccb5717e938863"  # Replace with the primary subnet ID for staging
+  SECONDARY_SUBNET="subnet-1234567890abcdef1"  # Replace with the secondary subnet ID for staging
   VPC_ID="vpc-0a0d5e6731a83b9ac"  # Replace with the actual VPC ID for staging
 fi
 
@@ -32,28 +34,36 @@ echo "Service Name: $SERVICE_NAME"
 echo "Environment: $ENVIRONMENT"
 echo "Cluster: $CLUSTER"
 echo "Security Group: $SECURITY_GROUP"
-echo "Subnets: ${SUBNETS[@]}"
+echo "Primary Subnet: $PRIMARY_SUBNET"
+echo "Secondary Subnet: $SECONDARY_SUBNET"
 echo "VPC ID: $VPC_ID"
 
-# Verify that the subnets exist
-VALID_SUBNETS=()
-for SUBNET in "${SUBNETS[@]}"; do
-  echo "Checking if subnet $SUBNET exists..."
-  SUBNET_EXISTS=$(aws ec2 describe-subnets --subnet-ids $SUBNET --region $REGION --query 'Subnets[0].SubnetId' --output text)
-  if [ -n "$SUBNET_EXISTS" ]; then
-    VALID_SUBNETS+=("$SUBNET")
+# Function to check if a subnet exists
+check_subnet() {
+  SUBNET_ID=$1
+  aws ec2 describe-subnets --subnet-ids $SUBNET_ID --region $REGION --query 'Subnets[0].SubnetId' --output text
+}
+
+# Verify that the primary subnet exists
+echo "Checking if primary subnet exists..."
+PRIMARY_SUBNET_EXISTS=$(check_subnet $PRIMARY_SUBNET)
+if [ -n "$PRIMARY_SUBNET_EXISTS" ]; then
+  SUBNET=$PRIMARY_SUBNET
+  echo "Using primary subnet: $PRIMARY_SUBNET"
+else
+  echo "Warning: Primary subnet '$PRIMARY_SUBNET' does not exist or is not available."
+  
+  # Verify that the secondary subnet exists
+  echo "Checking if secondary subnet exists..."
+  SECONDARY_SUBNET_EXISTS=$(check_subnet $SECONDARY_SUBNET)
+  if [ -n "$SECONDARY_SUBNET_EXISTS" ]; then
+    SUBNET=$SECONDARY_SUBNET
+    echo "Using secondary subnet: $SECONDARY_SUBNET"
   else
-    echo "Warning: Subnet ID '$SUBNET' does not exist or is not available."
+    echo "Error: Neither primary nor secondary subnets are valid or available."
+    exit 1
   fi
-done
-
-if [ ${#VALID_SUBNETS[@]} -eq 0 ]; then
-  echo "Error: None of the provided subnets are valid or available."
-  exit 1
 fi
-
-# Convert the valid subnets array to a JSON array
-SUBNETS_JSON=$(printf '%s\n' "${VALID_SUBNETS[@]}" | jq -R . | jq -s .)
 
 # Verify that the security group exists
 echo "Checking if security group exists..."
@@ -90,7 +100,7 @@ echo "Using task definition: $TASK_DEFINITION"
 
 # Running the ECS task
 echo "Running the ECS task..."
-RUN_TASK_OUTPUT=$(aws ecs run-task --cluster $CLUSTER --launch-type FARGATE --task-definition $TASK_DEFINITION --network-configuration "{\"awsvpcConfiguration\":{\"subnets\":$SUBNETS_JSON,\"securityGroups\":[\"$SECURITY_GROUP\"],\"assignPublicIp\":\"DISABLED\"}}" --region $REGION)
+RUN_TASK_OUTPUT=$(aws ecs run-task --cluster $CLUSTER --launch-type FARGATE --task-definition $TASK_DEFINITION --network-configuration "awsvpcConfiguration={subnets=[$SUBNET],securityGroups=[$SECURITY_GROUP],assignPublicIp=DISABLED}" --region $REGION)
 if [ $? -ne 0 ]; then
   echo "Error: Failed to run task"
   echo "RUN_TASK_OUTPUT: $RUN_TASK_OUTPUT"

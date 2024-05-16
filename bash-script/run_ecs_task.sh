@@ -52,6 +52,9 @@ if [ ${#VALID_SUBNETS[@]} -eq 0 ]; then
   exit 1
 fi
 
+# Convert the valid subnets array to a JSON array
+SUBNETS_JSON=$(printf '%s\n' "${VALID_SUBNETS[@]}" | jq -R . | jq -s .)
+
 # Verify that the security group exists
 echo "Checking if security group exists..."
 SECURITY_GROUP_EXISTS=$(aws ec2 describe-security-groups --group-ids $SECURITY_GROUP --region $REGION --query 'SecurityGroups[0].GroupId' --output text)
@@ -87,7 +90,7 @@ echo "Using task definition: $TASK_DEFINITION"
 
 # Running the ECS task
 echo "Running the ECS task..."
-RUN_TASK_OUTPUT=$(aws ecs run-task --cluster $CLUSTER --launch-type FARGATE --task-definition $TASK_DEFINITION --network-configuration "awsvpcConfiguration={subnets=[${VALID_SUBNETS[@]}],securityGroups=[$SECURITY_GROUP],assignPublicIp=DISABLED}" --region $REGION)
+RUN_TASK_OUTPUT=$(aws ecs run-task --cluster $CLUSTER --launch-type FARGATE --task-definition $TASK_DEFINITION --network-configuration "{\"awsvpcConfiguration\":{\"subnets\":$SUBNETS_JSON,\"securityGroups\":[\"$SECURITY_GROUP\"],\"assignPublicIp\":\"DISABLED\"}}" --region $REGION)
 if [ $? -ne 0 ]; then
   echo "Error: Failed to run task"
   echo "RUN_TASK_OUTPUT: $RUN_TASK_OUTPUT"
@@ -108,5 +111,4 @@ LOG_GROUP_LINK="https://console.aws.amazon.com/cloudwatch/home?region=$REGION#lo
 # Outputting the Task ARN and log group link
 echo "Task ARN: $TASK_ARN"
 echo "Log Group Link: $LOG_GROUP_LINK"
-
 

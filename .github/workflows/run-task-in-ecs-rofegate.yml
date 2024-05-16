@@ -28,6 +28,6 @@ jobs:
 
       - name: Run ECS Task
         run: |
-          chmod +x bash-script/script.sh
-          ./bash-script/script.sh Ecs_cluster web-app-hello-from-ecs-cluster subnet-013983ea153c7dd64 sg-0c1bd31ac18ae343b web-app-hello-from-ecs-cluster
+          chmod +x bash-script/run_ecs_tusk.sh
+          ./bash-script/run_ecs_tusk.sh web-app-hello-from-ecs-cluster staging Cluster
 

@@ -147,16 +147,15 @@ if [ "$TASK_STATUS" == "STOPPED" ]; then
   echo "Task Stop Reason: $STOP_REASON"
 fi
 
+# Extract log stream name from task details
+LOG_STREAM_NAME=$(echo $TASK_DETAILS | jq -r '.containers[0].logConfiguration.options["awslogs-stream"]')
+
+# Wait for log stream to be available
+echo "Waiting for log stream to be available..."
+sleep 30
+
 # Fetch the container logs
-CONTAINER_NAME=$(echo $TASK_DETAILS | jq -r '.containers[0].name')
-echo "Fetching container logs for container: $CONTAINER_NAME"
-aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $CONTAINER_NAME --region $REGION --limit 10 --query 'events[*].message' --output text
-
-
-
-
-
-
-
+echo "Fetching container logs for container: $LOG_STREAM_NAME"
+aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $LOG_STREAM_NAME --region $REGION --limit 10 --query 'events[*].message' --output text
 
 

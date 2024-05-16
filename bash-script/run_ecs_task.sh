@@ -25,7 +25,7 @@ if [ "$ENVIRONMENT" == "production" ]; then
   DEFAULT_VPC_ID=""  # Specify the default VPC value for production
 else
   DEFAULT_SECURITY_GROUP="sg-054071f2335d2c51e"
-  DEFAULT_SUBNET="subnet-0aaf282e59bb73704"  # Specify the default subnet value for staging
+  DEFAULT_SUBNET="subnet-07f3c1a3fa7940df9"  # Specify the default subnet value for staging
   DEFAULT_VPC_ID="vpc-03dab4e3ca86969fb"  # Specify the default VPC value for staging
 fi
 

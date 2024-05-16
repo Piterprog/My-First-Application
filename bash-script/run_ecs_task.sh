@@ -3,11 +3,10 @@
 # Command line parameters
 SERVICE_NAME=$1  # The name of the task or task family
 ENVIRONMENT=$2  # The environment (e.g., production, staging)
-CLUSTER=$3  # The name of the ECS cluster
 
 # Check for required parameters
-if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ] || [ -z "$CLUSTER" ]; then
-  echo "Usage: $0 <SERVICE_NAME> <ENVIRONMENT> <CLUSTER>"
+if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
+  echo "Usage: $0 <SERVICE_NAME> <ENVIRONMENT>"
   exit 1
 fi
 
@@ -17,12 +16,14 @@ LOG_PREFIX="/ecs"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
-  SECURITY_GROUP=""  # Replace with the actual security group ID for production
-  SUBNET=""  # Replace with the actual subnet ID for production
-  VPC_ID=""  # Replace with the actual VPC ID for production
+  CLUSTER="production-cluster"  # Hardcoded name of the production cluster
+  SECURITY_GROUP="sg-0123456789abcdef0"  # Replace with the actual security group ID for production
+  SUBNETS=("subnet-0123456789abcdef0" "subnet-1234567890abcdef1")  # Replace with actual subnet IDs for production
+  VPC_ID="vpc-0123456789abcdef0"  # Replace with the actual VPC ID for production
 else
+  CLUSTER="staging"  # Hardcoded name of the staging cluster
   SECURITY_GROUP="sg-07ee605260e72ee45"  # Replace with the actual security group ID for staging
-  SUBNET="subnet-007ccb5717e938863"  # Replace with the actual subnet ID for staging
+  SUBNETS=("subnet-0a7fd9277351bf325" "subnet-007ccb5717e938863")  # Replace with actual subnet IDs for staging
   VPC_ID="vpc-0a0d5e6731a83b9ac"  # Replace with the actual VPC ID for staging
 fi
 
@@ -31,14 +32,23 @@ echo "Service Name: $SERVICE_NAME"
 echo "Environment: $ENVIRONMENT"
 echo "Cluster: $CLUSTER"
 echo "Security Group: $SECURITY_GROUP"
-echo "Subnet: $SUBNET"
+echo "Subnets: ${SUBNETS[@]}"
 echo "VPC ID: $VPC_ID"
 
-# Verify that the subnet exists
-echo "Checking if subnet exists..."
-SUBNET_EXISTS=$(aws ec2 describe-subnets --subnet-ids $SUBNET --region $REGION --query 'Subnets[0].SubnetId' --output text)
-if [ -z "$SUBNET_EXISTS" ]; then
-  echo "Error: Subnet ID '$SUBNET' does not exist."
+# Verify that the subnets exist
+VALID_SUBNETS=()
+for SUBNET in "${SUBNETS[@]}"; do
+  echo "Checking if subnet $SUBNET exists..."
+  SUBNET_EXISTS=$(aws ec2 describe-subnets --subnet-ids $SUBNET --region $REGION --query 'Subnets[0].SubnetId' --output text)
+  if [ -n "$SUBNET_EXISTS" ]; then
+    VALID_SUBNETS+=("$SUBNET")
+  else
+    echo "Warning: Subnet ID '$SUBNET' does not exist or is not available."
+  fi
+done
+
+if [ ${#VALID_SUBNETS[@]} -eq 0 ]; then
+  echo "Error: None of the provided subnets are valid or available."
   exit 1
 fi
 
@@ -77,7 +87,7 @@ echo "Using task definition: $TASK_DEFINITION"
 
 # Running the ECS task
 echo "Running the ECS task..."
-RUN_TASK_OUTPUT=$(aws ecs run-task --cluster $CLUSTER --launch-type FARGATE --task-definition $TASK_DEFINITION --network-configuration "awsvpcConfiguration={subnets=[$SUBNET],securityGroups=[$SECURITY_GROUP],assignPublicIp=DISABLED}" --region $REGION)
+RUN_TASK_OUTPUT=$(aws ecs run-task --cluster $CLUSTER --launch-type FARGATE --task-definition $TASK_DEFINITION --network-configuration "awsvpcConfiguration={subnets=[${VALID_SUBNETS[@]}],securityGroups=[$SECURITY_GROUP],assignPublicIp=DISABLED}" --region $REGION)
 if [ $? -ne 0 ]; then
   echo "Error: Failed to run task"
   echo "RUN_TASK_OUTPUT: $RUN_TASK_OUTPUT"
@@ -98,4 +108,3 @@ LOG_GROUP_LINK="https://console.aws.amazon.com/cloudwatch/home?region=$REGION#lo
 # Outputting the Task ARN and log group link
 echo "Task ARN: $TASK_ARN"
 echo "Log Group Link: $LOG_GROUP_LINK"
-

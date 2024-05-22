@@ -13,11 +13,11 @@ module "security_group" {
 
 
 output "public_subnets_id" {
- value = module.vpc_staging.public_subnets_ids
+ value = module.vpc_staging.public_subnets[*].ids
 }
 
 output "privat_subnets_id" {
- value = module.vpc_staging.private_subnets_ids
+ value = module.vpc_staging.private_subnets[*].ids
 }
 
 output "vpc_cider_id" {

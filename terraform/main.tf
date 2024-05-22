@@ -15,15 +15,15 @@ module "security_group" {
 }
 
 
-outputs "public_subnets_id" {
+output "public_subnets_id" {
  value = module.vpc_staging.public_subnets_ids
 }
 
-outputs "privat_subnets_id" {
+output "privat_subnets_id" {
  value = module.vpc_staging.privat_subnets_ids
 }
 
-outputs "vpc_cider_id" {
+output "vpc_cider_id" {
  value = module.vpc_staging.vpc_cider_id
 }
 

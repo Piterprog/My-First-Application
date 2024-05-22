@@ -14,6 +14,3 @@ variable "private_subnet_cidrs" {
   type = list(string)
 }
 
-variable "database_subnet_cidrs" {
-  type = list(string)
-}

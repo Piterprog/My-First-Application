@@ -7,4 +7,3 @@ resource "aws_vpc" "main" {
     Name = "${var.env}-vpc"
   }
 }
-

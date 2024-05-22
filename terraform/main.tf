@@ -1,5 +1,5 @@
 module "vpc_staging" {
-  source              = "./module/vpc"
+  source              = "./modules/vpc"
   env                 = "staging"
   vpc_cidr            = "10.100.0.0/16"
   public_subnet_cidrs = ["10.100.1.0/24", "10.100.2.0/24"]
@@ -7,7 +7,7 @@ module "vpc_staging" {
 }
 
 module "security_group" {
- source                = "./module/security_group"
+ source                = "./modules/security_group"
  vpc_id                = module.vpc_staging.vpc_id
 }
 

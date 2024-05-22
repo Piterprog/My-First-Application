@@ -1,5 +1,5 @@
 variable "env" {
-  default = "staging"
+   type = string
 }
 
 variable "vpc_cidr" {

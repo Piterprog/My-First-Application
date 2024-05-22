@@ -1,28 +1,35 @@
+output "public_subnets_id" {
+  value = module.vpc_staging.public_subnets
+}
+
+output "private_subnets_id" {
+  value = module.vpc_staging.private_subnets
+}
+
+output "vpc_cidr_id" {
+  value = module.vpc_staging.vpc_cidr_id
+}
 
 output "vpc_id" {
-  value = aws_vpc.main.id
+  value = module.vpc_staging.vpc_id
 }
 
 output "vpc_cidr" {
-  value = aws_vpc.main.cidr_block
+  value = module.vpc_staging.vpc_cidr
 }
 
 output "public_subnet_ids" {
-  value = aws_subnet.public_subnets[*].id
+  value = module.vpc_staging.public_subnets
 }
 
 output "private_subnet_ids" {
-  value = aws_subnet.private_subnets[*].id
+  value = module.vpc_staging.private_subnets
 }
 
 output "database_subnet_ids" {
-  value = aws_subnet.database_subnets[*].id
+  value = module.vpc_staging.database_subnets
 }
 
 output "security_group_id" {
-  value = aws_security_group.security_vpc_musad.id
+  value = module.vpc_staging.security_group_id
 }
-
-
-
-

@@ -4,7 +4,7 @@ name: Terraform AWS Deployment
 on:
   push:
     branches:
-      - terraform.module/terraform
+      - terraform.module
 
 jobs:
   create_vpc:
@@ -33,7 +33,7 @@ jobs:
       working-directory: ./terraform
 
     - name: Apply Terraform changes
-      run: terraform destroy -auto-approve
+      run: terraform apply -auto-approve
       working-directory: ./terraform
 
 

@@ -1,4 +1,6 @@
-
+provider "aws" {
+  region = "us-uest-1"
+}
 
 
 module "vpc_staging" {

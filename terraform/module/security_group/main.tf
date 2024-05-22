@@ -1,5 +1,5 @@
 
-resource "aws_security_group" "security_vpc_musad" {
+resource "aws_security_group" "security_group_musad" {
   name        = "security_vpc_musad"
   description = "security group"
   vpc_id      =  var.vpc.id

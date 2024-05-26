@@ -4,7 +4,6 @@
 SERVICE_NAME=$1  # The name of the task or task family
 ENVIRONMENT=$2  # The environment (e.g., production, staging)
 
-
 # Check for required parameters
 if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
   echo "Usage: $0 <SERVICE_NAME> <ENVIRONMENT>"
@@ -74,6 +73,21 @@ if [ -z "$SECURITY_GROUP_EXISTS" ]; then
   exit 1
 fi
 
+# Define the log group name
+LOG_GROUP="$LOG_PREFIX/$SERVICE_NAME/$ENVIRONMENT"
+
+# Check if the log group exists
+echo "Checking if log group exists..."
+LOG_GROUP_EXISTS=$(aws logs describe-log-groups --log-group-name-prefix $LOG_GROUP --region $REGION --query "logGroups[?logGroupName=='$LOG_GROUP'].logGroupName" --output text)
+
+# Create the log group if it does not exist
+if [ -z "$LOG_GROUP_EXISTS" ]; then
+  echo "Creating log group: $LOG_GROUP"
+  aws logs create-log-group --log-group-name $LOG_GROUP --region $REGION
+else
+  echo "Log group already exists: $LOG_GROUP"
+fi
+
 # Fetching the latest revision of the task definition
 echo "Fetching the latest task definition..."
 TASK_DEFINITION=$(aws ecs list-task-definitions --family-prefix $SERVICE_NAME --sort DESC --query 'taskDefinitionArns[0]' --output text --region $REGION)
@@ -99,21 +113,6 @@ if [ -z "$TASK_ARN" ]; then
   echo "Error: Task ARN not found in the output"
   echo "RUN_TASK_OUTPUT: $RUN_TASK_OUTPUT"
   exit 1
-fi
-
-# Generate a unique log group name
-LOG_GROUP="$LOG_PREFIX/$SERVICE_NAME/$ENVIRONMENT/task-$(basename $TASK_ARN)"
-
-# Check if the log group exists
-echo "Checking if log group exists..."
-LOG_GROUP_EXISTS=$(aws logs describe-log-groups --log-group-name-prefix $LOG_GROUP --region $REGION --query "logGroups[?logGroupName=='$LOG_GROUP'].logGroupName" --output text)
-
-# Create the log group if it does not exist
-if [ -z "$LOG_GROUP_EXISTS" ]; then
-  echo "Creating log group: $LOG_GROUP"
-  aws logs create-log-group --log-group-name $LOG_GROUP --region $REGION
-else
-  echo "Log group already exists: $LOG_GROUP"
 fi
 
 # Constructing the log group link
@@ -142,5 +141,31 @@ echo "Fetching the task details..."
 TASK_DETAILS=$(aws ecs describe-tasks --cluster $CLUSTER --tasks $TASK_ARN --region $REGION --query 'tasks[0]')
 echo "Task Details: $TASK_DETAILS"
 
-# Fetch the task stop reason if task is stoppe
+# Fetch the task stop reason if task is stopped
+if [ "$TASK_STATUS" == "STOPPED" ]; then
+  STOP_REASON=$(aws ecs describe-tasks --cluster $CLUSTER --tasks $TASK_ARN --region $REGION --query 'tasks[0].stopReason' --output text)
+  echo "Task Stop Reason: $STOP_REASON"
+fi
+
+# Extract log stream name from task details
+CONTAINER_DETAILS=$(echo $TASK_DETAILS | jq -r '.containers[0]')
+CONTAINER_NAME=$(echo $CONTAINER_DETAILS | jq -r '.name')
+CONTAINER_RUNTIME_ID=$(echo $CONTAINER_DETAILS | jq -r '.runtimeId')
+LOG_STREAM_NAME=$(echo $CONTAINER_DETAILS | jq -r '.logConfiguration.options["awslogs-stream-prefix"]')"/"$CONTAINER_RUNTIME_ID
+
+# Wait for log stream to be available
+echo "Waiting for log stream to be available..."
+sleep 30
+
+# Check if log stream exists
+LOG_STREAM_EXISTS=$(aws logs describe-log-streams --log-group-name $LOG_GROUP --log-stream-name-prefix $LOG_STREAM_NAME --region $REGION --query "logStreams[?logStreamName=='$LOG_STREAM_NAME'].logStreamName" --output text)
+
+if [ -z "$LOG_STREAM_EXISTS" ]; then
+  echo "Error: Log stream '$LOG_STREAM_NAME' does not exist."
+  exit 1
+fi
+
+# Fetch the container logs
+echo "Fetching container logs for container: $LOG_STREAM_NAME"
+aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $LOG_STREAM_NAME --region $REGION --limit 10 --query 'events[*].message' --output text
 

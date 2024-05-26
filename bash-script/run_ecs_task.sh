@@ -24,10 +24,10 @@ if [ "$ENVIRONMENT" == "production" ]; then
   VPC_ID=""  # Replace with the actual VPC ID for production
 else
   CLUSTER="staging" # Cluster name
-  SECURITY_GROUP=""  # Replace with the actual security group ID for staging
-  PRIMARY_SUBNET=""  # Replace with the primary subnet ID for staging
-  SECONDARY_SUBNET=""  # Replace with the secondary subnet ID for staging
-  VPC_ID=""  # Replace with the actual VPC ID for staging
+  SECURITY_GROUP="sg-0b8d65e68add439fa"  # Replace with the actual security group ID for staging
+  PRIMARY_SUBNET="subnet-03bcc3211dec8169e"  # Replace with the primary subnet ID for staging
+  SECONDARY_SUBNET="subnet-07db11fbbad6729a5"  # Replace with the secondary subnet ID for staging
+  VPC_ID="10.100.0.0/16"  # Replace with the actual VPC ID for staging
 fi
 
 # Debug output

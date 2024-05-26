@@ -7,7 +7,7 @@ output "private_subnets_id" {
 }
 
 output "vpc_cidr_id" {
-  value = module.vpc_staging.vpc_cidr_id
+  value = module.vpc_staging.vpc_id
 }
 
 output "security_group_id" {

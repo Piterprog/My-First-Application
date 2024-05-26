@@ -3,7 +3,7 @@ name: Run ECS Task
 on:
   push:
     branches:
-      - main
+      - terraform.module
     paths:
       - 'bash-script/run_ecs_task.sh'
 

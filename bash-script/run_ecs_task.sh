@@ -1,7 +1,6 @@
 #!/bin/bash
 
 
-
 # Command line parameters
 SERVICE_NAME=$1  # The name of the task or task family
 ENVIRONMENT=$2  # The environment (e.g., production, staging)

@@ -4,6 +4,7 @@
 SERVICE_NAME=$1  # The name of the task or task family
 ENVIRONMENT=$2  # The environment (e.g., production, staging)
 
+
 # Check for required parameters
 if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
   echo "Usage: $0 <SERVICE_NAME> <ENVIRONMENT>"

@@ -1,4 +1,3 @@
-
 name: Terraform AWS Deployment
 
 on:
@@ -10,8 +9,8 @@ on:
 
 jobs:
   create_vpc:
-    needs: []
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -27,16 +26,21 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
-      env:
-        AWS_REGION: ${{ secrets.AWS_REGION }}
 
     - name: Initialize Terraform
       run: terraform init
       working-directory: ./terraform
 
-    - name: Apply Terraform changes
-      run: terraform apply -auto-approve
+    - name: Validate Terraform
+      run: terraform validate
       working-directory: ./terraform
 
+    - name: Plan Terraform changes
+      run: terraform plan -out=tfplan
+      working-directory: ./terraform
+
+    - name: Apply Terraform changes
+      run: terraform apply -auto-approve tfplan
+      working-directory: ./terraform
 
       

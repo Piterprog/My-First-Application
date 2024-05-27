@@ -4,7 +4,7 @@ name: Terraform AWS Deployment
 on:
   push:
     branches:
-      - terraform.module
+      - terraform.module/terraform
 
 jobs:
   create_vpc:

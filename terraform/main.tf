@@ -19,7 +19,7 @@ module "my_security_group" {
 
   sg_name        = "musad"
   sg_description = "Security group for my application"
-  vpc_id         = data.aws_vpc.staging.id
+  vpc_id         = data.aws_vpc.main.id
   ingress_rules = [
     {
       from_port   = 80

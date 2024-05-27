@@ -6,7 +6,7 @@ on:
     branches:
       - terraform.module
     paths:
-      - 'terraform/**'
+      - 'terraform/main.tf'
 
 jobs:
   create_vpc:

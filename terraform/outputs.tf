@@ -11,5 +11,5 @@ output "vpc_cidr_id" {
 }
 
 output "security_group_id" {
-  value = module.sg_group_security_group.id
+  value = aws_security_group.this.id
 }

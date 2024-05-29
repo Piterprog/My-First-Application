@@ -11,5 +11,5 @@ output "vpc_cidr_id" {
 }
 
 output "security_group_id" {
-  value = module.vpc_staging.security_group_id
+  value = module.vpc_staging.security_group.id
 }

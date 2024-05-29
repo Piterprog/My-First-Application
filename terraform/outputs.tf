@@ -1,9 +1,9 @@
 output "public_subnets_id" {
-  value = module.vpc_staging.public_subnets
+  value = module.vpc_staging.public_subnets[*].id
 }
 
 output "private_subnets_id" {
-  value = module.vpc_staging.private_subnets
+  value = module.vpc_staging.private_subnets[*].id
 }
 
 output "vpc_cidr_id" {
@@ -11,5 +11,5 @@ output "vpc_cidr_id" {
 }
 
 output "security_group_id" {
-  value = aws_security_group.my_security_group.id
+  value = module.vpc_staging.security_group_id
 }

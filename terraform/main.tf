@@ -4,6 +4,7 @@ provider "aws" {
 
 module "vpc_staging" {
   source              = "./modules/vpc"
+
   env                 = "staging"
   vpc_cidr            = "10.100.0.0/16"
   public_subnet_cidrs = ["10.100.1.0/24", "10.100.2.0/24"]
@@ -41,9 +42,5 @@ module "my_security_group" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   ]
- tags = {
-    Environment = "staging"
-    Application = "sg_group_staging"
-  }
 }
 

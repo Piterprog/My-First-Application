@@ -18,3 +18,8 @@ variable "ingress_rules" {
     cidr_blocks = list(string)
   }))
 }
+
+variable "tags" {
+  type = map(string)
+  default = {}
+}

@@ -18,7 +18,7 @@ data "aws_vpc" "staging" {
 module "my_security_group" {
   source = "./modules/sg_group"
 
-  sg_name        = "musad"
+  sg_name        = "staging"
   sg_description = "Security group for my application"
   vpc_id         = data.aws_vpc.staging.id
 

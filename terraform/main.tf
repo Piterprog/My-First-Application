@@ -41,5 +41,9 @@ module "my_security_group" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   ]
+ tags = {
+    Environment = "staging"
+    Application = "sg_group_staging"
+  }
 }
 

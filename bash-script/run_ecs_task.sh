@@ -22,7 +22,7 @@ if [ "$ENVIRONMENT" == "production" ]; then
   PRIMARY_SUBNET=""  # Replace with the primary subnet ID for production
   SECONDARY_SUBNET=""  # Replace with the secondary subnet ID for production
   VPC_ID=""  # Replace with the actual VPC ID for production
-else
+elif [ "$ENVIRONMENT" == "staging" ]; then
   CLUSTER="staging" # Cluster name
   SECURITY_GROUP=""  # Replace with the actual security group ID for staging
   PRIMARY_SUBNET=""  # Replace with the primary subnet ID for staging

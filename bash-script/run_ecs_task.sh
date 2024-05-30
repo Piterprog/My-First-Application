@@ -10,6 +10,7 @@ if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
   exit 1
 fi
 
+
 # Constant values
 REGION="us-east-1"
 LOG_PREFIX="/ecs"

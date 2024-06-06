@@ -9,7 +9,7 @@ fi
 
 # Constant values
 REGION="us-east-1"  
-LOG_PREFIX="/ecs"
+LOG_PREFIX="/ecs-cluster"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
@@ -78,7 +78,8 @@ LOG_GROUP="${LOG_PREFIX}/${SERVICE_NAME}"
 
 # Check if the log group exists
 echo "Checking if log group exists..."
-LOG_GROUP_EXISTS=$(aws logs describe-log-groups --log-group-name $LOG_GROUP --region $REGION --query "logGroups[?logGroupName=='$LOG_GROUP'].logGroupName" --output text)
+LOG_GROUP_EXISTS=$(aws logs describe-log-groups --log-group-name "$LOG_GROUP" --region $REGION --query "logGroups[?logGroupName=='$LOG_GROUP'].logGroupName" --output text)
+
 
 # Create the log group if it does not exist
 if [ -z "$LOG_GROUP_EXISTS" ]; then

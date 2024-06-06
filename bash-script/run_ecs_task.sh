@@ -77,17 +77,22 @@ fi
 # Define the log group name
 LOG_GROUP="${LOG_PREFIX}/${SERVICE_NAME}"
 
-# Check if the log group exists
+# Check if the log group exists using the exact name to avoid ambiguity
 echo "Checking if log group exists..."
-LOG_GROUP_EXISTS=$(aws logs describe-log-groups --log-group-name $LOG_GROUP --region $REGION --query "logGroups[?logGroupName=='$LOG_GROUP'].logGroupName" --output text)
+LOG_GROUP_EXISTS=$(aws logs describe-log-groups --log-group-name "$LOG_GROUP" --region $REGION --query "logGroups[?logGroupName=='$LOG_GROUP'].logGroupName" --output text)
 
-# Create the log group if it does not exist
 if [ -z "$LOG_GROUP_EXISTS" ]; then
-  echo "Creating log group: $LOG_GROUP"
-  aws logs create-log-group --log-group-name $LOG_GROUP --region $REGION
+  echo "Log group does not exist. Creating log group: $LOG_GROUP"
+  # Create the log group if it does not exist
+  aws logs create-log-group --log-group-name "$LOG_GROUP" --region $REGION
+  if [ $? -ne 0 ]; then
+    echo "Failed to create log group."
+    exit 1
+  fi
 else
   echo "Log group already exists: $LOG_GROUP"
 fi
+
 
 # Fetching the latest revision of the task definition
 echo "Fetching the latest task definition..."

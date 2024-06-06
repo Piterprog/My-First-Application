@@ -40,56 +40,53 @@ echo "Primary Subnet: $PRIMARY_SUBNET"
 echo "Secondary Subnet: $SECONDARY_SUBNET"
 echo "VPC ID: $VPC_ID"
 
+# Flag to track errors
+error_flag=0
+
+# Function to check if a resource exists
+check_resource() {
+  RESOURCE_TYPE=$1
+  RESOURCE_ID=$2
+  aws $RESOURCE_TYPE describe --region $REGION --$RESOURCE_TYPE-ids $RESOURCE_ID > /dev/null 2>&1
+}
+
 # Check if VPC exists
-if ! aws ec2 describe-vpcs --vpc-ids $VPC_ID --region $REGION > /dev/null 2>&1; then
+check_resource "ec2 describe-vpcs" $VPC_ID
+if [ $? -ne 0 ]; then
   echo "Error: VPC with ID $VPC_ID not found."
-  exit 1
+  error_flag=1
+else
+  echo "VPC with ID $VPC_ID exists."
 fi
-echo "VPC with ID $VPC_ID exists."
 
 # Check if primary subnet exists
-if ! aws ec2 describe-subnets --subnet-ids $PRIMARY_SUBNET --region $REGION > /dev/null 2>&1; then
+check_resource "ec2 describe-subnets" $PRIMARY_SUBNET
+if [ $? -ne 0 ]; then
   echo "Primary subnet with ID $PRIMARY_SUBNET not found. Trying secondary subnet..."
   PRIMARY_SUBNET=$SECONDARY_SUBNET
+else
+  echo "Using primary subnet: $PRIMARY_SUBNET"
 fi
-echo "Using primary subnet: $PRIMARY_SUBNET"
 
 # Check if secondary subnet exists
-if ! aws ec2 describe-subnets --subnet-ids $SECONDARY_SUBNET --region $REGION > /dev/null 2>&1; then
+check_resource "ec2 describe-subnets" $SECONDARY_SUBNET
+if [ $? -ne 0 ]; then
   echo "Secondary subnet with ID $SECONDARY_SUBNET not found. Using primary subnet..."
 fi
 
 # Check if security group exists
-if ! aws ec2 describe-security-groups --group-ids $SECURITY_GROUP --region $REGION > /dev/null 2>&1; then
+check_resource "ec2 describe-security-groups" $SECURITY_GROUP
+if [ $? -ne 0 ]; then
   echo "Error: Security group with ID $SECURITY_GROUP not found."
+  error_flag=1
+else
+  echo "Security group with ID $SECURITY_GROUP exists."
+fi
+
+# Exit if there was an error
+if [ $error_flag -ne 0 ]; then
   exit 1
 fi
-echo "Security group with ID $SECURITY_GROUP exists."
 
-# Fetching the latest revision of the task definition
-echo "Fetching the latest task definition..."
-TASK_DEFINITION=$(aws ecs list-task-definitions --family-prefix $SERVICE_NAME --sort DESC --query 'taskDefinitionArns[0]' --output text --region $REGION)
-echo "Using task definition: $TASK_DEFINITION"
+# Continue with the rest of the script...
 
-# Running the ECS task
-echo "Running the ECS task..."
-RUN_TASK_OUTPUT=$(aws ecs run-task --cluster $CLUSTER --launch-type FARGATE --task-definition $TASK_DEFINITION --network-configuration "awsvpcConfiguration={subnets=[$PRIMARY_SUBNET],securityGroups=[$SECURITY_GROUP],assignPublicIp=DISABLED}" --region $REGION)
-TASK_ARN=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].taskArn')
-echo "Task ARN: $TASK_ARN"
-
-# Extract log group and stream names from task definition
-LOG_GROUP=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].containers[0].logConfiguration.options["awslogs-group"]')
-LOG_STREAM_PREFIX=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].containers[0].logConfiguration.options["awslogs-stream-prefix"]')
-
-# Get the full log stream name
-LOG_STREAM_NAME="${LOG_STREAM_PREFIX}/${SERVICE_NAME}/${TASK_ARN}"
-
-# Output the log stream name
-echo "Log Stream Name: $LOG_STREAM_NAME"
-
-# Output the task definition
-echo "Task Definition:"
-aws ecs describe-task-definition --task-definition $TASK_DEFINITION --region $REGION
-
-# Output log group link
-echo "Log Group Link: https://$REGION.console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP" 

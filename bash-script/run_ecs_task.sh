@@ -1,7 +1,3 @@
-#!/bin/bash
-
-
-# Command line parameters
 SERVICE_NAME=$1  # The name of the task or task family
 ENVIRONMENT=$2  # The environment (e.g., production, staging)
 
@@ -18,16 +14,16 @@ LOG_PREFIX="/ecs"
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
   CLUSTER="production" # Cluster name 
-  SECURITY_GROUP="sg-0d9458b354b6aa271"  # Replace with the actual security group ID for production
-  PRIMARY_SUBNET="subnet-0e6332cdbd0f0c8cc"  # Replace with the primary subnet ID for production
-  SECONDARY_SUBNET="subnet-060aa25d2e0871e7e"  # Replace with the secondary subnet ID for production
-  VPC_ID="vpc-0348519926a57af3c"  # Replace with the actual VPC ID for production
+  SECURITY_GROUP=""  # Replace with the actual security group ID for production
+  PRIMARY_SUBNET=""  # Replace with the primary subnet ID for production
+  SECONDARY_SUBNET=""  # Replace with the secondary subnet ID for production
+  VPC_ID=""  # Replace with the actual VPC ID for production
 elif [ "$ENVIRONMENT" == "staging" ]; then
   CLUSTER="staging" # Cluster name
-  SECURITY_GROUP="sg-09ce964cc75cc77f2"  # Replace with the actual security group ID for staging
-  PRIMARY_SUBNET="subnet-0b1bd01365ac07748"  # Replace with the primary subnet ID for staging
-  SECONDARY_SUBNET="subnet-0078ea05496d49531"  # Replace with the secondary subnet ID for staging
-  VPC_ID="vpc-0a8836be5d46c33d8"  # Replace with the actual VPC ID for staging
+  SECURITY_GROUP="sg-09744c887ea95e783"  # Replace with the actual security group ID for staging
+  PRIMARY_SUBNET="subnet-04fbbc86ea80f6934"  # Replace with the primary subnet ID for staging
+  SECONDARY_SUBNET="subnet-081dee713da1a43ab"  # Replace with the secondary subnet ID for staging
+  VPC_ID="vpc-0dd5cffeb8c4d7d78"  # Replace with the actual VPC ID for staging
 else
   echo "Invalid environment specified. Use 'production' or 'staging'."
   exit 1
@@ -159,7 +155,7 @@ LOG_STREAM_NAME=$(echo $CONTAINER_DETAILS | jq -r '.logConfiguration.options["aw
 
 # Wait for log stream to be available
 echo "Waiting for log stream to be available..."
-sleep 30
+sleep 10
 
 # Check if log stream exists
 LOG_STREAM_EXISTS=$(aws logs describe-log-streams --log-group-name $LOG_GROUP --log-stream-name-prefix $LOG_STREAM_NAME --region $REGION --query "logStreams[?logStreamName=='$LOG_STREAM_NAME'].logStreamName" --output text)
@@ -172,4 +168,3 @@ fi
 # Fetch the container logs
 echo "Fetching container logs for container: $LOG_STREAM_NAME"
 aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $LOG_STREAM_NAME --region $REGION --limit 10 --query 'events[*].message' --output text
-

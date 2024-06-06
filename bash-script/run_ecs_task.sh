@@ -10,6 +10,7 @@ if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
   exit 1
 fi
 
+
 # Configuration based on environment
 REGION="us-east-1"
 

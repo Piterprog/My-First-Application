@@ -70,17 +70,6 @@ echo "Task ARN: $TASK_ARN"
 
 # Extract log group and stream names from task definition
 LOG_GROUP=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].containers[0].logConfiguration.options["awslogs-group"]')
-LOG_STREAM_PREFIX=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].containers[0].logConfiguration.options["awslogs-stream-prefix"]')
-
-# Get the full log stream name
-LOG_STREAM_NAME="${LOG_STREAM_PREFIX}/${SERVICE_NAME}/${TASK_ARN}"
-
-# Output the log stream name
-echo "Log Stream Name: $LOG_STREAM_NAME"
 
 # Output log group link
-echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP/log-events/$LOG_STREAM_NAME" 
-
-# Output the task definition
-echo "Task Definition:"
-aws ecs describe-task-definition --task-definition $TASK_DEFINITION --region $REGION
+echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP" 

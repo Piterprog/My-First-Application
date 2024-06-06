@@ -4,7 +4,6 @@
 SERVICE_NAME=$1  # The name of the ECS task or service
 ENVIRONMENT=$2   # The deployment environment (e.g., production, staging)
 
-
 # Check for required parameters
 if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
   echo "Usage: $0 <SERVICE_NAME> <ENVIRONMENT>"
@@ -93,4 +92,4 @@ echo "Task Definition:"
 aws ecs describe-task-definition --task-definition $TASK_DEFINITION --region $REGION
 
 # Output log group link
-echo "Log Group Link: https://$REGION.console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP"
+echo "Log Group Link: https://$REGION.console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$CLUSTER/$SERVICE_NAME"

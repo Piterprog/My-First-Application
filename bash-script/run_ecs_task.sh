@@ -93,4 +93,4 @@ aws ecs describe-task-definition --task-definition $TASK_DEFINITION --region $RE
 
 # Create the link to the log group
 LOG_GROUP_LINK="https://$REGION.console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP/log-events/$LOG_STREAM_NAME"
-echo "Log Group Link: <a href=\"$LOG_GROUP_LINK\">$LOG_GROUP_LINK</a>"
+echo "Log Group Link: $LOG_GROUP_LINK"

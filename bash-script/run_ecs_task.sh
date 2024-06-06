@@ -9,7 +9,7 @@ fi
 
 # Constant values
 REGION="us-east-1"  
-LOG_PREFIX="/ecs-cluster"
+LOG_PREFIX="/ecs-"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
@@ -74,7 +74,7 @@ if [ -z "$SECURITY_GROUP_EXISTS" ]; then
 fi
 
 # Define the log group name
-LOG_GROUP="${LOG_PREFIX}/${SERVICE_NAME}"
+LOG_GROUP="${LOG_PREFIX}-cluster/${SERVICE_NAME}"
 
 # Check if the log group exists
 echo "Checking if log group exists..."

@@ -4,7 +4,6 @@
 SERVICE_NAME=$1  # The name of the ECS task or service
 ENVIRONMENT=$2   # The deployment environment (e.g., production, staging)
 
-
 # Check for required parameters
 if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
   echo "Usage: $0 <SERVICE_NAME> <ENVIRONMENT>"
@@ -47,16 +46,11 @@ echo "Task ARN: $TASK_ARN"
 LOG_GROUP=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].containers[0].logConfiguration.options["awslogs-group"]')
 LOG_STREAM_PREFIX=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].containers[0].logConfiguration.options["awslogs-stream-prefix"]')
 
-# Wait for the log stream to be created
-echo "Waiting for log stream to be created..."
-aws logs wait log-stream-exists --log-group-name $LOG_GROUP --log-stream-name-prefix $LOG_STREAM_PREFIX --region $REGION
-
 # Get the full log stream name
 LOG_STREAM_NAME="${LOG_STREAM_PREFIX}/${TASK_ARN}"
 
 # Output the log stream name
 echo "Log Stream Name: $LOG_STREAM_NAME"
 
-# Fetch the container logs
-echo "Fetching container logs..."
-aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $LOG_STREAM_NAME --region $REGION --limit 10 --query 'events[*].message' --output text
+# Output log group link
+echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP"

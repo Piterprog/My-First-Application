@@ -4,6 +4,7 @@
 SERVICE_NAME=$1  # The name of the ECS task or service
 ENVIRONMENT=$2   # The deployment environment (e.g., production, staging)
 
+
 # Check for required parameters
 if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
   echo "Usage: $0 <SERVICE_NAME> <ENVIRONMENT>"

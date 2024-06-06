@@ -40,15 +40,17 @@ echo "VPC with ID $VPC_ID exists."
 
 # Check if primary subnet exists
 if ! aws ec2 describe-subnets --subnet-ids $PRIMARY_SUBNET --region $REGION > /dev/null 2>&1; then
-  echo "Primary subnet with ID $PRIMARY_SUBNET not found. Trying secondary subnet..."
-  PRIMARY_SUBNET=$SECONDARY_SUBNET
+  echo "Error: Primary subnet with ID $PRIMARY_SUBNET not found."
+  exit 1
 fi
-echo "Using primary subnet: $PRIMARY_SUBNET"
+echo "Primary subnet with ID $PRIMARY_SUBNET exists."
 
 # Check if secondary subnet exists
 if ! aws ec2 describe-subnets --subnet-ids $SECONDARY_SUBNET --region $REGION > /dev/null 2>&1; then
-  echo "Secondary subnet with ID $SECONDARY_SUBNET not found. Using primary subnet..."
+  echo "Error: Secondary subnet with ID $SECONDARY_SUBNET not found."
+  exit 1
 fi
+echo "Secondary subnet with ID $SECONDARY_SUBNET exists."
 
 # Check if security group exists
 if ! aws ec2 describe-security-groups --group-ids $SECURITY_GROUP --region $REGION > /dev/null 2>&1; then
@@ -64,12 +66,19 @@ echo "Using task definition: $TASK_DEFINITION"
 
 # Running the ECS task
 echo "Running the ECS task..."
-RUN_TASK_OUTPUT=$(aws ecs run-task --cluster $CLUSTER --launch-type FARGATE --task-definition $TASK_DEFINITION --network-configuration "awsvpcConfiguration={subnets=[$PRIMARY_SUBNET],securityGroups=[$SECURITY_GROUP],assignPublicIp=DISABLED}" --region $REGION)
+RUN_TASK_OUTPUT=$(aws ecs run-task --cluster $CLUSTER --launch-type FARGATE --task-definition $TASK_DEFINITION --network-configuration "awsvpcConfiguration={subnets=[$PRIMARY_SUBNET, $SECONDARY_SUBNET],securityGroups=[$SECURITY_GROUP],assignPublicIp=DISABLED}" --region $REGION)
 TASK_ARN=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].taskArn')
 echo "Task ARN: $TASK_ARN"
 
 # Extract log group and stream names from task definition
 LOG_GROUP=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].containers[0].logConfiguration.options["awslogs-group"]')
+LOG_STREAM_PREFIX=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].containers[0].logConfiguration.options["awslogs-stream-prefix"]')
+
+# Get the full log stream name
+LOG_STREAM_NAME="${LOG_STREAM_PREFIX}/${TASK_ARN}"
+
+# Output the log stream name
+echo "Log Stream Name: $LOG_STREAM_NAME"
 
 # Output log group link
 echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP" 

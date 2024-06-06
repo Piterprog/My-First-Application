@@ -64,7 +64,21 @@ if ! aws ec2 describe-security-groups --group-ids $SECURITY_GROUP --region $REGI
   echo "Error: Security group with ID $SECURITY_GROUP not found."
   exit 1
 fi
-echo "Security group with ID $SECURITY_GROUP exists."
+
+# Define the log group name
+LOG_GROUP="$LOG_PREFIX/$SERVICE_NAME/$ENVIRONMENT"
+
+# Check if the log group exists
+echo "Checking if log group exists..."
+LOG_GROUP_EXISTS=$(aws logs describe-log-groups --log-group-name-prefix $LOG_GROUP --region $REGION --query "logGroups[?logGroupName=='$LOG_GROUP'].logGroupName" --output text)
+
+# Create the log group if it does not exist
+if [ -z "$LOG_GROUP_EXISTS" ]; then
+  echo "Creating log group: $LOG_GROUP"
+  aws logs create-log-group --log-group-name $LOG_GROUP --region $REGION
+else
+  echo "Log group already exists: $LOG_GROUP"
+fi
 
 # Fetching the latest revision of the task definition
 echo "Fetching the latest task definition..."

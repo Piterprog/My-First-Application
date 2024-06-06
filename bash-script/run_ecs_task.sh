@@ -35,32 +35,24 @@ fi
 if ! aws ec2 describe-vpcs --vpc-ids $VPC_ID --region $REGION > /dev/null 2>&1; then
   echo "Error: VPC with ID $VPC_ID not found."
   exit 1
-else
-  echo "VPC with ID $VPC_ID found."
 fi
 
 # Check if primary subnet exists
 if ! aws ec2 describe-subnets --subnet-ids $PRIMARY_SUBNET --region $REGION > /dev/null 2>&1; then
   echo "Error: Primary subnet with ID $PRIMARY_SUBNET not found."
   exit 1
-else
-  echo "Primary subnet with ID $PRIMARY_SUBNET found."
 fi
 
 # Check if secondary subnet exists
 if ! aws ec2 describe-subnets --subnet-ids $SECONDARY_SUBNET --region $REGION > /dev/null 2>&1; then
   echo "Error: Secondary subnet with ID $SECONDARY_SUBNET not found."
   exit 1
-else
-  echo "Secondary subnet with ID $SECONDARY_SUBNET found."
 fi
 
 # Check if security group exists
 if ! aws ec2 describe-security-groups --group-ids $SECURITY_GROUP --region $REGION > /dev/null 2>&1; then
   echo "Error: Security group with ID $SECURITY_GROUP not found."
   exit 1
-else
-  echo "Security group with ID $SECURITY_GROUP found."
 fi
 
 # Fetching the latest revision of the task definition
@@ -79,11 +71,11 @@ LOG_GROUP=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].containers[0].logConfigurat
 LOG_STREAM_PREFIX=$(echo $RUN_TASK_OUTPUT | jq -r '.tasks[0].containers[0].logConfiguration.options["awslogs-stream-prefix"]')
 
 # Get the full log stream name
-LOG_STREAM_NAME="${LOG_STREAM_PREFIX}/${TASK_ARN}"
+LOG_STREAM_NAME="${LOG_STREAM_PREFIX}/${SERVICE_NAME}/${TASK_ARN}"
 
 # Output the log stream name
 echo "Log Stream Name: $LOG_STREAM_NAME"
 
 # Output log group link
-echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP"
+echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logEventViewer:group=$LOG_GROUP" 
 

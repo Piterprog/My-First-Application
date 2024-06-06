@@ -74,7 +74,7 @@ if [ -z "$SECURITY_GROUP_EXISTS" ]; then
 fi
 
 # Define the log group name
-LOG_GROUP="${LOG_PREFIX}-cluster/${SERVICE_NAME}"
+LOG_GROUP="${LOG_PREFIX}cluster/${SERVICE_NAME}"
 
 # Check if the log group exists
 echo "Checking if log group exists..."

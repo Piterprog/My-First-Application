@@ -24,10 +24,10 @@ if [ "$ENVIRONMENT" == "production" ]; then
   VPC_ID=""  # Replace with the actual VPC ID for production
 elif [ "$ENVIRONMENT" == "staging" ]; then
   CLUSTER="staging" # Cluster name
-  SECURITY_GROUP=""  # Replace with the actual security group ID for staging
-  PRIMARY_SUBNET=""  # Replace with the primary subnet ID for staging
-  SECONDARY_SUBNET=""  # Replace with the secondary subnet ID for staging
-  VPC_ID=""  # Replace with the actual VPC ID for staging
+  SECURITY_GROUP="sg-09744c887ea95e783"  # Replace with the actual security group ID for staging
+  PRIMARY_SUBNET="subnet-04fbbc86ea80f6934"  # Replace with the primary subnet ID for staging
+  SECONDARY_SUBNET="subnet-081dee713da1a43ab"  # Replace with the secondary subnet ID for staging
+  VPC_ID="vpc-0dd5cffeb8c4d7d78"  # Replace with the actual VPC ID for staging
 else
   echo "Invalid environment specified. Use 'production' or 'staging'."
   exit 1

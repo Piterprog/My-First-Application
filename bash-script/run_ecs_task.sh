@@ -78,9 +78,9 @@ LOG_STREAM_NAME="${LOG_STREAM_PREFIX}/${SERVICE_NAME}/${TASK_ARN}"
 # Output the log stream name
 echo "Log Stream Name: $LOG_STREAM_NAME"
 
-# Output log group link
-echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP/log-events/$LOG_STREAM_NAME" 
-
 # Output the task definition
 echo "Task Definition:"
 aws ecs describe-task-definition --task-definition $TASK_DEFINITION --region $REGION
+
+# Output log group link
+echo "Log Group Link: https://$REGION.console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP/log-events/$LOG_STREAM_NAME" 

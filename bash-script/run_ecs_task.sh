@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Command line parameters
 SERVICE_NAME=$1  # The name of the task or task family
 ENVIRONMENT=$2  # The environment (e.g., production, staging)
@@ -10,29 +11,27 @@ if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
   exit 1
 fi
 
-
 # Constant values
-REGION="us-east-1"
-LOG_PREFIX="/ecs"
+REGION="us-east-1"  
+LOG_PREFIX="/ecs-cluster"
 
 # Define default values based on environment
 if [ "$ENVIRONMENT" == "production" ]; then
-  CLUSTER="production" # Cluster name
+  CLUSTER="production" # Cluster name 
   SECURITY_GROUP=""  # Replace with the actual security group ID for production
   PRIMARY_SUBNET=""  # Replace with the primary subnet ID for production
   SECONDARY_SUBNET=""  # Replace with the secondary subnet ID for production
   VPC_ID=""  # Replace with the actual VPC ID for production
 elif [ "$ENVIRONMENT" == "staging" ]; then
   CLUSTER="staging" # Cluster name
-  SECURITY_GROUP="sg-0301d32d0c0b4fcbb"  # Replace with the actual security group ID for staging
-  PRIMARY_SUBNET="subnet-0b3c128dac44a5f31"  # Replace with the primary subnet ID for staging
-  SECONDARY_SUBNET="subnet-0a10eac7c86c0f751"  # Replace with the secondary subnet ID for staging
-  VPC_ID="vpc-0fc99c158dad8c224"  # Replace with the actual VPC ID for staging
+  SECURITY_GROUP=""  # Replace with the actual security group ID for staging
+  PRIMARY_SUBNET=""  # Replace with the primary subnet ID for staging
+  SECONDARY_SUBNET=""  # Replace with the secondary subnet ID for staging
+  VPC_ID=""  # Replace with the actual VPC ID for staging
 else
-  echo "Error: Invalid environment specified. Use 'production' or 'staging'."
+  echo "Invalid environment specified. Use 'production' or 'staging'."
   exit 1
 fi
-
 
 # Debug output
 echo "Service Name: $SERVICE_NAME"
@@ -79,11 +78,11 @@ if [ -z "$SECURITY_GROUP_EXISTS" ]; then
 fi
 
 # Define the log group name
-LOG_GROUP="$LOG_PREFIX/$SERVICE_NAME/$ENVIRONMENT"
+LOG_GROUP="${LOG_PREFIX}/${SERVICE_NAME}"
 
 # Check if the log group exists
 echo "Checking if log group exists..."
-LOG_GROUP_EXISTS=$(aws logs describe-log-groups --log-group-name-prefix $LOG_GROUP --region $REGION --query "logGroups[?logGroupName=='$LOG_GROUP'].logGroupName" --output text)
+LOG_GROUP_EXISTS=$(aws logs describe-log-groups --log-group-name $LOG_GROUP --region $REGION --query "logGroups[?logGroupName=='$LOG_GROUP'].logGroupName" --output text)
 
 # Create the log group if it does not exist
 if [ -z "$LOG_GROUP_EXISTS" ]; then
@@ -135,7 +134,7 @@ while true; do
   if [ "$TASK_STATUS" == "RUNNING" ] || [ "$TASK_STATUS" == "STOPPED" ]; then
     break
   fi
-  sleep 10
+  sleep 5
 done
 
 # Fetch the task status
@@ -160,7 +159,7 @@ LOG_STREAM_NAME=$(echo $CONTAINER_DETAILS | jq -r '.logConfiguration.options["aw
 
 # Wait for log stream to be available
 echo "Waiting for log stream to be available..."
-sleep 30
+sleep 10
 
 # Check if log stream exists
 LOG_STREAM_EXISTS=$(aws logs describe-log-streams --log-group-name $LOG_GROUP --log-stream-name-prefix $LOG_STREAM_NAME --region $REGION --query "logStreams[?logStreamName=='$LOG_STREAM_NAME'].logStreamName" --output text)
@@ -173,4 +172,3 @@ fi
 # Fetch the container logs
 echo "Fetching container logs for container: $LOG_STREAM_NAME"
 aws logs get-log-events --log-group-name $LOG_GROUP --log-stream-name $LOG_STREAM_NAME --region $REGION --limit 10 --query 'events[*].message' --output text
-

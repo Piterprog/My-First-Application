@@ -31,6 +31,15 @@ else
   exit 1
 fi
 
+# Debug output
+echo "Service Name: $SERVICE_NAME"
+echo "Environment: $ENVIRONMENT"
+echo "Cluster: $CLUSTER"
+echo "Security Group: $SECURITY_GROUP"
+echo "Primary Subnet: $PRIMARY_SUBNET"
+echo "Secondary Subnet: $SECONDARY_SUBNET"
+echo "VPC ID: $VPC_ID"
+
 # Check if VPC exists
 if ! aws ec2 describe-vpcs --vpc-ids $VPC_ID --region $REGION > /dev/null 2>&1; then
   echo "Error: VPC with ID $VPC_ID not found."

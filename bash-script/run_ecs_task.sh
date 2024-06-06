@@ -82,4 +82,5 @@ echo "Log Stream Name: $LOG_STREAM_NAME"
 echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP/log-events/$LOG_STREAM_NAME" 
 
 # Output the task definition
-echo "Task Definition: $TASK_DEFINITION"
+echo "Task Definition:"
+aws ecs describe-task-definition --task-definition $TASK_DEFINITION --region $REGION

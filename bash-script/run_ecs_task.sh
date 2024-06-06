@@ -31,6 +31,30 @@ else
   exit 1
 fi
 
+# Check if VPC exists
+if ! aws ec2 describe-vpcs --vpc-ids $VPC_ID --region $REGION > /dev/null 2>&1; then
+  echo "Error: VPC with ID $VPC_ID not found."
+  exit 1
+fi
+
+# Check if primary subnet exists
+if ! aws ec2 describe-subnets --subnet-ids $PRIMARY_SUBNET --region $REGION > /dev/null 2>&1; then
+  echo "Error: Primary subnet with ID $PRIMARY_SUBNET not found."
+  exit 1
+fi
+
+# Check if secondary subnet exists
+if ! aws ec2 describe-subnets --subnet-ids $SECONDARY_SUBNET --region $REGION > /dev/null 2>&1; then
+  echo "Error: Secondary subnet with ID $SECONDARY_SUBNET not found."
+  exit 1
+fi
+
+# Check if security group exists
+if ! aws ec2 describe-security-groups --group-ids $SECURITY_GROUP --region $REGION > /dev/null 2>&1; then
+  echo "Error: Security group with ID $SECURITY_GROUP not found."
+  exit 1
+fi
+
 # Fetching the latest revision of the task definition
 echo "Fetching the latest task definition..."
 TASK_DEFINITION=$(aws ecs list-task-definitions --family-prefix $SERVICE_NAME --sort DESC --query 'taskDefinitionArns[0]' --output text --region $REGION)
@@ -54,3 +78,4 @@ echo "Log Stream Name: $LOG_STREAM_NAME"
 
 # Output log group link
 echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP"
+

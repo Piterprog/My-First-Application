@@ -10,7 +10,6 @@ if [ -z "$SERVICE_NAME" ] || [ -z "$ENVIRONMENT" ]; then
   exit 1
 fi
 
-
 # Configuration based on environment
 REGION="us-east-1"
 
@@ -37,24 +36,28 @@ if ! aws ec2 describe-vpcs --vpc-ids $VPC_ID --region $REGION > /dev/null 2>&1; 
   echo "Error: VPC with ID $VPC_ID not found."
   exit 1
 fi
+echo "VPC with ID $VPC_ID exists."
 
 # Check if primary subnet exists
 if ! aws ec2 describe-subnets --subnet-ids $PRIMARY_SUBNET --region $REGION > /dev/null 2>&1; then
   echo "Error: Primary subnet with ID $PRIMARY_SUBNET not found."
   exit 1
 fi
+echo "Primary subnet with ID $PRIMARY_SUBNET exists."
 
 # Check if secondary subnet exists
 if ! aws ec2 describe-subnets --subnet-ids $SECONDARY_SUBNET --region $REGION > /dev/null 2>&1; then
   echo "Error: Secondary subnet with ID $SECONDARY_SUBNET not found."
   exit 1
 fi
+echo "Secondary subnet with ID $SECONDARY_SUBNET exists."
 
 # Check if security group exists
 if ! aws ec2 describe-security-groups --group-ids $SECURITY_GROUP --region $REGION > /dev/null 2>&1; then
   echo "Error: Security group with ID $SECURITY_GROUP not found."
   exit 1
 fi
+echo "Security group with ID $SECURITY_GROUP exists."
 
 # Fetching the latest revision of the task definition
 echo "Fetching the latest task definition..."
@@ -78,5 +81,4 @@ LOG_STREAM_NAME="${LOG_STREAM_PREFIX}/${SERVICE_NAME}/${TASK_ARN}"
 echo "Log Stream Name: $LOG_STREAM_NAME"
 
 # Output log group link
-echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logEventViewer:group=$LOG_GROUP" 
-
+echo "Log Group Link: https://console.aws.amazon.com/cloudwatch/home?region=$REGION#logsV2:log-groups/log-group/$LOG_GROUP/log-events/$LOG_STREAM_NAME"
